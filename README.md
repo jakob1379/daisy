@@ -3,12 +3,20 @@
 Refactor of Daisy from https://github.com/perabrahamsen/daisy-model
 
 ## Installation
+[CMakePresets.json](CMakePresets.json) define setups for building with gcc and clang on linux.
 
     git clone git@github.com:daisy-model/daisy.git
     cd daisy
     mkdir build/release -p
     cd buld/release
-    cmake ../../
+
+To see a list of available presets
+
+    cmake ../../ --list-presets
+
+To build with gcc using release options
+
+    cmake ../../ --preset gcc-release
     make -j 8
 
 ## Testing
@@ -21,11 +29,13 @@ Use [ctest](https://cmake.org/cmake/help/latest/manual/ctest.1.html) to run test
 
 ## Code coverage
 To get code coverage you need to set the build type to `Coverage`. This will disable some optimizations.
+There is a coverage preset defined for gcc.
 
-    cd <daisy-src-dir>
+    git clone git@github.com:daisy-model/daisy.git
+    cd daisy
     mkdir build/coverage -p
     cd build/coverage
-    cmake ../.. -DCMAKE_BUILD_TYPE=Coverage
+    cmake ../.. --preset gcc-coverage
     make -j 8
     ctest
 
