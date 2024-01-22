@@ -2,7 +2,7 @@
 
 Refactor of Daisy from https://github.com/perabrahamsen/daisy-model
 
-## Installation
+## Building
 [CMakePresets.json](CMakePresets.json) define setups for building with gcc and clang on linux.
 
     git clone git@github.com:daisy-model/daisy.git
@@ -17,7 +17,12 @@ To see a list of available presets
 To build with gcc using release options
 
     cmake ../../ --preset gcc-release
-    make -j 8
+    make
+    
+To build a portable statically linked binary
+
+    cmake ../../ --preset gcc-release-portable
+    make
 
 ## Testing
 Test scenarios are in [test/dai_test_files](test/dai_test_files).

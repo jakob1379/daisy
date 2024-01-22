@@ -13,14 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 option(USE_PROFILE "Set to ON to build for profiling" OFF)
 option(MAKE_PORTABLE "Set to ON to make a generic build" OFF)
 
-IF(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
    SET(CMAKE_BUILD_TYPE Release
        CACHE STRING "Choose the type of build : None Debug Release RelWithDebInfo MinSizeRel Coverage."
        FORCE)
-ENDIF(NOT CMAKE_BUILD_TYPE)
+endif (NOT CMAKE_BUILD_TYPE)
 
 add_compile_options(${COMPILER_OPTIONS_WARNING})
 
+if (MAKE_PORTABLE)
+  set(Boost_USE_STATIC_LIBS ON)
+endif (MAKE_PORTABLE)
 find_package(Boost 1.74 REQUIRED CONFIG COMPONENTS filesystem system)
 message(STATUS "Boost version: ${Boost_VERSION}")
 
@@ -50,6 +53,7 @@ target_compile_options(daisy PRIVATE
 
 target_link_options(daisy PRIVATE
   "$<$<CONFIG:COVERAGE>:${LINKER_OPTIONS_COVERAGE}>"
+  "$<$<BOOL:${MAKE_PORTABLE}>:${LINKER_OPTIONS_PORTABLE}>"
 )
 
 
