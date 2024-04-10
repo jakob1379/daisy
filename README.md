@@ -131,6 +131,11 @@ Make an installer
 
 
 ## Testing
+### Install test dependencies
+We use a set of python tools to check Daisy output against a baseline. These are available from [daispy-test](https://github.com/daisy-model/daisypy-test) and can be installed with
+
+    pip install daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
 Test scenarios are in [test/dai_test_files](test/dai_test_files).
 When adding a test you need to add it as a `dai_test_case` in [test/CMakeLists.txt](test/CMakeLists.txt).
 
@@ -145,7 +150,7 @@ There is a coverage preset defined for gcc.
     git clone git@github.com:daisy-model/daisy.git
     mkdir -p daisy/build/coverage 
     cd daisy/build/coverage
-    cmake ../.. --preset gcc-coverage
+    cmake ../.. --preset linux-gcc-coverage
     make -j 8
     ctest
 
