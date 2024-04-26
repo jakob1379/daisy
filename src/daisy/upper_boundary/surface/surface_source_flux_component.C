@@ -21,7 +21,7 @@ static struct SurfaceSourceFluxSyntax : DeclareModel
   { return new SurfaceSourceFluxComponent (al); }
 
   SurfaceSourceFluxSyntax () 
-    : DeclareModel (Surface::component, "source_flux", "simple", "\
+    : DeclareModel (SurfaceSourceFluxComponent::component, "source_flux", "simple", "\
 Dynamic flux upper boundary for soil.")
   { }
 

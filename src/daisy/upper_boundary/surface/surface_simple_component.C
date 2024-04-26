@@ -7,7 +7,7 @@
 static struct SurfaceSimpleSyntax : DeclareBase
 {
   SurfaceSimpleSyntax () 
-    : DeclareBase (Surface::component, "simple", "\
+    : DeclareBase (SurfaceSimple::component, "simple", "\
   Don't keep track of surface stuff.")
   { }
 
@@ -33,7 +33,7 @@ static struct SurfaceConstFluxSyntax : DeclareModel
   { return new SurfaceConstFluxComponent (al); }
 
   SurfaceConstFluxSyntax () 
-    : DeclareModel (Surface::component, "const_flux", "simple", "\
+    : DeclareModel (SurfaceConstFluxComponent::component, "const_flux", "simple", "\
   Constant flux upper boundary for soil.")
   { }
 
@@ -65,7 +65,7 @@ static struct SurfaceConstPressureSyntax : DeclareModel
   { return new SurfaceConstPressureComponent (al); }
 
   SurfaceConstPressureSyntax () 
-    : DeclareModel (Surface::component, "const_pressure", "simple", "\
+    : DeclareModel (SurfaceConstPressureComponent::component, "const_pressure", "simple", "\
 //  Constant pressure upper boundary for soil.")
   { }
 
@@ -82,7 +82,7 @@ static struct SurfaceConstPressureSyntax : DeclareModel
 static struct SurfaceNoneSyntax : public DeclareParam
 { 
   SurfaceNoneSyntax ()
-    : DeclareParam (Surface::component, "none", "const_flux", "\
+    : DeclareParam (SurfaceConstFluxComponent::component, "none", "const_flux", "\
 //  Zero flux upper boundary for soil.")
   { }
   void load_frame (Frame& frame) const

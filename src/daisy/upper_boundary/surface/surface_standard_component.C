@@ -56,7 +56,7 @@ static struct SurfaceStandardSyntax : DeclareModel
   { return new SurfaceStandardComponent (al); }
 
   SurfaceStandardSyntax () 
-    : DeclareModel (Surface::component, "default", "\
+    : DeclareModel (SurfaceStandardComponent::component, "default", "\
 Keep track of soil surface.")
   { }
 
