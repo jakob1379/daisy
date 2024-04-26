@@ -22,9 +22,9 @@
 
 #define BUILD_DLL
 
-#include "surface_simple.h"
-#include "source.h"
-#include "units.h"
+#include "models/surface/surface_source_flux_model.h"
+//include "source.h"
+//#include "units.h"
 #include "librarian.h"
 #include "block_model.h"
 #include "assertion.h"
@@ -35,30 +35,20 @@
 
 // The 'source_flux' model.
 
-struct SurfaceSourceFlux : public SurfaceSimple
-{
-  const Units& units;
-  const bool interpolate;	//  Interpolate flux values.
-  const std::unique_ptr<Source> source;
-  size_t index;
-  enum { uninitialized, working, error } state;
-  Time previous_time;
-  Time next_time;
-  double previous_flux;
-  double next_flux;
-  double flux;
-
-  top_t top_type (const Geometry&, size_t edge) const
+SurfaceSourceFluxModel::top_t
+SurfaceSourceFluxModel::top_type (const Geometry&, size_t edge) const
   { return forced_flux; }
-  double q_top (const Geometry&, size_t edge, const double dt) const // [cm/h]
+
+double SurfaceSourceFluxModel::q_top (const Geometry&, size_t edge, const double dt) const // [cm/h]
   { return flux; }
-  double h_top (const Geometry& geo, size_t edge) const // [cm]
+
+double SurfaceSourceFluxModel::h_top (const Geometry& geo, size_t edge) const // [cm]
   {
     const double dt = 1.0;       // [h]
     return -q_top (geo, edge, dt) * dt; 
   }
 
-  void tick (const Time& time, double dt /* [h] */,
+void SurfaceSourceFluxModel::tick (const Time& time, double dt /* [h] */,
              double PotSoilEvaporationWet, 
              double PotSoilEvaporationDry, 
              double flux_in /* [mm/h] */,
@@ -67,22 +57,25 @@ struct SurfaceSourceFlux : public SurfaceSimple
              double soil_T /* [dg C] */,
 	     Treelog& msg)
   {
-    SurfaceSimple::tick (time, dt, PotSoilEvaporationDry, PotSoilEvaporationWet,
+    SurfaceSimpleModel::tick (time, dt, PotSoilEvaporationDry, PotSoilEvaporationWet,
 			 flux_in, temp, geo, soil, soil_water,
 			 soil_T, msg);
     tick_source (time, msg);
   }
 
-  void tick_source (const Time& time, Treelog& msg)
+  void SurfaceSourceFluxModel::tick_source (const Time& time, Treelog& msg)
   {
-    TREELOG_MODEL (msg);
+    // TODO: Figure out how this can be logged. TREELOG_MODEL assumes caller is a ModelLogable, but
+    // we have separated the objet model from the actual models, so it is not possible atm.
+    // TREELOG_MODEL (msg);
 
     if (state == uninitialized)
       // Initialize
       {
 	std::ostringstream tmp;
-	tmp << objid << ": " << source->objid << " '" << source->title () << "'";
-	Treelog::Open nest (msg, tmp.str ());
+        // TODO: Figure out how this can be logged.
+	// tmp << objid << ": " << source->objid << " '" << source->title () << "'";
+	// Treelog::Open nest (msg, tmp.str ());
 	state = working;
 	if (!source->load (msg))
 	  state = error;
@@ -153,45 +146,6 @@ struct SurfaceSourceFlux : public SurfaceSimple
     else
       flux = next_flux;
   }
-
-  // Create.
-  SurfaceSourceFlux (const BlockModel& al)
-    : SurfaceSimple (al),
-      units (al.units ()),
-      interpolate (al.flag ("interpolate")),
-      source (Librarian::build_item<Source> (al, "source")),
-      index (0),
-      state (uninitialized),
-      previous_time (42, 1, 1, 0),
-      next_time (42, 1, 1, 0),
-      previous_flux (0.0),
-      next_flux (0.0),
-      flux (0.0)
-  { }
-  ~SurfaceSourceFlux ()
-  { }
-};
-
-static struct SurfaceSourceFluxSyntax : DeclareModel
-{
-  Model* make (const BlockModel& al) const
-  { return new SurfaceSourceFlux (al); }
-
-  SurfaceSourceFluxSyntax () 
-    : DeclareModel (Surface::component, "source_flux", "simple", "\
-Dynamic flux upper boundary for soil.")
-  { }
-
-  void load_frame (Frame& frame) const
-  {
-    frame.declare_object ("source", Source::component, Attribute::Const, 
-                          Attribute::Singleton, "\
-Flux time series.");
-    frame.declare_boolean ("interpolate", Attribute::Const, "\
-If true, interpolate values.  If false, use last read.");
-    frame.set ("interpolate", false);
-  }
-} SurfaceSourceFlux_syntax;
 
 
 // surface_source.C ends here.

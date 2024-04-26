@@ -42,13 +42,3 @@ Surface::Surface (const BlockModel& al)
 
 Surface::~Surface ()
 { }
-
-static struct SurfaceInit : public DeclareComponent 
-{
-  SurfaceInit ()
-    : DeclareComponent (Surface::component, "\
-Surface processes.")
-  { }
-} Surface_init;
-
-// surface.C ends here.
