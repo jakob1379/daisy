@@ -44,7 +44,7 @@ public:
   // Create and Destroy.
 public:
   virtual void initialize (const double Theta_res, const double h_res,
-			   const double Theta_sat, Treelog&) = 0;
+			   const double Theta_sat) = 0; //, Treelog&) = 0;
 protected:
   Retention ();
 public:

@@ -81,7 +81,7 @@ struct RetentionPASTIS : public Retention
   }
 
   void initialize (const double Theta_res_, const double h_res_,
-		   const double Theta_sat_, Treelog&)
+		   const double Theta_sat_) //, Treelog&)
   {
     Theta_res = Theta_res_;
     h_min = h_res_;
@@ -130,7 +130,7 @@ struct RetentionExponential : public Retention
   { return std::exp (k * h) * (Theta_sat - Theta_res) + Theta_res;  }
   
   void initialize (const double Theta_res_, const double h_res_,
-		   const double Theta_sat_, Treelog& msg)
+		   const double Theta_sat_) //, Treelog& msg)
   {
     if (Theta_res < 0.0)
       Theta_res = Theta_res_;
@@ -148,7 +148,7 @@ struct RetentionExponential : public Retention
 	const double h2 = h (Theta1);
 	tmp << "\n" << pF << "\t" << h2 << "\t" << Theta1;
       }
-    msg.debug (tmp.str ());
+    //msg.debug (tmp.str ());
   }
   RetentionExponential (const BlockModel& al)
     : k (al.number ("k")),

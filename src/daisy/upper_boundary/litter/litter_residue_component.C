@@ -1,4 +1,4 @@
-// litter_residue.C -- Dynamic litter layer affecting water and heat.
+// litter_residue_component.C -- Dynamic litter layer affecting water and heat.
 // 
 // Copyright 2010 KU
 //
@@ -20,54 +20,39 @@
 
 #define BUILD_DLL
 
-#include "litter_residue.h"
+#include "litter.h"
 #include "block_model.h"
 #include "mathlib.h"
 #include "librarian.h"
 #include "check.h"
 #include "log.h"
 #include "organic.h"
+#include "models/litter/litter_residue_model.h"
 
-// The 'residue' model.
-
-void
-LitterResidue::output (Log& log) const
+struct LitterResidueComponent : Litter, LitterResidueModel
 {
-  Litter::output (log);
-  output_variable (mass, log);
-}
-  
-void
-LitterResidue::tick (const Bioclimate& bioclimate,
-		     const Geometry& geo, const Soil& soil,
-		     const SoilWater& soil_water, const SoilHeat& soil_heat,
-		     OrganicMatter& organic, Chemistry& chemistry,
-		     const double dt,
-		     Treelog& msg)
-{
-  mass = organic.top_DM ();
-  const double MAI = mass * specific_AI; 
-  cover_ = 1.0 - std::exp (- MAI * extinction_coefficent);
-}
+  void output (Log& log) const
+  {
+    Litter::output (log);
+    output_variable (mass, log);
+  }
 
-LitterResidue::LitterResidue (const BlockModel& al)
-  : Litter (al),
-    water_capacity_ (al.number ("water_capacity")),
-    vapor_flux_factor_ (al.number ("vapor_flux_factor")),
-    specific_AI (al.number ("specific_AI")),
-    extinction_coefficent (al.number ("extinction_coefficent")),
-    albedo_ (al.number ("albedo", -1.0)),
-    mass (NAN),
-    cover_ (NAN)
-{ }
-
-LitterResidue::~LitterResidue ()
-{ }
+  LitterResidueComponent (const BlockModel& al)
+    : Litter(al),
+      LitterResidueModel(al.number ("water_capacity"),
+                         al.number ("vapor_flux_factor"),
+                         al.number ("specific_AI"),
+                         al.number ("extinction_coefficent"),
+                         al.number ("albedo", -1.0))
+  { }  
+  ~LitterResidueComponent ()
+  { }
+};
 
 static struct LitterResidueSyntax : DeclareModel
 {
   Model* make (const BlockModel& al) const
-  { return new LitterResidue (al); }
+  { return new LitterResidueComponent (al); }
   LitterResidueSyntax ()
     : DeclareModel (Litter::component, "residue", "\
 A dynamic litter layer based on applied fertilizer and crop residuals.\n\
@@ -138,5 +123,3 @@ Maize crop residues in La Tinaja.")
     frame.set ("extinction_coefficent", 0.80);
   }
 } LitterMaize_syntax;
-
-// litter_residue.C ends here.

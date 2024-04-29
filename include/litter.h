@@ -24,48 +24,17 @@
 
 #include "model_derived.h"
 #include "symbol.h"
+#include "interfaces/litter_interface.h"
 
 class BlockModel;
-class Geometry;
-class Soil;
-class SoilWater;
-class SoilHeat;
-class OrganicMatter;
-class Chemistry;
-class Treelog;
-class Bioclimate;
 
-class Litter : public ModelDerived
+struct Litter : public ModelDerived, public virtual LitterInterface
 {
-  // Content.
-public:
   static const char *const component;
   symbol library_id () const;
-
-  // Simulation.
-public:
   void output (Log& log) const;
-  
-  virtual void tick (const Bioclimate&, const Geometry& geo, const Soil& soil,
-		     const SoilWater& soil_water, const SoilHeat& soil_heat,
-		     OrganicMatter& organic, Chemistry& chemistry,
-		     const double dt,
-		     Treelog& msg) = 0;
 
-  virtual double cover () const = 0; // Fraction of surface covered [0-1]
-  virtual double intercept () const; // Multiply with cover for rain int. [0-1]
-  virtual bool diffuse () const; // True iff water can diffuse to surface.
-  virtual double vapor_flux_factor () const = 0; // Affect on soil evap. []
-  virtual double water_capacity () const = 0;    // Max water content [mm]
-  virtual double water_protected () const;    // Water not evapable [mm]
-  virtual double albedo () const = 0;  // Light reflection factor []
-  virtual double potential_exfiltration () const; // Water exchange with soil [mm/h]
-  virtual double decompose_factor () const;	  // Effect on chemicals []
-  
-  // Create and Destroy.
-protected:
   Litter (const BlockModel&);
-public:
   ~Litter ();
 };
 
