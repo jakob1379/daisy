@@ -1,4 +1,5 @@
 #include <sstream>
+
 #include "abiotic.h"
 #include "block_model.h"
 #include "check.h"
@@ -6,6 +7,7 @@
 #include "librarian.h"
 #include "log.h"
 #include "mathlib.h"
+
 #include "litter.h"
 #include "models/litter/litter_mulch_model.h"
 
@@ -13,29 +15,7 @@ struct LitterMulchComponent : Litter, LitterMulchModel
 {
   void output (Log& log) const
   {
-    Litter::output (log);
-    output_variable (mass, log);
-    output_variable (height, log);
-    output_variable (contact, log);
-    output_variable (water, log);
-    output_variable (protected_water, log);
-    output_variable (Theta, log);
-    output_variable (h, log);
-    output_variable (h1, log);
-    output_variable (h_soil, log);
-    output_variable (K_soil, log);
-    output_variable (E_darcy, log);
-    output_variable (h_factor, log);
-    output_variable (T, log);
-    output_variable (T_soil, log);
-    output_variable (T_factor, log);
-    output_variable (SMB_C, log);
-    output_variable (SMB_factor, log);
-    output_variable (factor, log);
-    output_variable (DOC_gen, log);
-    output_variable (DON_gen, log);
-    output_variable (SOC_gen, log);
-    output_variable (SON_gen, log);
+    LitterMulchModel::output (log);
   }
 
   static double find_Theta_sat (const Frame& al)
@@ -280,5 +260,3 @@ Stationary organic carbon generated from turnover.");
 Stationary organic nitrogen generated from turnover.");
   }
 } LitterMulch_syntax;
-
-// litter.C ends here.

@@ -33,8 +33,7 @@ struct LitterResidueComponent : Litter, LitterResidueModel
 {
   void output (Log& log) const
   {
-    Litter::output (log);
-    output_variable (mass, log);
+    LitterResidueModel::output (log);
   }
 
   LitterResidueComponent (const BlockModel& al)

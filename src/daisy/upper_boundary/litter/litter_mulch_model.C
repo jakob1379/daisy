@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "abiotic.h"
 #include "am.h"
 #include "aom.h"
@@ -6,13 +8,42 @@
 #include "chemistry.h"
 #include "geometry.h"
 #include "iterative.h"
+#include "log.h"
 #include "mathlib.h"
 #include "organic.h"
 #include "smb.h"
 #include "soil_heat.h"
 #include "soil_water.h"
+#include "treelog.h"
 
 #include "models/litter/litter_mulch_model.h"
+
+void LitterMulchModel::output (Log& log) const
+{
+  LitterModel::output (log);
+  output_variable (mass, log);
+  output_variable (height, log);
+  output_variable (contact, log);
+  output_variable (water, log);
+  output_variable (protected_water, log);
+  output_variable (Theta, log);
+  output_variable (h, log);
+  output_variable (h1, log);
+  output_variable (h_soil, log);
+  output_variable (K_soil, log);
+  output_variable (E_darcy, log);
+  output_variable (h_factor, log);
+  output_variable (T, log);
+  output_variable (T_soil, log);
+  output_variable (T_factor, log);
+  output_variable (SMB_C, log);
+  output_variable (SMB_factor, log);
+  output_variable (factor, log);
+  output_variable (DOC_gen, log);
+  output_variable (DON_gen, log);
+  output_variable (SOC_gen, log);
+  output_variable (SON_gen, log);
+}
 
 double LitterMulchModel::find_E_darcy (const double h) const // [cm/h]
 { return cover () * factor_exch * ((h - h_soil) / -soil_height) * K_soil; }
@@ -80,11 +111,11 @@ double LitterMulchModel::decompose_factor () const // Effect on chemical decompo
 
 // Simulation.
 void LitterMulchModel::tick (const Bioclimate& bioclimate,
-           const Geometry& geo, const Soil& soil,
-           const SoilWater& soil_water, const SoilHeat& soil_heat,
-           OrganicMatter& organic, Chemistry& chemistry,
-           const double dt,
-           Treelog& msg)
+                             const Geometry& geo, const Soil& soil,
+                             const SoilWater& soil_water, const SoilHeat& soil_heat,
+                             OrganicMatter& organic, Chemistry& chemistry,
+                             const double dt,
+                             Treelog& msg)
 {
   // Find mass and cover.
   LitterResidueModel::tick (bioclimate,
@@ -305,13 +336,12 @@ LitterMulchModel::LitterMulchModel (double water_capacity,
   SON_gen (NAN)
 {
   //TREELOG_MODEL (al.msg ());
-  //retention->initialize (Theta_res, h_min, Theta_sat, al.msg ());
   retention->initialize (Theta_res, h_min, Theta_sat, msg);
-  //std::ostringstream tmp;
-  // tmp << "Theta_sat = " << Theta_sat
-  //     << "\nT_scale = " << T_scale
-  //     << "\nSMB_scale = " << SMB_scale;
-  // al.msg ().debug (tmp.str ());
+  std::ostringstream tmp;
+  tmp << "Theta_sat = " << Theta_sat
+      << "\nT_scale = " << T_scale
+      << "\nSMB_scale = " << SMB_scale;
+  msg.debug (tmp.str ());
 }
 
 LitterMulchModel::~LitterMulchModel ()

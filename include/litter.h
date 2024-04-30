@@ -31,7 +31,6 @@ struct Litter : public ModelDerived, public virtual LitterInterface
 {
   static const char *const component;
   symbol library_id () const;
-  void output (Log& log) const;
 
   Litter (const BlockModel&);
   ~Litter ();

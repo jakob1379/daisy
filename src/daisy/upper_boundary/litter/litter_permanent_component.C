@@ -6,6 +6,11 @@
 
 struct LitterPermanentComponent : Litter, LitterPermanentModel
 {
+  void output (Log& log) const
+  {
+    LitterPermanentModel::output (log);
+  }
+
   LitterPermanentComponent (const BlockModel& al)
     : Litter (al),
       LitterPermanentModel(al.number ("vapor_flux_factor"),

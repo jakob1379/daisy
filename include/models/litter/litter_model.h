@@ -5,21 +5,15 @@
 
 struct LitterModel : public virtual LitterInterface
 {
-  double intercept () const
-  { return 1.0; }
-  bool diffuse () const
-  { return false; }
-  double water_protected () const
-  { return 0.0; }
-  double potential_exfiltration () const
-  { return 0.0; }
-  double decompose_factor () const
-  { return 1.0; }
+  void output (Log& log) const;
+  double intercept () const;
+  bool diffuse () const;
+  double water_protected () const;
+  double potential_exfiltration () const;
+  double decompose_factor () const;
   
   // Create and Destroy.
-  LitterModel()
-  { }
-  ~LitterModel ()
-  { }
+  LitterModel();
+  ~LitterModel ();
 };
 #endif // LITTER_MODEL_H

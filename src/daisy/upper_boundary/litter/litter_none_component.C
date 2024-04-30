@@ -1,10 +1,16 @@
 #include "block_model.h"
 #include "librarian.h"
+
 #include "litter.h"
 #include "models/litter/litter_none_model.h"
 
 struct LitterNoneComponent : Litter, LitterNoneModel
 {
+  void output (Log& log) const
+  {
+    LitterNoneModel::output (log);
+  }
+  
   LitterNoneComponent (const BlockModel& al)
     : Litter (al),
       LitterNoneModel()

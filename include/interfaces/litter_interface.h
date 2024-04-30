@@ -25,6 +25,7 @@
 #include "symbol.h"
 
 class Geometry;
+class Log;
 class Soil;
 class SoilWater;
 class SoilHeat;
@@ -35,12 +36,12 @@ class Bioclimate;
 
 struct LitterInterface
 {
+  virtual void output (Log& log) const = 0;
   virtual void tick (const Bioclimate&, const Geometry& geo, const Soil& soil,
 		     const SoilWater& soil_water, const SoilHeat& soil_heat,
 		     OrganicMatter& organic, Chemistry& chemistry,
 		     const double dt,
 		     Treelog& msg) = 0;
-
   virtual double cover () const = 0; // Fraction of surface covered [0-1]
   virtual double intercept () const = 0; // Multiply with cover for rain int. [0-1]
   virtual bool diffuse () const = 0; // True iff water can diffuse to surface.

@@ -38,6 +38,8 @@ struct LitterResidueModel : public LitterModel
   double mass;                    // Surface residuals [kg DM/m^2]
   double cover_;		  // Surface residuals [m^2 mulch/m^2 soil]
 
+  void output (Log& log) const;
+  
   // Simulation.
   void tick (const Bioclimate& bioclimate,
 	     const Geometry& geo, const Soil& soil,
@@ -45,32 +47,18 @@ struct LitterResidueModel : public LitterModel
 	     OrganicMatter& organic, Chemistry& chemistry,
 	     const double dt,
 	     Treelog& msg);
-  double cover () const
-  { return cover_; }
-  double vapor_flux_factor () const
-  { return vapor_flux_factor_; }
-  double water_capacity () const
-  { return mass * water_capacity_; }
-  double albedo () const
-  { return albedo_; }
+  double cover () const;
+  double vapor_flux_factor () const;
+  double water_capacity () const;
+  double albedo () const;
 
   // Create and Destroy.
   LitterResidueModel (double water_capacity,
                       double vapor_flux_factor,
                       double specific_AI,
                       double extinction_coefficent,
-                      double albedo=-1.0)
-    : LitterModel(),
-      water_capacity_ (water_capacity),
-      vapor_flux_factor_ (vapor_flux_factor),
-      specific_AI (specific_AI),
-      extinction_coefficent (extinction_coefficent),
-      albedo_ (albedo),
-      mass (NAN),
-      cover_ (NAN)
-  { }      
-  ~LitterResidueModel ()
-  { }
+                      double albedo);
+  ~LitterResidueModel ();
 };
 
 #endif // LITTER_RESIDUE_H

@@ -10,22 +10,14 @@ struct LitterNoneModel : public LitterModel
 	     const SoilWater& soil_water, const SoilHeat& soil_heat,
 	     OrganicMatter& organic, Chemistry& chemistry,
 	     const double dt,
-	     Treelog& msg)
-  { }
-  double cover () const
-  { return 0.0; }
-  double vapor_flux_factor () const
-  { return 1.0; }
-  double water_capacity () const
-  { return 0.0; }
-  double albedo () const
-  { return -1.0; }
+	     Treelog& msg);
+  double cover () const;
+  double vapor_flux_factor () const;
+  double water_capacity () const;
+  double albedo () const;
 
   // Create and Destroy.
-  LitterNoneModel ()
-    : LitterModel()
-  { }
-  ~LitterNoneModel ()
-  { }
+  LitterNoneModel ();
+  ~LitterNoneModel ();
 };
 #endif

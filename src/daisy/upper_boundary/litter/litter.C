@@ -19,7 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "block_model.h"
-#include "log.h"
+
 #include "litter.h"
 
 const char *const Litter::component = "litter";
@@ -30,13 +30,6 @@ Litter::library_id () const
   static const symbol id (component);
   return id;
 }
-
-void
-Litter::output (Log& log) const
-{
-  output_value (cover (), "cover", log);
-}
-
 
 Litter::Litter (const BlockModel& al)
   : ModelDerived (al.type_name ())
