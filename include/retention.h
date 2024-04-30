@@ -24,30 +24,15 @@
 
 #include "model.h"
 #include "symbol.h"
+#include "interfaces/retention_interface.h"
 
-#include <memory>
-
-class BlockModel;
-class Treelog;
-
-class Retention : public Model
+struct Retention : public Model, public virtual RetentionInterface
 {
   // Content.
-public:
   static const char *const component;
   symbol library_id () const;
 
-  // Simulation.
-public:
-  virtual double h (double Theta) const = 0;
-
-  // Create and Destroy.
-public:
-  virtual void initialize (const double Theta_res, const double h_res,
-			   const double Theta_sat) = 0; //, Treelog&) = 0;
-protected:
   Retention ();
-public:
   ~Retention ();
 };
 

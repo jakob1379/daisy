@@ -18,15 +18,9 @@
 // along with Daisy; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#define BUILD_DLL
-
-#include "litter.h"
 #include "block_model.h"
-#include "librarian.h"
-#include "check.h"
 #include "log.h"
-
-// The 'litter' component.
+#include "litter.h"
 
 const char *const Litter::component = "litter";
 

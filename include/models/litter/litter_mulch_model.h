@@ -1,7 +1,10 @@
 #ifndef LITTER_MULCH_MODEL_H
 #define LITTER_MULCH_MODEL_H
+
 #include <memory>
+
 #include "plf.h"
+
 #include "retention.h"
 #include "models/litter/litter_residue_model.h"
 
@@ -80,19 +83,7 @@ struct LitterMulchModel : public LitterResidueModel
   double decompose_factor () const; // Effect on chemical decomposition []
   void output (Log& log) const;
 
-  // // Create and Destroy.
-  // static double find_Theta_sat (const Frame& al)
-  // {
-  //   const double bulk_density = al.number ("density"); // [kg/m^3]
-  //   const double density = al.number ("particle_density", bulk_density); // [kg/m^3]
-  //   const double water_capacity = al.number ("water_capacity"); // [L/kg]
-  //   const double L_per_m3 = 1000.0; // [L/m^3]
-  //   // [m^3/m^3] = [kg/m^3] * [L/kg] / [L/m^3]
-  //   const double Theta_sat = density * water_capacity / L_per_m3; 
-
-  //   return Theta_sat;
-  // }
-
+  // Create and Destroy.
   LitterMulchModel (double water_capacity,
                     double vapor_flux_factor,
                     double specific_AI,
@@ -118,63 +109,8 @@ struct LitterMulchModel : public LitterResidueModel
                     int decompose_SMB_pool,
                     double decompose_SMB_KM,
                     double SMB_scale,
-                    bool use_soil_decompose);
-  //                   :
-  //   LitterResidueModel (water_capacity,
-  //                       vapor_flux_factor,
-  //                       specific_AI,
-  //                       extinction_coefficient,
-  //                       albedo),
-  //   DOC_name (DOC_name),
-  //   DON_name (DON_name),
-  //   density (density),
-  //   particle_density (particle_density),
-  //   decompose_height (decompose_height),
-  //   evaporate_depth (evaporate_depth),
-  //   soil_height (soil_height),
-  //   Theta_res (Theta_res),
-  //   Theta_sat (Theta_sat),
-  //   h_min (h_min),
-  //   factor_exch (factor_exch),
-  //   alpha (alpha),
-  //   Si (Theta_sat * Si), // This is confusing
-  //   retention (retention),
-  //   decompose_heat_factor (decompose_heat_factor),
-  //   T_scale (T_scale), 
-  //   decompose_water_factor (decompose_water_factor),
-  //   decompose_SMB_pool (decompose_SMB_pool),
-  //   decompose_SMB_KM (decompose_SMB_KM),
-  //   SMB_scale (SMB_scale),
-  //   use_soil_decompose (use_soil_decompose),
-  //   height (NAN),
-  //   contact (NAN),
-  //   water (NAN),
-  //   Theta (NAN),
-  //   h (NAN),
-  //   h1 (NAN),
-  //   h_soil (NAN),
-  //   K_soil (NAN),
-  //   E_darcy (NAN),
-  //   h_factor (NAN),
-  //   T (NAN),
-  //   T_soil (NAN),
-  //   T_factor (NAN),
-  //   SMB_C (NAN),
-  //   SMB_factor (NAN),
-  //   factor (NAN),
-  //   DOC_gen (NAN),
-  //   DON_gen (NAN),
-  //   SOC_gen (NAN),
-  //   SON_gen (NAN)
-  // {
-  //   //TREELOG_MODEL (al.msg ());
-  //   //retention->initialize (Theta_res, h_min, Theta_sat, al.msg ());
-  //   std::ostringstream tmp;
-  //   //tmp << "Theta_sat = " << Theta_sat
-  //   //    << "\nT_scale = " << T_scale
-  //   //   << "\nSMB_scale = " << SMB_scale;
-  //   //al.msg ().debug (tmp.str ());
-  // }
+                    bool use_soil_decompose,
+                    Treelog &msg);
   ~LitterMulchModel ();
 };
 #endif

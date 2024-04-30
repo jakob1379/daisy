@@ -2,7 +2,6 @@
 #include "am.h"
 #include "aom.h"
 #include "bioclimate.h"
-//#include "check.h"
 #include "chemical.h"
 #include "chemistry.h"
 #include "geometry.h"
@@ -256,7 +255,8 @@ LitterMulchModel::LitterMulchModel (double water_capacity,
                                     int decompose_SMB_pool,
                                     double decompose_SMB_KM,
                                     double SMB_scale,
-                                    bool use_soil_decompose)
+                                    bool use_soil_decompose,
+                                    Treelog &msg)
 : LitterResidueModel (water_capacity,
                       vapor_flux_factor,
                       specific_AI,
@@ -306,7 +306,7 @@ LitterMulchModel::LitterMulchModel (double water_capacity,
 {
   //TREELOG_MODEL (al.msg ());
   //retention->initialize (Theta_res, h_min, Theta_sat, al.msg ());
-  retention->initialize (Theta_res, h_min, Theta_sat); //, al.msg ());
+  retention->initialize (Theta_res, h_min, Theta_sat, msg);
   //std::ostringstream tmp;
   // tmp << "Theta_sat = " << Theta_sat
   //     << "\nT_scale = " << T_scale

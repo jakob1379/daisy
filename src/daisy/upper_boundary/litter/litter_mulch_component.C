@@ -78,7 +78,8 @@ struct LitterMulchComponent : Litter, LitterMulchModel
                        al.integer ("decompose_SMB_pool"),
                        al.number ("decompose_SMB_KM"),
                        Abiotic::find_SMB_scale (al),
-                       al.flag ("use_soil_decompose"))
+                       al.flag ("use_soil_decompose"),
+                       al.msg ())
   { }
   ~LitterMulchComponent ()
   { }

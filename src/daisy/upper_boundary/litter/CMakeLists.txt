@@ -8,4 +8,9 @@ target_sources(${DAISY_CORE_NAME} PRIVATE
   litter_residue_component.C
   litter_mulch_component.C
   retention.C
+  retention_exponential_model.C
+  retention_pastis_model.C
+  retention_component.C
+  retention_exponential_component.C
+  retention_pastis_component.C
 )
