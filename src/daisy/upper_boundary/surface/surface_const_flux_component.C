@@ -1,13 +1,18 @@
 #include "block_model.h"
 #include "librarian.h"
 
-#include "surface_simple.h"
+#include "surface.h"
 #include "models/surface/surface_const_flux_model.h"
 
-struct SurfaceConstFluxComponent : SurfaceSimple, SurfaceConstFluxModel
+struct SurfaceConstFluxComponent : Surface, SurfaceConstFluxModel
 {
+  void output (Log& log) const
+  {
+    SurfaceConstFluxModel::output (log);
+  }
+    
   SurfaceConstFluxComponent (const BlockModel& al)
-    : SurfaceSimple (al),
+    : Surface (al),
       SurfaceConstFluxModel (al.number("flux"))
   { }
   ~SurfaceConstFluxComponent()

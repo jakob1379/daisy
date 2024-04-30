@@ -1,24 +1,19 @@
 #include <cmath>
 #include <vector>
 
-#include "check.h"
-#include "surface.h"
 #include "block_model.h"
+#include "check.h"
 #include "librarian.h"
 #include "log.h"
-#include "models/surface/surface_standard_model.h"
 
+#include "surface.h"
+#include "models/surface/surface_standard_model.h"
 
 struct SurfaceStandardComponent : Surface, SurfaceStandardModel
 {
-  void output (Log& log) const override
+  void output (Log& log) const
   {
-    output_variable (T, log);
-    output_value (pond_average, "pond", log);
-    output_variable (pond_section, log);
-    output_variable (EvapSoilSurface, log);
-    output_variable (Eps, log);
-    output_variable (runoff, log);
+    SurfaceStandardModel::output (log);
   }
 
   SurfaceStandardComponent(const BlockModel& al)

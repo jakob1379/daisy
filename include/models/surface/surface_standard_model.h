@@ -16,6 +16,8 @@ class TreeLog;
 
 struct SurfaceStandardModel : public virtual SurfaceInterface
 {
+  void output (Log& log) const;
+  
   // Content.
   const double temperature_change_rate; // [h^-1]
   const double EpFactor_;		// []
@@ -102,35 +104,7 @@ public:
                         double ReservoirConstant,
                         double LocalDetentionCapacity,
                         double R_mixing,
-                        double z_mixing)
-    : temperature_change_rate (temperature_change_rate),
-      EpFactor_ (EpFactor),
-      EpFactor_SWE (EpFactor_SWE),
-      EpFactor_current (EpFactor_),
-      albedo_wet (albedo_wet),
-      albedo_dry (albedo_dry),
-#ifdef FORCED_BOUNDARY
-      use_forced_pressure (use_forced_pressure),
-      forced_pressure_value (forced_pressure),
-      use_forced_flux (use_forced_flux),
-      forced_flux_value (forced_flux),
-#endif // FORCED_BOUNDARY
-      pond_average (NAN),
-      pond_section (pond_section),
-      EvapSoilSurface (0.0),
-      Eps (0.0),
-      T (0.0),
-      DetentionCapacity (DetentionCapacity),
-      ReservoirConstant (ReservoirConstant),
-      LocalDetentionCapacity (LocalDetentionCapacity),
-      runoff (0.0),
-      runoff_rate_ (0.0),
-      R_mixing (R_mixing),
-      z_mixing (z_mixing),
-      print_runoff_rate_ (true)
-  { }
-  
-  ~SurfaceStandardModel ()
-  { }
+                        double z_mixing);
+  ~SurfaceStandardModel ();
 };
 #endif // SURFACE_STANDARD_MODEL_H

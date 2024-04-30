@@ -1,5 +1,8 @@
 #include "models/surface/surface_simple_model.h"
 
+void SurfaceSimpleModel::output(Log&) const
+{ }
+
 void SurfaceSimpleModel::accept_top (double amount, const Geometry&, size_t edge, 
                                      double dt, Treelog&)
 { }

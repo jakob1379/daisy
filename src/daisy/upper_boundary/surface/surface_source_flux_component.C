@@ -1,12 +1,18 @@
-#include "models/surface/surface_source_flux_model.h"
-#include "surface_simple.h"
 #include "block_model.h"
 #include "librarian.h"
 
-struct SurfaceSourceFluxComponent : SurfaceSimple, SurfaceSourceFluxModel
+#include "surface.h"
+#include "models/surface/surface_source_flux_model.h"
+
+struct SurfaceSourceFluxComponent : Surface, SurfaceSourceFluxModel
 {
+  void output (Log& log) const
+  {
+    SurfaceSourceFluxModel::output (log);
+  }
+
   SurfaceSourceFluxComponent(const BlockModel& al)
-    : SurfaceSimple (al),      
+    : Surface (al),
       SurfaceSourceFluxModel (al.units (),
                               al.flag ("interpolate"),
                               Librarian::build_item<Source> (al, "source"))

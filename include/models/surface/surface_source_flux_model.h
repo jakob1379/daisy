@@ -33,20 +33,7 @@ struct SurfaceSourceFluxModel : public SurfaceSimpleModel
   void tick_source (const Time& time, Treelog& msg);
 
   // Create.
-  SurfaceSourceFluxModel (const Units& units, bool interpolate, Source *source)
-    : SurfaceSimpleModel (),
-      units (units),
-      interpolate (interpolate),
-      source (source), 
-      index (0),
-      state (uninitialized),
-      previous_time (42, 1, 1, 0),
-      next_time (42, 1, 1, 0),
-      previous_flux (0.0),
-      next_flux (0.0),
-      flux (0.0)
-  { }
-  ~SurfaceSourceFluxModel ()
-  { }
+  SurfaceSourceFluxModel (const Units& units, bool interpolate, Source *source);
+  ~SurfaceSourceFluxModel ();
 };
 #endif

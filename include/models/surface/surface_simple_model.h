@@ -28,6 +28,8 @@
 struct SurfaceSimpleModel : public virtual SurfaceInterface {
   // Content.
   double T; 			// [dg C]
+
+  void output(Log& log) const;
   
   // Communication with soil water.
   void accept_top (double amount, const Geometry&, size_t edge, double dt, Treelog&);

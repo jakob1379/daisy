@@ -1,13 +1,18 @@
 #include "block_model.h"
 #include "librarian.h"
 
-#include "surface_simple.h"
+#include "surface.h"
 #include "models/surface/surface_const_pressure_model.h"
 
-struct SurfaceConstPressureComponent : SurfaceSimple, SurfaceConstPressureModel
+struct SurfaceConstPressureComponent : Surface, SurfaceConstPressureModel
 {
+  void output (Log& log) const
+  {
+    SurfaceConstPressureModel::output (log);
+  }
+
   SurfaceConstPressureComponent(const BlockModel& al)
-    : SurfaceSimple (al),
+    : Surface (al),
       SurfaceConstPressureModel (al.number("pressure"))
   { }
   ~SurfaceConstPressureComponent()

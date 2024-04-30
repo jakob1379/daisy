@@ -12,6 +12,8 @@ class Time;
 
 struct SurfaceInterface
 {
+  virtual void output(Log& log) const = 0;
+  
   // Communication with soil water.
   enum top_t { forced_pressure, forced_flux, limited_water };
   virtual top_t top_type (const Geometry&, size_t edge) const = 0;

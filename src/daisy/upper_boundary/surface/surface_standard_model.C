@@ -23,20 +23,28 @@
 #define BUILD_DLL
 
 // The 'default' model.
-
-#include "models/surface/surface_standard_model.h"
-#include "geometry1d.h"
-#include "soil.h"
-#include "soil_water.h"
-//#include "log.h"
-#include "mathlib.h"
-#include "plf.h"
-//#include "librarian.h"
-#include "check.h"
-#include "treelog.h"
-//#include "block_model.h"
 #include <memory>
 #include <sstream>
+
+#include "geometry1d.h"
+#include "log.h"
+#include "mathlib.h"
+#include "soil.h"
+#include "soil_water.h"
+#include "treelog.h"
+
+#include "models/surface/surface_standard_model.h"
+
+void SurfaceStandardModel::output (Log& log) const
+{
+    output_variable (T, log);
+    output_value (pond_average, "pond", log);
+    output_variable (pond_section, log);
+    output_variable (EvapSoilSurface, log);
+    output_variable (Eps, log);
+    output_variable (runoff, log);
+  }
+
 
 SurfaceStandardModel::top_t 
 SurfaceStandardModel::top_type (const Geometry& geo, size_t edge) const
@@ -451,3 +459,51 @@ SurfaceStandardModel::initialize (const Geometry& geo)
     }
   update_pond_average (geo);
 }
+
+
+SurfaceStandardModel::SurfaceStandardModel (double temperature_change_rate,
+                                            double EpFactor,
+                                            PLF EpFactor_SWE,
+                                            double albedo_wet,
+                                            double albedo_dry,
+#ifdef FORCED_BOUNDARY
+                                            bool use_forced_pressure,
+                                            double forced_pressure_value,
+                                            bool use_forced_flux,
+                                            double forced_flux_value,
+#endif // FORCED_BOUNDARY
+                                            std::vector<double> pond_section,
+                                            double DetentionCapacity,
+                                            double ReservoirConstant,
+                                            double LocalDetentionCapacity,
+                                            double R_mixing,
+                                            double z_mixing)
+: temperature_change_rate (temperature_change_rate),
+  EpFactor_ (EpFactor),
+  EpFactor_SWE (EpFactor_SWE),
+  EpFactor_current (EpFactor_),
+  albedo_wet (albedo_wet),
+  albedo_dry (albedo_dry),
+#ifdef FORCED_BOUNDARY
+  use_forced_pressure (use_forced_pressure),
+  forced_pressure_value (forced_pressure),
+  use_forced_flux (use_forced_flux),
+  forced_flux_value (forced_flux),
+#endif // FORCED_BOUNDARY
+  pond_average (NAN),
+  pond_section (pond_section),
+  EvapSoilSurface (0.0),
+  Eps (0.0),
+  T (0.0),
+  DetentionCapacity (DetentionCapacity),
+  ReservoirConstant (ReservoirConstant),
+  LocalDetentionCapacity (LocalDetentionCapacity),
+  runoff (0.0),
+  runoff_rate_ (0.0),
+  R_mixing (R_mixing),
+  z_mixing (z_mixing),
+  print_runoff_rate_ (true)
+{ }
+
+SurfaceStandardModel::~SurfaceStandardModel ()
+{ }
