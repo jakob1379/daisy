@@ -54,38 +54,8 @@ void SurfaceSimpleModel::set_svat_temperature (double temp /* dg C */)
 void SurfaceSimpleModel::initialize (const Geometry&)
 { }
 
+SurfaceSimpleModel::SurfaceSimpleModel ()
+{ }
 
-SurfaceConstFluxModel::top_t
-SurfaceConstFluxModel::top_type (const Geometry&, size_t edge) const
-{
-  return forced_flux;
-}
-
-double SurfaceConstFluxModel::q_top (const Geometry&, size_t edge, const double dt) const // [cm/h]
-{
-  return flux;
-}
-
-double SurfaceConstFluxModel::h_top (const Geometry& geo, size_t edge) const // [cm]
-{
-  const double dt = 1.0;       // [h]
-  return -q_top (geo, edge, dt) * dt; 
-}
-
-SurfaceConstPressureModel::top_t
-SurfaceConstPressureModel::top_type (const Geometry&, size_t edge) const
-{
-  return forced_pressure;
-}
-
-double SurfaceConstPressureModel::q_top (const Geometry& geo, size_t edge,
-		const double dt) const // [cm/h]
-{
-  return h_top (geo, edge) / dt;
-}
-
-double SurfaceConstPressureModel::h_top (const Geometry&, size_t edge) const // [cm]
-{
-  return pressure;
-}
-
+SurfaceSimpleModel::~SurfaceSimpleModel ()
+{ }

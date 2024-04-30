@@ -42,13 +42,17 @@ struct SurfaceSimpleModel : public virtual SurfaceInterface {
 
   // Simulation.
   void update_pond_average (const Geometry&);
-  void tick (const Time&, double dt /* [h] */,
+  void tick (const Time&,
+             double dt /* [h] */,
              double PotSoilEvaporationWet, 
              double PotSoilEvaporationDry, 
              double flux_in /* [mm/h] */,
-             double temp /* [dg C] */, const Geometry& geo,
-             const Soil&, const SoilWater&,
-             double soil_T /* [dg C] */, Treelog&);
+             double temp /* [dg C] */,
+             const Geometry& geo,
+             const Soil&,
+             const SoilWater&,
+             double soil_T /* [dg C] */,
+             Treelog&);
 
   // Communication with bioclimate.
   double ponding_average () const; // [mm]
@@ -64,47 +68,9 @@ struct SurfaceSimpleModel : public virtual SurfaceInterface {
   
   // Create.
   void initialize (const Geometry&);
-  SurfaceSimpleModel ()
-  { }
-  ~SurfaceSimpleModel ()
-  { }
+  SurfaceSimpleModel ();
+  ~SurfaceSimpleModel ();
 };
 
-struct SurfaceConstFluxModel : public SurfaceSimpleModel
-{
-  // Content.
-  const double flux;
-
-  top_t top_type (const Geometry&, size_t edge) const;
-  double q_top (const Geometry&, size_t edge, const double dt) const; // [cm/h]
-  double h_top (const Geometry& geo, size_t edge) const; // [cm]
-
-  // Create.
-  SurfaceConstFluxModel (double flux)
-    : SurfaceSimpleModel (),
-      flux (flux) 
-  { }
-  ~SurfaceConstFluxModel ()
-  { }
-};
-
-
-struct SurfaceConstPressureModel : public SurfaceSimpleModel
-{
-  // Content.
-  const double pressure;
-
-  top_t top_type (const Geometry&, size_t edge) const;
-  double q_top (const Geometry& geo, size_t edge, const double dt) const; // [cm/h]
-  double h_top (const Geometry&, size_t edge) const; // [cm]
-
-  // Create.
-  SurfaceConstPressureModel (double pressure)
-    : SurfaceSimpleModel (),
-      pressure (pressure)
-  { }
-  ~SurfaceConstPressureModel ()
-  { }
-};
 
 #endif // SURFACE_SIMPLE_MODEL_H
