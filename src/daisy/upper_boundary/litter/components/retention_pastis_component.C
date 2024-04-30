@@ -2,7 +2,7 @@
 #include "librarian.h"
 
 #include "retention.h"
-#include "models/retention/retention_pastis_model.h"
+#include "models/litter/retention_pastis_model.h"
 
 struct RetentionPASTISComponent : Retention, RetentionPASTISModel
 {

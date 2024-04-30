@@ -1,5 +1,5 @@
 #include "mathlib.h"
-#include "models/retention/retention_pastis_model.h"
+#include "models/litter/retention_pastis_model.h"
 
 double RetentionPASTISModel::h (const double Theta) const
 {

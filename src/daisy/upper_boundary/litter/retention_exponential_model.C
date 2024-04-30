@@ -3,7 +3,7 @@
 #include "mathlib.h"
 #include "treelog.h"
 
-#include "models/retention/retention_exponential_model.h"
+#include "models/litter/retention_exponential_model.h"
 
 double RetentionExponentialModel::h (const double Theta) const // []->[cm]
 {

@@ -3,7 +3,7 @@
 #include "librarian.h"
 
 #include "retention.h"
-#include "models/retention/retention_exponential_model.h"
+#include "models/litter/retention_exponential_model.h"
 
 struct RetentionExponentialComponent : Retention, RetentionExponentialModel
 {
