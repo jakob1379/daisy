@@ -81,4 +81,12 @@ if (${BUILD_CXX_TESTS})
   cxx_unit_test(ut_mathlib)
   cxx_unit_test_mock(ut_solver_ublas)
   cxx_unit_test_mock(ut_solver_cxsparse)
+  
+  cxx_unit_test(ut_retention_exponential_model
+    ${CMAKE_SOURCE_DIR}/src/daisy/upper_boundary/litter/retention_exponential_model.C
+  )
+  cxx_unit_test(ut_retention_pastis_model
+    ${CMAKE_SOURCE_DIR}/src/daisy/upper_boundary/litter/retention_pastis_model.C
+   #${CMAKE_SOURCE_DIR}/src/object_model/treelog.C
+  )
 endif()
