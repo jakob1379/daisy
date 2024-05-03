@@ -10,7 +10,7 @@ class Soil;
 class SoilWater;
 class Time;
 
-struct SurfaceInterface
+struct ISurface
 {
   virtual void output(Log& log) const = 0;
   
@@ -54,7 +54,7 @@ struct SurfaceInterface
   
   // Create.
   virtual void initialize (const Geometry&) = 0;
-  virtual ~SurfaceInterface () {};
+  virtual ~ISurface () {};
 };
 
 #endif // SURFACE_INTERFACE_H

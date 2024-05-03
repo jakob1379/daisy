@@ -34,7 +34,7 @@ class Chemistry;
 class Treelog;
 class Bioclimate;
 
-struct LitterInterface
+struct ILitter
 {
   virtual void output (Log& log) const = 0;
   virtual void tick (const Bioclimate&, const Geometry& geo, const Soil& soil,
@@ -53,7 +53,7 @@ struct LitterInterface
   virtual double decompose_factor () const = 0;	  // Effect on chemicals []
   
   // Create and Destroy.
-  virtual ~LitterInterface () {}
+  virtual ~ILitter () {}
 };
 
 #endif // LITTER_H

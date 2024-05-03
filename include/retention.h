@@ -26,7 +26,7 @@
 #include "symbol.h"
 #include "interfaces/retention_interface.h"
 
-struct Retention : public Model, public virtual RetentionInterface
+struct Retention : public Model, public virtual IRetention
 {
   // Content.
   static const char *const component;

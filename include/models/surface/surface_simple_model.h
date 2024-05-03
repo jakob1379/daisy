@@ -25,7 +25,7 @@
 
 #include "interfaces/surface_interface.h"
 
-struct SurfaceSimpleModel : public virtual SurfaceInterface {
+struct SurfaceSimpleModel : public virtual ISurface {
   // Content.
   double T; 			// [dg C]
 

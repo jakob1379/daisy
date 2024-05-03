@@ -3,7 +3,7 @@
 
 #include "interfaces/retention_interface.h"
 
-struct RetentionPASTISModel : public virtual RetentionInterface
+struct RetentionPASTISModel : public virtual IRetention
 {
   double Theta_res;
   double h_min;

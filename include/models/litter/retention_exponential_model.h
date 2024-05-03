@@ -3,7 +3,7 @@
 
 #include "interfaces/retention_interface.h"
 
-struct RetentionExponentialModel : public virtual RetentionInterface
+struct RetentionExponentialModel : public virtual IRetention
 {
   double k; 			// [cm^-1]
   double Theta_res;		// []

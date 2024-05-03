@@ -14,7 +14,7 @@ class SoilWater;
 class Time;
 class TreeLog;
 
-struct SurfaceStandardModel : public virtual SurfaceInterface
+struct SurfaceStandardModel : public virtual ISurface
 {
   void output (Log& log) const;
   

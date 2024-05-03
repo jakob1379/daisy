@@ -27,7 +27,7 @@
 
 class BlockModel;
 
-struct Litter : public ModelDerived, public virtual LitterInterface
+struct Litter : public ModelDerived, public virtual ILitter
 {
   static const char *const component;
   symbol library_id () const;

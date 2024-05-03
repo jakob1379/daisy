@@ -5,7 +5,7 @@
 
 class Treelog;
 
-struct RetentionInterface
+struct IRetention
 {
   // Simulation.
   virtual double h (double Theta) const = 0;
@@ -15,7 +15,7 @@ struct RetentionInterface
                            const double h_res,
 			   const double Theta_sat,
                            Treelog& msg) = 0;
-  virtual ~RetentionInterface ()
+  virtual ~IRetention ()
   { }
 };
 

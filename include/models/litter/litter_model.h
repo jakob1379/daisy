@@ -3,7 +3,7 @@
 
 #include "interfaces/litter_interface.h"
 
-struct LitterModel : public virtual LitterInterface
+struct LitterModel : public virtual ILitter
 {
   void output (Log& log) const;
   double intercept () const;

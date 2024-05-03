@@ -30,7 +30,7 @@
 
 class BlockModel;
 
-struct Surface : public ModelDerived, public virtual SurfaceInterface
+struct Surface : public ModelDerived, public virtual ISurface
 {
   static const char *const component;
   symbol library_id () const;
