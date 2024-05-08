@@ -2838,7 +2838,7 @@ static struct ChemicalFOCUSSyntax : public DeclareModel
   { return new ChemicalFOCUS (al); }
   void load_frame (Frame& frame) const
   {
-    frame.set_strings ("cite", "focus2002", "focussw2002");
+    frame.set_strings ("cite", "focusgw2002", "focussw2002");
     frame.declare ("B", Attribute::None (), Check::none (),
 		   Attribute::Const, "Soil moisture effect parameter.");
     frame.set_cited ("B", 0.49, "Section 7.4.5", "focussw2002");
