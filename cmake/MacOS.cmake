@@ -78,7 +78,7 @@ set(_dylibs_rel_path
 foreach(_dylib_rel_path ${_dylibs_rel_path})
   set(_old_lib_id "${HOMEBREW_PREFIX}/opt/${_dylib_rel_path}")
   cmake_path(GET _old_lib_id FILENAME _dylib)
-  set(_new_lib_id "@rpath/lib/${_dylib}")
+  set(_new_lib_id "@rpath/${_dylib}")
 
   message("-change ${_old_lib_id} ${_new_lib_id}")
   add_custom_command(TARGET daisy
