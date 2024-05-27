@@ -52,18 +52,23 @@ install(DIRECTORY ${_dylib_target_dir}
 
 # Update daisy binary so it knows to look in @executable_path for dylibs
 # First update the rpath.
-# For the installed binary we use @executable_path directly because it is installed to
+# For the installed binary we use @executable_path/lib because we install to
 #  <prefix/bin
 # which contain lib/ with shared libraries.
-# For the build binary we use @executable_path/bin because the binary is not moved to the bin dir
+# For the build binary we use @executable_path/bin/lib because the binary is not moved to bin
 set_target_properties(daisy
   PROPERTIES
-  INSTALL_RPATH "@executable_path"
-  BUILD_RPATH "@executable_path/bin"
+  INSTALL_RPATH "@executable_path/lib"
+  BUILD_RPATH "@executable_path/bin/lib"
 )
 
 # Then update the id of dylibs
 # This is brittle. Would be nice to get the dir path dynamically.
+# In some cases the dylibs are already specified with an rpath. As long as this is @rpath/<lib-name>
+# , e.g. @rpath/libcxsparse.4.dylib, everything should be fine.
+# Setting CMAKE_BUILD_RPATH_USE_ORIGIN=OFF, as is done CMakePresets.json for macos,  should result
+# in absolute paths that we then match. But again, this seems like something that will fail every
+# once in a while, so we should find a more robust approach.
 set(_dylibs_rel_path
   "suite-sparse/lib/libcxsparse.4.dylib"
   "suite-sparse/lib/libsuitesparseconfig.7.dylib"
