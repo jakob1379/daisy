@@ -104,7 +104,7 @@ Download the source code and setup a build dir
     
 Build it
 
-    cmake ../../ --preset mingw-gcc-release
+    cmake ../../ --preset mingw-gcc-native
     cmake --build .
 
 Test it
