@@ -1,6 +1,6 @@
-// function.h -- Pure functions of one parameter.
+// denprod.h --- Find products of denitrification.
 // 
-// Copyright 2023 KU
+// Copyright 2018, 2024 KU.
 //
 // This file is part of Daisy.
 // 
@@ -19,46 +19,42 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef DENPROD_H
+#define DENPROD_H
 
-#include "model.h"
+#include "model_derived.h"
 #include "symbol.h"
 #include <vector>
 
+class Geometry;
+class Soil;
+class SoilWater;
+class Chemical;
+class OrganicMatter;
+class Treelog;
 class BlockModel;
 
-class Function : public Model
+class Denprod : public ModelDerived
 {
   // Content.
 public:
   static const char *const component;
+  symbol library_id () const;
 
   // Simulation.
 public:
-  virtual double value (const double) const = 0;
-
-  // Utility
-public:
-  virtual void plot_xy (std::vector<double>& x, std::vector<double>& y) const;
-
+  virtual void split (const std::vector<double>& N, const Geometry& geo,
+		      const Soil& soil, const SoilWater& soil_water,
+		      Chemical& soil_NO3, const OrganicMatter& organic,
+		      Treelog& msg) = 0;
+  
   // Create and Destroy.
-protected:
-  Function (const BlockModel&);
 public:
-  ~Function ();
-};
-
-class FunctionPlotable : public Function
-{
+  virtual void initialize (const Geometry&) = 0;
 protected:
-  void plot_xy (std::vector<double>& x, std::vector<double>& y) const;
-  virtual double x_min () const = 0;
-  virtual double x_max () const = 0;
-  FunctionPlotable (const BlockModel&);
-  ~FunctionPlotable ();
+  Denprod (const BlockModel&);
+public:
+  ~Denprod ();
 };
 
-#endif // FUNCTION_H
-
-// function.h ends here.
+#endif // DENPROD_H
