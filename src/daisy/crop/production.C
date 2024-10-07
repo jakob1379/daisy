@@ -736,7 +736,7 @@ Production::load_syntax (Frame& frame)
 	      "Maintenance respiration coefficient, stem.");
   frame.declare ("r_SOrg", "d^-1", Attribute::Const,
 	      "Maintenance respiration coefficient, storage organ.");
-  frame.declare ("ExfoliationFac", Attribute::None (), Attribute::Const,
+  frame.declare ("ExfoliationFac", "h^-1", Attribute::Const,
 	      "Exfoliation factor, 0-1.");
   frame.set ("ExfoliationFac", 1.0);
   frame.declare ("LfDR", "DS", "d^-1", Attribute::Const,

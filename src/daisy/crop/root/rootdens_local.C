@@ -285,15 +285,20 @@ RootdensLocal::internal_growth (const Geometry& geo,
 	}
 	// Put all the roots in the cell.
 	I[c] = extended_cell_roots / extended_V;
+	daisy_assert (std::isfinite (I[c]));
     }
 
   // Scale to available roots.
   const double I_tot = geo.total_soil (I);
-  const double factor = delta_root / I_tot;
-  for (size_t c = 0; c < cell_size; c++)
-    I[c] *= factor;
+  if (std::isnormal (I_tot))
+    {
+      const double factor = delta_root / I_tot;
+      daisy_assert (std::isfinite (factor));
+      for (size_t c = 0; c < cell_size; c++)
+	I[c] *= factor;
   
-  daisy_approximate (geo.total_soil (I), delta_root);
+      daisy_approximate (geo.total_soil (I), delta_root);
+    }
 
   for (size_t c = 0; c < cell_size; c++)
     I[c] = std::min (I[c], L[c] * max_internal_growth_rate);
