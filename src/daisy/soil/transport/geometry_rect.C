@@ -20,16 +20,16 @@
 
 #define BUILD_DLL
 
-#include "geometry_rect.h"
-#include "volume.h"
-#include "check.h"
-#include "vcheck.h"
-#include "block_model.h"
-#include "frame.h"
-#include "librarian.h"
-#include "treelog.h"
-#include "assertion.h"
-#include "mathlib.h"
+#include "daisy/soil/transport/geometry_rect.h"
+#include "daisy/soil/transport/volume.h"
+#include "object_model/check.h"
+#include "object_model/vcheck.h"
+#include "object_model/block_model.h"
+#include "object_model/frame.h"
+#include "object_model/librarian.h"
+#include "object_model/treelog.h"
+#include "util/assertion.h"
+#include "util/mathlib.h"
 #include <sstream>
 
 size_t 
@@ -230,21 +230,28 @@ The end points are listed ascending from left (0.0) to right.");
 				  VCheck::min_size_1 ());
   frame.set_check ("xplus", xplus_check);
 }
-  
+
+
 GeometryRect::GeometryRect (const Block& al)
-  : GeometryVert (al), 
-    cell_rows_ (al.number_sequence ("zplus").size ()),
-    cell_columns_ (al.number_sequence ("xplus").size ())
+  : GeometryRect (al.number_sequence ("zplus"),
+                  al.number_sequence ("xplus"))
+{ }
+
+GeometryRect::GeometryRect (const std::vector<double> &zplus,
+                            const std::vector<double> &xplus)
+  : GeometryVert (), 
+    cell_rows_ (zplus.size ()),
+    cell_columns_ (xplus.size ())
 {
   // Initialize base.
   size_ = cell_columns () * cell_rows ();
 
   // Extract grid information from parameters.
-  const std::vector<double> z_end (al.number_sequence ("zplus"));
+  const std::vector<double> z_end = zplus; //(al.number_sequence ("zplus"));
   std::vector<double> z_center;
   std::vector<double> z_distance;
   initialize_intervals (z_end, z_center, z_distance);
-  const std::vector<double> x_end (al.number_sequence ("xplus"));
+  const std::vector<double> x_end = xplus; //(al.number_sequence ("xplus"));
   std::vector<double> x_center;
   std::vector<double> x_distance;
   initialize_intervals (x_end, x_center, x_distance);

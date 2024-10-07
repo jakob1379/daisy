@@ -20,17 +20,17 @@
 
 #define BUILD_DLL
 
-#include "unit_model.h"
-#include "check.h"
-#include "librarian.h"
-#include "frame.h"
-#include "block_model.h"
-#include "mathlib.h"
-#include "convert.h"
-#include "units.h"
-#include "model.h"
-#include "frame.h"
-#include "memutils.h"
+#include "object_model/unit_model.h"
+#include "object_model/check.h"
+#include "object_model/librarian.h"
+#include "object_model/frame.h"
+#include "object_model/block_model.h"
+#include "util/mathlib.h"
+#include "object_model/convert.h"
+#include "object_model/units.h"
+#include "object_model/model.h"
+#include "object_model/frame.h"
+#include "util/memutils.h"
 #include <sstream>
 
 const char *const MUnit::component = "unit";
@@ -346,9 +346,9 @@ Connvert to SI base units by multiplying with a factor.")
          "Per millimeter.");
 
     add ("m^-2", 1.0, -2, 0, 0, 0, 0, 0, 0,
-         "Per aquare meter.");
+         "Per square meter.");
     add ("cm^-2", 1.0 / p_c_2, -2, 0, 0, 0, 0, 0, 0,
-         "Per aquare centimeter.");
+         "Per square centimeter.");
     add ("cm R/cm^3", p_c / p_c_3, -2, 0, 0, 0, 0, 0, 0,
          "Root length per cubic centimeter.");
     

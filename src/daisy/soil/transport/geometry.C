@@ -20,17 +20,17 @@
 
 #define BUILD_DLL
 
-#include "geometry.h"
-#include "volume.h"
-#include "check.h"
-#include "vcheck.h"
-#include "treelog.h"
-#include "frame_submodel.h"
-#include "assertion.h"
-#include "mathlib.h"
-#include "librarian.h"
-#include "plf.h"
-#include "check.h"
+#include "daisy/soil/transport/geometry.h"
+#include "daisy/soil/transport/volume.h"
+#include "object_model/check.h"
+#include "object_model/vcheck.h"
+#include "object_model/treelog.h"
+#include "object_model/frame_submodel.h"
+#include "util/assertion.h"
+#include "util/mathlib.h"
+#include "object_model/librarian.h"
+#include "object_model/plf.h"
+#include "object_model/check.h"
 #include <sstream>
 
 const int Geometry::cell_above;
@@ -863,6 +863,11 @@ Geometry::build_common ()
       edge_area_per_length_.push_back (edge_area (e) / length);
     }
 }
+
+Geometry::Geometry ()
+  : size_ (0)
+{ }
+
 
 Geometry::Geometry (const Block&)
   : size_ (0)
