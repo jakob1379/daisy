@@ -15,11 +15,12 @@ in the source dirrectory.
 Install dependencies
 * cmake
 * boost (filesystem and system)
-* suitesparse 
+* suitesparse
+* g++
 
 Using apt
 
-    apt install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev
+    apt g++ install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev
 
 [CMakePresets.json](CMakePresets.json) define setups for building with gcc and clang on linux.
 
