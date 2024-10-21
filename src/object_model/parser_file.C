@@ -1307,7 +1307,8 @@ ParserFile::Implementation::load_list (Frame& frame)
 			      return;
 
 			    if (has == Attribute::Unknown ()
-				|| want == Attribute::Unknown ())
+				|| want == Attribute::Unknown ()
+				|| want == Attribute::User ())
 			      return;
 
 			    static const symbol empty ("");
