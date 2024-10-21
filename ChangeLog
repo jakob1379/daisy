@@ -1,3 +1,12 @@
+2024-10-21  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/util/function_Python.C: New function model.
+
+2024-10-18  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/object_model/parameter_types/number_apply.C: New model.
+	* src/object_model/toplevel.C (Toplevel::run): Start python.
+
 2024-10-07  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/daisy/crop/root/rootdens_local.C

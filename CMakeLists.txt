@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.25)
 project(
-  daisy
+  daisy-epy
   VERSION 7.0.0
   DESCRIPTION "Mechanistic simulation of agricultural fields"
   HOMEPAGE_URL https://daisy.ku.dk/
   LANGUAGES CXX C
 )
 include(cmake/AddCoverageBuildType.cmake)
+
+# Python interface
+set(PYBIND11_FINDPYTHON ON)
+find_package(pybind11 REQUIRED)
+
+link_libraries(pybind11::embed)
 
 # Make Daisy version available to version.C
 add_definitions( -DDAISY_VERSION="${CMAKE_PROJECT_VERSION}" )
