@@ -18,6 +18,10 @@
 	("Drain Sink NO3", "Drain Sink NH4"): Remove dimension.
 	("Fertilizer"): Add spec.
 
+2024-10-22  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/util/function_Python.C: Better error messages.
+
 2024-10-21  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/util/function_Python.C: New function model.
