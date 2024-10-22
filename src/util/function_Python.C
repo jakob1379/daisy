@@ -36,23 +36,58 @@ struct FunctionPython : public Function
   const symbol pname;
   const symbol domain;
   const symbol range;
+
+  mutable pybind11::object py_module;
+  mutable pybind11::object py_function;
+  mutable enum class state_t { uninitialized, working, error } state;
   
   // Simulation.
   double value (const double arg) const
   {
-    try
+    switch (state)
       {
-	pybind11::object py_module
-	  = pybind11::module::import (pmodule.name ().c_str ());
-	pybind11::object py_object = py_module.attr(pname.name ().c_str ())(arg);
-	return py_object.cast<double> ();
-      }
-    catch (...)
-      {
-	Assertion::message ("Could not find Python function '"
-			    + pname + "' in '" + pmodule + ".");
+      case state_t::error:
 	return NAN;
+      case state_t::uninitialized:
+	// Find module.
+	try
+	  {
+	    py_module = pybind11::module::import (pmodule.name ().c_str ());
+	  }
+	catch (...)
+	  {
+	    Assertion::message ("Could not find Python module '"
+				+ pmodule + ".");
+	    break;
+	  }
+
+	// Find function.
+	try
+	  {
+	    py_function = py_module.attr(pname.name ().c_str ());
+	  }
+	catch (...)
+	  {
+	    Assertion::message ("Can't find Python function '"
+				+ pname + "' in '" + pmodule + "'.");
+	    break;
+	  }
+	state = state_t::working;
+	/* fall through */
+      case state_t::working:
+	try
+	  {
+	    pybind11::object py_object = py_function (arg);
+	    return py_object.cast<double> ();
+	  }
+	catch (...)
+	  {
+	    Assertion::message ("Call to Python function '"
+				+ pname + "' in '" + pmodule + "' failed.");
+	  }
       }
+    state = state_t::error;
+    return NAN;
   }
 
   // Create.
@@ -61,7 +96,8 @@ struct FunctionPython : public Function
       pmodule (al.name ("module")),
       pname (al.name ("name")),
       domain (al.name ("domain")),
-      range (al.name ("range"))
+      range (al.name ("range")),
+      state (state_t::uninitialized)
   { }
 };
 
