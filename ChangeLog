@@ -18,6 +18,13 @@
 	("Drain Sink NO3", "Drain Sink NH4"): Remove dimension.
 	("Fertilizer"): Add spec.
 
+2024-10-30  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption.h:
+	* src/daisy/chemicals/adsorption.C (AdsorptionLinear): Removed.
+	* src/daisy/chemicals/adsorption_linear.C (AdsorptionLinearOld):
+	Renamed to AdsorptionLinear.
+
 2024-10-22  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/util/function_Python.C: Better error messages.

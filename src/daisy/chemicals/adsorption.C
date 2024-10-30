@@ -106,12 +106,6 @@ transported with the water.")
   { Model::load_model (frame); }
 } Adsorption_init;
 
-// "linear" special.
-
-AdsorptionLinear::AdsorptionLinear (const BlockModel& al)
-  : Adsorption (al)
-{ }
-
 // "none" model.
 
 class AdsorptionNone : public Adsorption

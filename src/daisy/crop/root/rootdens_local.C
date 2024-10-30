@@ -36,7 +36,7 @@
 #include "daisy/soil/soil_water.h"
 #include "daisy/soil/soil_heat.h"
 #include "daisy/soil/abiotic.h"
-#include "util/function.h"
+#include "object_model/function.h"
 #include <sstream>
 #include <algorithm>
 

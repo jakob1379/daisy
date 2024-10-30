@@ -1,5 +1,4 @@
 target_sources(${DAISY_CORE_NAME} PRIVATE
-  function_Python.C
   anystate.C
   assertion.C
   complex_functions.C
@@ -7,7 +6,6 @@ target_sources(${DAISY_CORE_NAME} PRIVATE
   filepos.C
   format.C
   format_LaTeX.C
-  function.C
   gaussj.C
   hyp_2F1.C
   iterative.C

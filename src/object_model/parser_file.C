@@ -40,7 +40,7 @@
 #include "object_model/librarian.h"
 #include "object_model/frame_model.h"
 #include "object_model/frame_submodel.h"
-#include "util/function.h"
+#include "object_model/function.h"
 #include <set>
 #include <memory>
 #include <sstream>

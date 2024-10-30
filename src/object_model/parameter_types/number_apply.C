@@ -23,7 +23,7 @@
 #include "object_model/parameter_types/number.h"
 #include "object_model/units.h"
 #include "util/memutils.h"
-#include "util/function.h"
+#include "object_model/function.h"
 #include "object_model/block_model.h"
 #include "object_model/librarian.h"
 #include "object_model/submodeler.h"
