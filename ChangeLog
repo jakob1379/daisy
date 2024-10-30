@@ -20,6 +20,13 @@
 
 2024-10-30  Per Abrahamsen  <pa@plen.ku.dk>
 
+	* include/daisy/soil/soil.h: 
+	* src/daisy/soil/soil.C (Soil::texture_fractile): New function.
+
+
+	* include/daisy/soil/texture.h: 
+	* src/daisy/soil/texture.C (Texture::fractile): New function.
+
 	* src/daisy/chemicals/adsorption.h:
 	* src/daisy/chemicals/adsorption.C (AdsorptionLinear): Removed.
 	* src/daisy/chemicals/adsorption_linear.C (AdsorptionLinearOld):

@@ -23,6 +23,7 @@
 
 #include "daisy/soil/soil.h"
 #include "daisy/soil/horizon.h"
+#include "daisy/soil/texture.h"
 #include "daisy/soil/transport/geometry.h"
 #include "daisy/soil/hydraulic.h"
 #include "daisy/soil/tortuosity.h"
@@ -408,6 +409,10 @@ Soil::clay (size_t i) const
 double 
 Soil::texture_below (size_t i, double size) const
 { return horizon (i).texture_below (size); }
+
+double /* [um] */
+Soil::texture_fractile (size_t i, double fraction /* [] */) const
+{ return horizon (i).texture ().fractile (fraction); }
 
 double 
 Soil::humus (size_t i) const

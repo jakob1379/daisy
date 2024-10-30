@@ -1,6 +1,6 @@
-// adsorption_linear.C -- Lininear adsorption.
+// adsorption_linear.C -- Linear adsorption.
 // 
-// Copyright 1996-2001 Per Abrahamsen and SÃ¸ren Hansen
+// Copyright 1996-2001 Per Abrahamsen and Søren Hansen
 // Copyright 2000-2001 KVL.
 //
 // This file is part of Daisy.
