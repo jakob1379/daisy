@@ -61,12 +61,4 @@ public:
   ~Adsorption ();
 };
 
-// Linear adsorption is treated specially in some solute transport models.
-struct AdsorptionLinear : public Adsorption
-{
-  virtual double K (const Soil& soil, size_t c) const = 0;
-protected:
-  AdsorptionLinear (const BlockModel&);
-};
-
 #endif // ADSORPTION_H
