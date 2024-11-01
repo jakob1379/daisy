@@ -170,7 +170,7 @@ static struct AdsorptionPythonSyntax : DeclareModel
     return new AdsorptionPython (al);
   }
   AdsorptionPythonSyntax ()
-    : DeclareModel (Adsorption::component, "linear", "\
+    : DeclareModel (Adsorption::component, "Python", "\
 Adsorption defined in user specified Python module.")
   { }
   void load_frame (Frame& frame) const
