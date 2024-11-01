@@ -38,7 +38,7 @@ double /* [um] */
 Texture::fractile (double fraction /* [] */) const
 {
   PLF inverse = accumulated.inverse ();
-  return std::pow (10.0, inverse (fraction));
+  return std::exp (inverse (fraction));
 }
 
 double 
