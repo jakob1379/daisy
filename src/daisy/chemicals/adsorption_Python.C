@@ -178,11 +178,29 @@ Adsorption defined in user specified Python module.")
     frame.declare_string ("module", Attribute::Const, "\
 Python module to find the functions.");
     frame.declare_string ("C_to_M", Attribute::Const, "\
-Name of function to convert concentration [g/cm^3 WATER] to\n\
-mass [g/cm^3 SPACE].");
+Name of function to convert concentration to mass.\n\
+C_to_M (C, Theta_sat, Theta, rho_b, f_OC, f_clay, d50, T)\n\
+C: [g CHEMICAL/cm^3 WATER] concentration in soil water\n\
+Theta_sat: [cm^3 WATER/cm^3 SPACE] saturated water content\n\
+Theta: [cm^3 WATER/cm^3 SPACE] actual water content\n\
+rho_b: [g SOIL/cm^3 SPACE] dry bulk density\n\
+f_OC: [g OC/g SOIL] organic carbon content in soil\n\
+f_clay: [g clay/g SOIL] soil clay fraction\n\
+d50: [um] median particle diameter\n\
+T: [dg C] soil temperature\n\
+-> [g CHEMICAL/cm^3 SPACE] total content in soil/water/air.");
     frame.declare_string ("M_to_C", Attribute::Const, "\
-Name of the function to convert mass [g/cm^3 SPACE] to\n\
-concentration [g/cm^3 WATER].");
+Name of the function to convert mass to concentration.\n\
+M_to_C (M, Theta_sat, Theta, rho_b, f_OC, f_clay, d50, T)\n\
+M: [g CHEMICAL/cm^3 SPACE] total content in soil/water/air\n\
+Theta_sat: [cm^3 WATER/cm^3 SPACE] saturated water content\n\
+Theta: [cm^3 WATER/cm^3 SPACE] actual water content\n\
+rho_b: [g SOIL/cm^3 SPACE] dry bulk density\n\
+f_OC: [g OC/g SOIL] organic carbon content in soil\n\
+f_clay: [g clay/g SOIL] soil clay fraction\n\
+d50: [um] median particle diameter\n\
+T: [dg C] soil temperature\n\
+-> [g CHEMICAL/cm^3 WATER] concentration in soil water.");
   }
 } AdsorptionPython_syntax;
 
