@@ -88,13 +88,17 @@ Install build environment
 
 Install daisy dependencies
     
-    pacman -S mingw-w64-ucrt-x86_64-suitesparse mingw-w64-ucrt-x86_64-boost
-    
+    pacman -S mingw-w64-ucrt-x86_64-suitesparse mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-pybind11 mingw-w64-ucrt-x86_64-python
+	
+   
 Download the source code and setup a build dir
 
     git clone git@github.com:daisy-model/daisy.git
     mkdir -p daisy/build/release
     cd daisy/build/release
+
+
+Download a python distribution from https://www.python.org/downloads/windows/ and unpack to `daisy/python/<python-release-name>`. Then update `Python_ROOT_DIR` in `cmake/MinGW.cmake` to point to the directory you just unpacked.
     
 Build it
 
