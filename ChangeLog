@@ -18,13 +18,23 @@
 	("Drain Sink NO3", "Drain Sink NH4"): Remove dimension.
 	("Fertilizer"): Add spec.
 
+2024-11-21  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/nitrification_solute.C (tick): Multiply with
+	Theta.
+	* include/daisy/chemicals/nitrification.h: Update signature.
+	* src/daisy/chemicals/nitrification_soil.C:
+	* src/daisy/chemicals/reaction_nit.C (tick_soil): Pass Theta.
+	* include/daisy/soil/soil.h:
+	* src/daisy/soil/horizon.C:
+
 2024-10-30  Per Abrahamsen  <pa@plen.ku.dk>
 
-	* include/daisy/soil/soil.h: 
+	* include/daisy/soil/soil.h:
 	* src/daisy/soil/soil.C (Soil::texture_fractile): New function.
 
 
-	* include/daisy/soil/texture.h: 
+	* include/daisy/soil/texture.h:
 	* src/daisy/soil/texture.C (Texture::fractile): New function.
 
 	* src/daisy/chemicals/adsorption.h:

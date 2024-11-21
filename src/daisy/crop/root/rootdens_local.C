@@ -174,7 +174,7 @@ RootdensLocal::expansion (const Geometry& geo,
       const double fE		// Expansion factor []
 	= (flooded[c] > 0.0) ? 0.0 : 1.0;
 	
-      if (L[c] > DensRtTip)
+      if (L[c] > DensRtTip * 0.99)
 	// Ignore existing root zone
 	continue;
 
