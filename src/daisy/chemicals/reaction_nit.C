@@ -94,7 +94,8 @@ ReactionNitrification::tick_soil (const Geometry& geo,
         soil.nitrification (i, 
                             soil_NH4.M_primary (i), 
 			    soil_NH4.C_primary (i), 
-                            soil_water.h (i), soil_heat.T (i),
+                            soil_water.Theta (i),
+			    soil_water.h (i), soil_heat.T (i),
                             NH4[i], N2O[i], NO3[i]);
       else
         NH4[i] = N2O[i] = NO3[i] = 0.0;        

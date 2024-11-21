@@ -506,10 +506,10 @@ Soil::output (Log& log) const
 
 void 
 Soil::nitrification (const size_t i,
-                     const double M, const double C, 
+                     const double M, const double C, const double Theta,
                      const double h, const double T,
                      double& NH4, double& N2O, double& NO3) const
-{ horizon (i).nitrification (M, C, h,  T, NH4, N2O, NO3); }
+{ horizon (i).nitrification (M, C, Theta, h,  T, NH4, N2O, NO3); }
 
 double
 Soil::MaxRootingHeight () const
