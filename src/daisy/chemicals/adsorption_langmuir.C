@@ -30,6 +30,8 @@
 #include "object_model/treelog.h"
 #include "object_model/frame.h"
 
+static const double c_fraction_in_humus = 0.587;
+
 class AdsorptionLangmuir : public Adsorption
 {
   // Parameters.
@@ -43,7 +45,8 @@ public:
 		 const int i, const double C, double sf) const
     {
       const double my_max 
-	= my_max_clay * soil.clay (i) + my_max_OC * soil.humus (i);
+	= my_max_clay * soil.clay (i)
+	+ my_max_OC * c_fraction_in_humus * soil.humus (i);
       const double S = (my_max * C) / (K + C);
       return sf * soil.dry_bulk_density (i) * S + Theta * C;
     }
@@ -60,7 +63,9 @@ public:
       //
       // So we get a square equation.  We use the positive solution.
       
-      const double my_max = my_max_clay * soil.clay (i);
+      const double my_max 
+	= my_max_clay * soil.clay (i)
+	+ my_max_OC * c_fraction_in_humus * soil.humus (i);
 
       const double a = Theta;
       const double b = sf * soil.dry_bulk_density (i) * my_max + Theta * K - M;
