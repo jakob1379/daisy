@@ -21,7 +21,7 @@ Install dependencies
 
 Using apt
 
-    apt install g++ cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev pybind11
+    apt install g++ cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev python3-pybind11
 
 [CMakePresets.json](CMakePresets.json) define setups for building with gcc and clang on linux.
 
