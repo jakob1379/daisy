@@ -33,8 +33,16 @@ add_compile_options(
 )
 
 if (${OS} STREQUAL "macos")
+  if(DEFINED ENV{HOMEBREW_PREFIX}) 
+    set(HOMEBREW_PREFIX $ENV{HOMEBREW_PREFIX})
+  else()
+    message("HOMEBREW_PREFIX not set in environment. Defaulting to /usr/local")
+    set(HOMEBREW_PREFIX /usr/local)
+  endif()
+  message("Using HOMEBREW_PREFIX = ${HOMEBREW_PREFIX}")
+  
   # Hack until we update program_spawn.C to use new interface
-  set(Boost_DIR /usr/local/opt/boost@1.85/lib/cmake/Boost-1.85.0)
+  set(Boost_DIR ${HOMEBREW_PREFIX}/opt/boost@1.85/lib/cmake/Boost-1.85.0)
 endif()
  
 find_package(Boost 1.74 REQUIRED CONFIG COMPONENTS filesystem system)

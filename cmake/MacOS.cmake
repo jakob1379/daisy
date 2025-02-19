@@ -3,13 +3,6 @@ set(DAISY_SAMPLE_DESTINATION "${DAISY_PACKAGE_INSTALL_DIRECTORY}/sample")
 set(DAISY_LIB_DESTINATION "${DAISY_PACKAGE_INSTALL_DIRECTORY}/lib")
 set(DAISY_CORE_NAME ${DAISY_BIN_NAME})
 
-if(DEFINED ENV{HOMEBREW_PREFIX}) 
-  set(HOMEBREW_PREFIX $ENV{HOMEBREW_PREFIX})
-else()
-  message("HOMEBREW_PREFIX not set in environment. Defaulting to /usr/local")
-  set(HOMEBREW_PREFIX /usr/local)
-endif()
-
 target_include_directories(${DAISY_BIN_NAME} PUBLIC include)
 target_compile_options(${DAISY_BIN_NAME} PRIVATE ${COMPILE_OPTIONS})
 target_link_options(${DAISY_BIN_NAME} PRIVATE ${LINKER_OPTIONS})
