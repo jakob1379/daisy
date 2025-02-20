@@ -15,11 +15,13 @@ in the source dirrectory.
 Install dependencies
 * cmake
 * boost (filesystem and system)
-* suitesparse 
+* suitesparse
+* g++
+* pybind11
 
 Using apt
 
-    apt install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev
+    apt install g++ cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev python3-pybind11
 
 [CMakePresets.json](CMakePresets.json) define setups for building with gcc and clang on linux.
 
@@ -54,9 +56,13 @@ For the generic linux installer it is necesary to set the environment variable `
 TODO: Need to figure out static linking vs specifying depends in the package. The deb package and similar should probably be dynamically linked with depends, and the generic installer should probably be statically linked.
 
 ### MacOS
+#### Note on python suppport
+At the moment we rely on users manually installing python from python.org. The current version is python 3.13.2, which should be downloaded from https://www.python.org/downloads/release/python-3132/ and installed before building. Other dependencies are installed with brew. The reason we do not use brew to install python, is because it would then require that users also used brew to install python and we prefer the on-click installer from python.org.
+
+
 Install dependencies
 
-    brew install cmake boost suite-sparse 
+    brew install cmake boost@1.85 suite-sparse pybind11
 
 Download the source code and setup a build dir
 

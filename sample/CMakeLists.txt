@@ -60,3 +60,4 @@ install(FILES
   test-spawn.dai
   test_T_min.py
   DESTINATION ${DAISY_SAMPLE_DESTINATION} COMPONENT sample)
+add_subdirectory(python)

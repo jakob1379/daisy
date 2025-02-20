@@ -30,10 +30,12 @@
 #include "object_model/treelog.h"
 #include "object_model/frame.h"
 
+static const double c_fraction_in_humus = 0.587;
+
 class AdsorptionLangmuir : public Adsorption
 {
   // Parameters.
-  const double K;
+  const double B;		// = [1/K]
   const double my_max_clay;
   const double my_max_OC;
 
@@ -43,8 +45,9 @@ public:
 		 const int i, const double C, double sf) const
     {
       const double my_max 
-	= my_max_clay * soil.clay (i) + my_max_OC * soil.humus (i);
-      const double S = (my_max * C) / (K + C);
+	= my_max_clay * soil.clay (i)
+	+ my_max_OC * c_fraction_in_humus * soil.humus (i);
+      const double S = (my_max * C) / (B + C);
       return sf * soil.dry_bulk_density (i) * S + Theta * C;
     }
   double M_to_C (const Soil& soil, const double Theta, const double T,
@@ -52,19 +55,21 @@ public:
     {
       // We need to solve the following equation w.r.t. C.
       //
-      //     M = rho (my_max C) / (K + C) + Theta C
+      //     M = rho (my_max C) / (B + C) + Theta C
       // ==>
-      //     M (K + C) = rho my_max C + Theta C (K + C)
+      //     M (B + C) = rho my_max C + Theta C (B + C)
       // ==> 
-      //     0 = Theta C^2 + (rho my_max + Theta K - M) C - M K
+      //     0 = Theta C^2 + (rho my_max + Theta B - M) C - M B
       //
       // So we get a square equation.  We use the positive solution.
       
-      const double my_max = my_max_clay * soil.clay (i);
+      const double my_max 
+	= my_max_clay * soil.clay (i)
+	+ my_max_OC * c_fraction_in_humus * soil.humus (i);
 
       const double a = Theta;
-      const double b = sf * soil.dry_bulk_density (i) * my_max + Theta * K - M;
-      const double c = - M * K;
+      const double b = sf * soil.dry_bulk_density (i) * my_max + Theta * B - M;
+      const double c = - M * B;
 
       return single_positive_root_of_square_equation (a, b, c);
     }
@@ -72,7 +77,7 @@ public:
 public:
   AdsorptionLangmuir (const BlockModel& al)
     : Adsorption (al),
-      K (al.number ("K")),
+      B (1.0/al.number ("K")),
       my_max_clay (al.number ("my_max_clay", 0.0)),
       my_max_OC (al.check ("my_max_OC") 
 		    ? al.number ("my_max_OC") 
@@ -100,18 +105,19 @@ static struct AdsorptionLangmuirSyntax : DeclareModel
   }
   AdsorptionLangmuirSyntax ()
     : DeclareModel (Adsorption::component, "Langmuir", "\
-M = rho (my_max C) / (K + C) + Theta C")
+M = rho (my_max C) / ((1/K) + C) + Theta C")
   { }
   void load_frame (Frame& frame) const
   {
     frame.add_check (check_alist);
-    frame.declare ("K", "g/cm^3", Check::non_negative (), Attribute::Const, "Half saturation constant.");
-    frame.declare ("my_max_clay", "g/cm^3", Check::non_negative (), 
-		Attribute::OptionalConst,
-		"Max adsorption capacity (clay).\n\
+    frame.declare ("K", "cm^3/g", Check::positive (), Attribute::Const,
+		   "Slope parameter.");
+    frame.declare ("my_max_clay", "g/g", Check::non_negative (), 
+		   Attribute::OptionalConst,
+		   "Max adsorption capacity (clay).\n\
 It is multiplied with the soil clay fraction to get the clay part of\n\
 'my_max'.  If 'my_max_OC' is specified, 'my_max_clay' defaults to 0.");
-    frame.declare ("my_max_OC", "g/cm^3", Check::non_negative (), 
+    frame.declare ("my_max_OC", "g/g", Check::non_negative (), 
 		Attribute::OptionalConst,
 		"Max adsorption capacity (humus).\n\
 It is multiplied with the soil organic carbon fraction to get the\n\
