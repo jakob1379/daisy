@@ -147,7 +147,8 @@ struct ReactionAdsorption : public Reaction
   void initialize (const Geometry& geo, 
                    const Soil& soil, const SoilWater& soil_water, 
                    const SoilHeat& soil_heat,
-		   const OrganicMatter&, const Surface&, Treelog& msg)
+		   const OrganicMatter&, const Chemistry&,
+		   const Surface&, Treelog& msg)
   { 
     adsorption_source.insert (adsorption_source.begin (), soil.size (), 0.0);
     daisy_assert (adsorption_source.size () == soil.size ());

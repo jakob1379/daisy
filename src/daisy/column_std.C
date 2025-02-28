@@ -1147,7 +1147,7 @@ ColumnStandard::initialize (const Metalib& metalib,
   
   // Solutes depends on water and heat.
   chemistry->initialize (scope, geometry, *soil, *soil_water, *soil_heat, 
-                         *organic_matter, *surface, msg);
+                         *organic_matter, *chemistry, *surface, msg);
 
   // Movement depends on soil, soil_water, and groundwater
   if (!movement->initialize (units, *soil, *soil_water, *groundwater,

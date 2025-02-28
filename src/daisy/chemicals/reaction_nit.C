@@ -59,7 +59,8 @@ struct ReactionNitrification : public Reaction
 	      Treelog& msg) const;
   void initialize (const Geometry&, 
                    const Soil&, const SoilWater&, const SoilHeat&, 
-                   const OrganicMatter&, const Surface&, Treelog&);
+                   const OrganicMatter&, const Chemistry&,
+		   const Surface&, Treelog&);
   explicit ReactionNitrification (const BlockModel& al);
 };
 
@@ -131,7 +132,8 @@ void
 ReactionNitrification::initialize (const Geometry&,
                                    const Soil& soil, 
                                    const SoilWater&, const SoilHeat&,
-                                   const OrganicMatter&, const Surface&,
+                                   const OrganicMatter&, const Chemistry&,
+				   const Surface&,
 				   Treelog&)
 {
   const size_t cell_size = soil.size ();

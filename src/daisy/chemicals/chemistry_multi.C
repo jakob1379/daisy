@@ -116,7 +116,8 @@ struct ChemistryMulti : public Chemistry
   // Create & Destroy.
   void initialize (const Scope&, const Geometry&,
                    const Soil&, const SoilWater&, const SoilHeat&, 
-                   const OrganicMatter&, const Surface&, Treelog&);
+                   const OrganicMatter&, const Chemistry&,
+		   const Surface&, Treelog&);
   bool check (const Scope&, const Geometry&, 
 	      const Soil&, const SoilWater&, const SoilHeat&,
 	      const OrganicMatter&, const Chemistry&,
@@ -509,11 +510,12 @@ ChemistryMulti::initialize (const Scope& scope,
 			    const SoilWater& soil_water,
 			    const SoilHeat& soil_heat,
 			    const OrganicMatter& organic,
+			    const Chemistry& chemistry, 
 			    const Surface& surface, Treelog& msg)
 {
   for (size_t c = 0; c < combine.size (); c++)
     combine[c]->initialize (scope, geo, soil, soil_water, soil_heat,
-			    organic, surface, msg);
+			    organic, chemistry, surface, msg);
 }
 
 bool 

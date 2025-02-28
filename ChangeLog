@@ -1,3 +1,9 @@
+2025-02-28  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* include/daisy/chemicals/reaction.h:
+	* include/daisy/chemicals/chemistry.h (initialize): Take
+	'chemistry' parameter.
+
 2025-01-27  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/object_model/model.C (Model::obsolete)

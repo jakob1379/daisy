@@ -173,6 +173,7 @@ struct ReactionPython : public Reaction
   void initialize (const Geometry& geo, 
                    const Soil& soil, const SoilWater& soil_water,
                    const SoilHeat& soil_heat, const OrganicMatter&,
+		   const Chemistry& chemistry,
 		   const Surface&, Treelog& msg)
   {
     switch (state)

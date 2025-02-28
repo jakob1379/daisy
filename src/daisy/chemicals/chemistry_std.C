@@ -116,7 +116,8 @@ struct ChemistryStandard : public Chemistry
   // Create & Destroy.
   void initialize (const Scope& scope, const Geometry& geo,
                    const Soil&, const SoilWater&, const SoilHeat&, 
-                   const OrganicMatter&, const Surface&, Treelog&);
+                   const OrganicMatter&, const Chemistry&,
+		   const Surface&, Treelog&);
   bool check (const Scope& scope, const Geometry&,
 	      const Soil&, const SoilWater&, const SoilHeat&,
 	      const OrganicMatter&, const Chemistry&,
@@ -487,6 +488,7 @@ ChemistryStandard::initialize (const Scope& scope,
                                const SoilWater& soil_water,
 			       const SoilHeat& soil_heat,
 			       const OrganicMatter& organic,
+			       const Chemistry& chemistry,
 			       const Surface& surface, Treelog& msg)
 {
   for (size_t c = 0; c < chemicals.size (); c++)
@@ -495,7 +497,7 @@ ChemistryStandard::initialize (const Scope& scope,
 
   for (size_t r = 0; r < reactions.size (); r++)
     reactions[r]->initialize (geo, soil, soil_water, soil_heat, organic,
-			      surface, 
+			      chemistry, surface, 
                               msg);
 }
 
