@@ -50,6 +50,9 @@ struct ReactionPython : public Reaction
   typedef decltype(&Chemical::C_primary) in_handle_t;
   const std::vector<in_handle_t> solute_in_handle;
   const std::vector<symbol> solute_in_tag;
+
+  const std::vector<symbol> texture_tag;
+  const std::vector<double> texture_size;
   
   const std::set<symbol> extra;
   
@@ -79,16 +82,32 @@ struct ReactionPython : public Reaction
     if (psoil == Attribute::None () || state != state_t::working)
       return;
 
-#if 0
-    Chemical& soil_NO3 = chemistry.find (Chemical::NO3 ());
-#endif
-
     TREELOG_MODEL (msg);
     const size_t cell_size = soil.size ();
     pybind11::dict kwargs;
     for (size_t i = 0; i < cell_size; i++)
       {
+	// "solute_in"
+	for (size_t p = 0; p < solute_in_name.size (); p++)
+	  {
+	    const symbol name = solute_in_name[p];
+	    const symbol tag = solute_in_tag[p];
+	    const Chemical& chemical = chemistry.find (name);
+	    const in_handle_t handle = solute_in_handle[p];
+	    const double value = (chemical.*handle)(i);
+	    kwargs[tag.name ().c_str ()] = value;
+	  }
 
+	// "texture"
+	for (size_t p = 0; p < texture_tag.size (); p++)
+	  {
+	    const symbol tag = texture_tag[p];
+	    const double size = texture_size[p];
+	    const double value = soil.texture_below (i, size);
+	    kwargs[tag.name ().c_str ()] = value;
+	  }
+
+	// "extra".
 	if (extra.find ("Theta") != extra.end ())
 	  kwargs["Theta"] = soil_water.Theta (i);
 	if (extra.find ("h") != extra.end ())
@@ -278,6 +297,24 @@ struct ReactionPython : public Reaction
     return result;
   }
 
+  static std::vector<symbol> extract_texture_tag (const BlockModel& al)
+  {
+    const auto seq = al.submodel_sequence ("texture");
+    std::vector<symbol> result;
+    for (auto i: seq)
+      result.push_back (i->name ("tag"));
+    return result;
+  }
+
+  static std::vector<double> extract_texture_size (const BlockModel& al)
+  {
+    const auto seq = al.submodel_sequence ("texture");
+    std::vector<double> result;
+    for (auto i: seq)
+      result.push_back (i->number ("size"));
+    return result;
+  }
+
   static std::vector<out_handle_t> extract_out_handle (const BlockModel& al)
   {
     const auto seq = al.submodel_sequence ("solute_out");
@@ -310,6 +347,8 @@ struct ReactionPython : public Reaction
       solute_in_name (extract_chemical (al, "solute_in")),
       solute_in_handle (extract_in_handle (al)),
       solute_in_tag (extract_tag (al, "solute_in")),
+      texture_tag (extract_texture_tag (al)),
+      texture_size (extract_texture_size (al)),
       extra (v2s (al.name_sequence ("extra"))),
       solute_out_name (extract_chemical (al, "solute_out")),
       solute_out_handle (extract_out_handle (al)),
