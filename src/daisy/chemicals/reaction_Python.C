@@ -45,8 +45,7 @@ struct ReactionPython : public Reaction
   const symbol pmodule;
   const symbol psoil;
 
-  
-  const std::vector<symbol> solute_in_name;
+    const std::vector<symbol> solute_in_name;
   typedef decltype(&Chemical::C_primary) in_handle_t;
   const std::vector<in_handle_t> solute_in_handle;
   const std::vector<symbol> solute_in_tag;
@@ -56,10 +55,10 @@ struct ReactionPython : public Reaction
   
   const std::set<symbol> extra;
   
-  const std::vector<symbol> solute_out_name;
+  const std::vector<symbol> out_name;
   typedef decltype(&Chemical::add_to_transform_source) out_handle_t;
-  const std::vector<out_handle_t> solute_out_handle;
-  const std::vector<symbol> solute_out_tag;
+  const std::map<symbol, out_handle_t> out_handle;
+  const std::vector<symbol> out_tag;
   
   const symbol ptop;
 
@@ -69,9 +68,19 @@ struct ReactionPython : public Reaction
   pybind11::object py_top;
   enum class state_t { uninitialized, working, error } state;
 
+  // Stoe all output here.
+  std::map<symbol,std::vector<double>> out;
+
   // Output.
   void output (Log& log) const
-  { }
+  {
+    for (symbol tag: out_tag)
+      {
+	auto entry = out.find (tag);
+	daisy_assert (entry != out.end ());
+	log.output_entry (tag, out.find (tag)->second);
+      }
+  }
 
   // Simulation.
   void tick_soil (const Geometry& geo,
@@ -127,14 +136,44 @@ struct ReactionPython : public Reaction
 
 	try
 	  {
-	    pybind11::object py_object = py_soil (**kwargs);
+	    pybind11::object result = py_soil (**kwargs);
+	    if (!pybind11::isinstance<pybind11::dict> (result))
+	      {
+		msg.error ("'" + psoil + "' does not return dictionary");
+		state = state_t::error;
+		break;
+	      }
+	    pybind11::dict dictionary = result;
+	    for (auto item : dictionary)
+	      {
+		const symbol key = item.first.cast<std::string>();
+		const double value = item.second.cast<double>();
+		auto entry = out.find (key);
+		if (entry == out.end ())
+		  {
+		    msg.error ("'" + psoil + "' return bad key '" + key + "'");
+		    state = state_t::error;
+		    continue;
+		  }
+		std::vector<double>& array = entry->second;
+		daisy_assert (array.size () > i);
+		array[i] = value;
+	      }
 	  }
 	catch (...)
 	  {
 	    msg.error ("Call to Python function '"
 		       + psoil + "' in '" + pmodule + "' failed");
 	    state = state_t::error;
+	    break;
 	  }
+      }
+
+    // Put data back to chemical.
+    for (auto [key,  handle] : out_handle)
+      {
+	Chemical& chemical = chemistry.find (key);
+	(chemical.*handle)(out[key]);
       }
   }
 
@@ -179,11 +218,13 @@ struct ReactionPython : public Reaction
 	    ok = false;
 	  }
       }
-    for (symbol name : solute_out_name)
+    for (int i = 0; i < out_name.size (); i++)
       {
-	if (!chemistry.know (name))
+	const symbol name = out_name[i];
+	if (!chemistry.know (name)
+	    && out_handle.find (name) != out_handle.end ())
 	  {
-	    msg.error ("Unknown output chemical '" + name + "'");
+	    msg.error ("Can't handle output chemical '" + name + "'");
 	    ok = false;
 	  }
       }
@@ -243,6 +284,12 @@ struct ReactionPython : public Reaction
 	    }
       }
     state = state_t::working;
+
+    const size_t cell_size = geo.cell_size ();
+    for (symbol key: out_tag)
+      out[key] = std::vector<double> (cell_size, -42.42e42);
+      
+      
   }
   static std::set<symbol> v2s (const std::vector<symbol>& v)
   { return std::set (v.begin (), v.end ()); }
@@ -315,27 +362,21 @@ struct ReactionPython : public Reaction
     return result;
   }
 
-  static std::vector<out_handle_t> extract_out_handle (const BlockModel& al)
+  static std::map<symbol, out_handle_t>
+  /**/ extract_out_handle (const BlockModel& al)
   {
-    const auto seq = al.submodel_sequence ("solute_out");
-    static std::vector<out_handle_t> result;
+    const auto seq = al.submodel_sequence ("out");
+    static std::map<symbol,out_handle_t> result;
     for (auto i: seq)
       {
+	const symbol name = (i->name ("tag", i->name ("chemical")));
 	if (!i->check ("handle"))
-	  {
-	    result.push_back (&Chemical::add_to_transform_source);
-	    continue;
-	  }
+	  continue;
 	const symbol handle = i->name ("handle");
 	if (handle == "primary")
-	  result.push_back (&Chemical::add_to_transform_source);
+	  result[name] = (&Chemical::add_to_transform_source);
 	else if (handle == "secondary")
-	  result.push_back (&Chemical::add_to_transform_source_secondary);
-	else 
-	  {
-	    result.push_back (&Chemical::add_to_transform_source);
-	    daisy_bug ("Unknown out handle '" + handle + "'");
-	  }
+	  result[name] = (&Chemical::add_to_transform_source_secondary);
       }
     return result;
   }
@@ -350,9 +391,9 @@ struct ReactionPython : public Reaction
       texture_tag (extract_texture_tag (al)),
       texture_size (extract_texture_size (al)),
       extra (v2s (al.name_sequence ("extra"))),
-      solute_out_name (extract_chemical (al, "solute_out")),
-      solute_out_handle (extract_out_handle (al)),
-      solute_out_tag (extract_tag (al, "solute_out")),
+      out_name (extract_chemical (al, "out")),
+      out_handle (extract_out_handle (al)),
+      out_tag (extract_tag (al, "out")),
       ptop (al.name ("top", Attribute::None ())),
       state (state_t::uninitialized)
   { }
@@ -394,27 +435,18 @@ Include particles below this size.");
     frame.order ("tag", "size");
   }
 
-  static void load_solute_out (Frame& frame)
+  static void load_out (Frame& frame)
   {
     frame.declare_string ("chemical", Attribute::Const, "\
 Name of chemical.");
-    static const VCheck::InLibrary is_chemical (Chemical::component);
-    frame.set_check ("chemical", is_chemical);
     frame.declare_string ("handle", Attribute::OptionalConst, "\
 Where to add it.\n\
 One of 'primary', 'secondary'.");
-    static const VCheck::Enum is_handle ("primary", "secondary");
+    static const VCheck::Enum is_handle ("primary", "secondary", "none");
     frame.set_check ("handle", is_handle);
     frame.declare_string ("tag", Attribute::OptionalConst, "\
 Name to use both for logging and as Python output.");
     frame.order ("chemical", "handle", "tag");
-  }
-
-  static void load_gas_out (Frame& frame)
-  {
-    frame.declare_string ("tag", Attribute::Const, "\
-Name to use both for logging and as Python output.");
-    frame.order ("tag");
   }
 
   void load_frame (Frame& frame) const
@@ -457,11 +489,11 @@ Options include:\n\
       }
     } extra_check;
     frame.set_check ("extra", extra_check);
-    frame.declare_submodule_sequence ("solute_out", Attribute::Const, "\
-List of solute sources generated by Python as output.", load_solute_out);
-    frame.declare_submodule_sequence ("gas_out", Attribute::Const, "\
-List of gasses produced.", load_gas_out);
+    frame.declare_submodule_sequence ("out", Attribute::Const, "\
+List of Python as output.", load_out);
     frame.declare_string ("top", Attribute::OptionalConst, "\
 Name of Python function for above ground reactions.");
   }
 } ReactionPython_syntax;
+
+// reaction_Python.C ends here.
