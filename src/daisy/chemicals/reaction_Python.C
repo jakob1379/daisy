@@ -45,10 +45,10 @@ struct ReactionPython : public Reaction
   const symbol pmodule;
   const symbol psoil;
 
-    const std::vector<symbol> solute_in_name;
+  const std::vector<symbol> in_name;
   typedef decltype(&Chemical::C_primary) in_handle_t;
-  const std::vector<in_handle_t> solute_in_handle;
-  const std::vector<symbol> solute_in_tag;
+  const std::vector<in_handle_t> in_handle;
+  const std::vector<symbol> in_tag;
 
   const std::vector<symbol> texture_tag;
   const std::vector<double> texture_size;
@@ -96,13 +96,13 @@ struct ReactionPython : public Reaction
     pybind11::dict kwargs;
     for (size_t i = 0; i < cell_size; i++)
       {
-	// "solute_in"
-	for (size_t p = 0; p < solute_in_name.size (); p++)
+	// "in"
+	for (size_t p = 0; p < in_name.size (); p++)
 	  {
-	    const symbol name = solute_in_name[p];
-	    const symbol tag = solute_in_tag[p];
+	    const symbol name = in_name[p];
+	    const symbol tag = in_tag[p];
 	    const Chemical& chemical = chemistry.find (name);
-	    const in_handle_t handle = solute_in_handle[p];
+	    const in_handle_t handle = in_handle[p];
 	    const double value = (chemical.*handle)(i);
 	    kwargs[tag.name ().c_str ()] = value;
 	  }
@@ -210,7 +210,7 @@ struct ReactionPython : public Reaction
   { 
     TREELOG_MODEL (msg);
     bool ok = true;
-    for (symbol name : solute_in_name)
+    for (symbol name : in_name)
       {
 	if (!chemistry.know (name))
 	  {
@@ -304,7 +304,7 @@ struct ReactionPython : public Reaction
   }
   static std::vector<in_handle_t> extract_in_handle (const BlockModel& al)
   {
-    const auto seq = al.submodel_sequence ("solute_in");
+    const auto seq = al.submodel_sequence ("in");
     static std::vector<in_handle_t> result;
     for (auto i: seq)
       {
@@ -385,9 +385,9 @@ struct ReactionPython : public Reaction
     : Reaction (al),
       pmodule (al.name ("module")),
       psoil (al.name ("soil", Attribute::None ())),
-      solute_in_name (extract_chemical (al, "solute_in")),
-      solute_in_handle (extract_in_handle (al)),
-      solute_in_tag (extract_tag (al, "solute_in")),
+      in_name (extract_chemical (al, "in")),
+      in_handle (extract_in_handle (al)),
+      in_tag (extract_tag (al, "in")),
       texture_tag (extract_texture_tag (al)),
       texture_size (extract_texture_size (al)),
       extra (v2s (al.name_sequence ("extra"))),
@@ -407,7 +407,7 @@ static struct ReactionPythonSyntax : public DeclareModel
     : DeclareModel (Reaction::component, "Python", "\
 Python interface for chemical reactions above and below ground.")
   { }
-  static void load_solute_in (Frame& frame)
+  static void load_in (Frame& frame)
   {
     frame.declare_string ("chemical", Attribute::Const, "\
 Name of chemical.");
@@ -455,8 +455,8 @@ Name to use both for logging and as Python output.");
 Python module to find the functions.");
     frame.declare_string ("soil", Attribute::OptionalConst, "\
 Name of Python function for soil reactions.");
-    frame.declare_submodule_sequence ("solute_in", Attribute::Const, "\
-List of solutes to pass to Python as input.", load_solute_in);
+    frame.declare_submodule_sequence ("in", Attribute::Const, "\
+List of solutes to pass to Python as input.", load_in);
     frame.declare_submodule_sequence ("texture", Attribute::Const, "\
 List of texture classes to pass to Python.", load_texture);
     frame.declare_string ("extra",
