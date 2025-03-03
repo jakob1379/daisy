@@ -77,8 +77,10 @@ struct ReactionPython : public Reaction
     for (symbol tag: out_tag)
       {
 	auto entry = out.find (tag);
-	daisy_assert (entry != out.end ());
-	log.output_entry (tag, out.find (tag)->second);
+	if (entry == out.end ())
+	  daisy_bug ("'" + tag + "' not found");
+	else
+	  log.output_entry (tag, out.find (tag)->second);
       }
   }
 
@@ -119,6 +121,10 @@ struct ReactionPython : public Reaction
 	// "extra".
 	if (extra.find ("Theta") != extra.end ())
 	  kwargs["Theta"] = soil_water.Theta (i);
+	if (extra.find ("Theta_primary") != extra.end ())
+	  kwargs["Theta_primary"] = soil_water.Theta_primary (i);
+	if (extra.find ("Theta_secondary") != extra.end ())
+	  kwargs["Theta_secondary"] = soil_water.Theta_secondary (i);
 	if (extra.find ("h") != extra.end ())
 	  kwargs["h"] = soil_water.h (i);
 	if (extra.find ("rho_b") != extra.end ())
@@ -468,6 +474,8 @@ Options include:\n\
   z [cm]: Height above soil surface (always negative).\n\
   rho_b [g S/cm^3]: Soil dry bulk density.\n\
   Theta [cm^3 W/cm^3 V]: Water per system volume.\n\
+  Theta_primary [cm^3 W/cm^3 V]: Water in primary domain per system volume.\n\
+  Theta_secondary [cm^3 W/cm^3 V]: Water in secondary domain per sys. volume.\n\
   h [cm]: Soil water potential.\n\
   T [dg C]: Temperature.\n\
   CO2_C [g C/cm^3 V/h]: CO2 production rate per system volume.\n\
@@ -481,6 +489,8 @@ Options include:\n\
 	add ("z");
 	add ("rho_b");
 	add ("Theta");
+	add ("Theta_primary");
+	add ("Theta_secondary");
 	add ("h");
 	add ("T");
 	add ("CO2_C");
