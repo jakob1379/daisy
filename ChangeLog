@@ -1,3 +1,11 @@
+2025-03-04  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* include/daisy/chemicals/adsorption.h: 
+	* src/daisy/chemicals/adsorption.C (M_to_C_bisect):
+	New function.
+	* src/daisy/chemicals/adsorption_Python.C (M_to_C): Use
+	'M_to_C_bisect' if no Python function is specified.
+
 2025-03-03  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/daisy/chemicals/reaction_Python.C: New model.

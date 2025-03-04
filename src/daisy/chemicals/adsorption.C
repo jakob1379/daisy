@@ -75,13 +75,39 @@ Adsorption::C_to_M2 (const Soil& soil, double Theta, double T, int i, double C) 
   const double sf = 1.0 - soil.primary_sorption_fraction (i);
   return C_to_M (soil, Theta, T, i, C, sf);
 }
-double 
 
-Adsorption::M_to_C2 (const Soil& soil, double Theta, double T, int i, double M) const
+double 
+Adsorption::M_to_C2 (const Soil& soil,
+		     double Theta, double T, int i, double M) const
 {
   const double sf = 1.0 - soil.primary_sorption_fraction (i);
   return M_to_C (soil, Theta, T, i, M, sf);
 }
+
+double
+Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
+			   int i, double M, double sf,
+			   double C_lower, double C_upper) const
+{
+  double M_lower = C_to_M (soil, Theta, T, i, C_lower, sf);
+  double M_upper = C_to_M (soil, Theta, T, i, C_upper, sf);
+  daisy_assert (M >= M_lower);
+  daisy_assert (M <= M_upper);
+
+  while (true)
+    {
+      const double C_guess = (C_lower + C_upper) / 2.0;
+      const double M_guess = C_to_M (soil, Theta, T, i, C_guess, sf);
+
+      if (M_guess > M)
+	C_upper = C_guess;
+      else if (M_guess < M)
+	C_lower = C_guess;
+      else
+	return C_guess;
+    }
+}
+
 
 Adsorption::Adsorption (const char *const type)
   : ModelDerived (symbol (type))

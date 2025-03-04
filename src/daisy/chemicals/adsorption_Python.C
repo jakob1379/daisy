@@ -82,17 +82,18 @@ struct AdsorptionPython : public Adsorption
 	  }
 
 	// Find M_to_C
-	try
-	  {
-	    py_M_to_C = py_module.attr(pM_to_C.name ().c_str ());
-	  }
-	catch (...)
-	  {
-	    Assertion::message ("Can't find Python function '"
-				+ pM_to_C + "' in '" + pmodule + "'.");
-	    state = state_t::error;
-	    return;
-	  }
+	if (pM_to_C != Attribute::None ())
+	  try
+	    {
+	      py_M_to_C = py_module.attr(pM_to_C.name ().c_str ());
+	    }
+	  catch (...)
+	    {
+	      Assertion::message ("Can't find Python function '"
+				  + pM_to_C + "' in '" + pmodule + "'.");
+	      state = state_t::error;
+	      return;
+	    }
       }
     state = state_t::working;
   }
@@ -132,6 +133,9 @@ public:
     if (state != state_t::working)
       return NAN;
 
+    if (pM_to_C == Attribute::None ())
+      return M_to_C_bisect (soil, Theta, T, i, M, sf, 0.0, 1.0);
+
     try
       {
 	const double Theta_sat = soil.Theta_sat (i);	// [cm^3 W/cm^3 Sp]
@@ -158,7 +162,7 @@ public:
     : Adsorption (al),
       pmodule (al.name ("module")),
       pC_to_M (al.name ("C_to_M")),
-      pM_to_C (al.name ("M_to_C")),
+      pM_to_C (al.name ("M_to_C", Attribute::None ())),
       state (state_t::uninitialized)
   { }
 };
@@ -189,7 +193,7 @@ f_clay: [g clay/g SOIL] soil clay fraction\n\
 d50: [um] median particle diameter\n\
 T: [dg C] soil temperature\n\
 -> [g CHEMICAL/cm^3 SPACE] total content in soil/water/air.");
-    frame.declare_string ("M_to_C", Attribute::Const, "\
+    frame.declare_string ("M_to_C", Attribute::OptionalConst, "\
 Name of the function to convert mass to concentration.\n\
 M_to_C (M, Theta_sat, Theta, rho_b, f_OC, f_clay, d50, T)\n\
 M: [g CHEMICAL/cm^3 SPACE] total content in soil/water/air\n\
@@ -200,7 +204,9 @@ f_OC: [g OC/g SOIL] organic carbon content in soil\n\
 f_clay: [g clay/g SOIL] soil clay fraction\n\
 d50: [um] median particle diameter\n\
 T: [dg C] soil temperature\n\
--> [g CHEMICAL/cm^3 WATER] concentration in soil water.");
+-> [g CHEMICAL/cm^3 WATER] concentration in soil water.\n\
+\n\
+By default this will use C_to_M and bisection between 0 and 1.");
   }
 } AdsorptionPython_syntax;
 

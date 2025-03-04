@@ -45,6 +45,10 @@ private:
 			 int i, double C, double sf) const = 0;
   virtual double M_to_C (const Soil&, double Theta, double T,
 			 int i, double M, double sf) const = 0;
+protected:
+  double M_to_C_bisect (const Soil&, double Theta, double T,
+			int i, double M, double sf,
+			double C_lower, double C_upper) const;
 public:
   double C_to_M_total (const Soil&, double Theta, double T,
 		       int i, double C) const;
