@@ -45,7 +45,7 @@ if (${OS} STREQUAL "macos")
   set(Boost_DIR ${HOMEBREW_PREFIX}/opt/boost@1.85/lib/cmake/Boost-1.85.0)
 endif()
  
-find_package(Boost 1.74 REQUIRED CONFIG COMPONENTS filesystem system)
+find_package(Boost 1.81 REQUIRED CONFIG COMPONENTS filesystem system)
 message(STATUS "Boost version: ${Boost_VERSION}")
 
 SET(COMPILE_OPTIONS
