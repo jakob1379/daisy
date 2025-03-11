@@ -10,6 +10,7 @@ target_include_directories(${DAISY_CORE_NAME} PUBLIC include)
 target_link_libraries(${DAISY_CORE_NAME} PUBLIC
   cxsparse
   Boost::filesystem
+  Boost::process
 )
 target_link_options(${DAISY_CORE_NAME} PRIVATE ${LINKER_OPTIONS})
 add_library(windows SHARED)
@@ -32,7 +33,8 @@ install(FILES
   $ENV{MINGW_PREFIX}/bin/libgomp-1.dll
   $ENV{MINGW_PREFIX}/bin/libcxsparse.dll
   $ENV{MINGW_PREFIX}/bin/libsuitesparseconfig.dll
-  $ENV{MINGW_PREFIX}/bin/libboost_filesystem-mt.dll
+  $ENV{MINGW_PREFIX}/bin/libboost_filesystem.dll
+  $ENV{MINGW_PREFIX}/bin/libboost_process.dll
   TYPE BIN
   COMPONENT runtime
 )

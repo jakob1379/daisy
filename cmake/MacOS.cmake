@@ -9,6 +9,7 @@ target_link_options(${DAISY_BIN_NAME} PRIVATE ${LINKER_OPTIONS})
 target_link_libraries(${DAISY_BIN_NAME} PUBLIC
   cxsparse
   Boost::filesystem
+  Boost::process
 )
 target_link_directories(${DAISY_BIN_NAME} PRIVATE ${EXTRA_SYSTEM_INCLUDE_DIRECTORIES})
 
@@ -37,6 +38,7 @@ file(INSTALL
   "${HOMEBREW_PREFIX}/${_boost_path_prefix}lib/libboost_filesystem-mt.dylib"
   "${HOMEBREW_PREFIX}/${_boost_path_prefix}lib/libboost_system-mt.dylib"
   "${HOMEBREW_PREFIX}/${_boost_path_prefix}lib/libboost_atomic-mt.dylib"
+  "${HOMEBREW_PREFIX}/${_boost_path_prefix}lib/libboost_process.dylib"
   "${HOMEBREW_PREFIX}/opt/libomp/lib/libomp.dylib"
   DESTINATION ${_dylib_target_dir}
   FOLLOW_SYMLINK_CHAIN
@@ -66,6 +68,7 @@ set(_dylibs_rel_path
   "${_boost_id_prefix}lib/libboost_filesystem-mt.dylib"
   "${_boost_id_prefix}lib/libboost_system-mt.dylib"
   "${_boost_id_prefix}lib/libboost_atomic-mt.dylib"
+  "${_boost_id_prefix}lib/libboost_process.dylib"
 )
 foreach(_dylib_rel_path ${_dylibs_rel_path})
   set(_old_lib_id "${HOMEBREW_PREFIX}/opt/${_dylib_rel_path}")

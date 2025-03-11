@@ -40,12 +40,9 @@ if (${OS} STREQUAL "macos")
     set(HOMEBREW_PREFIX /usr/local)
   endif()
   message("Using HOMEBREW_PREFIX = ${HOMEBREW_PREFIX}")
-  
-  # Hack until we update program_spawn.C to use new interface
-  set(Boost_DIR ${HOMEBREW_PREFIX}/opt/boost@1.85/lib/cmake/Boost-1.85.0)
 endif()
  
-find_package(Boost 1.81 REQUIRED CONFIG COMPONENTS filesystem system)
+find_package(Boost 1.87 REQUIRED CONFIG COMPONENTS filesystem system process)
 message(STATUS "Boost version: ${Boost_VERSION}")
 
 SET(COMPILE_OPTIONS
