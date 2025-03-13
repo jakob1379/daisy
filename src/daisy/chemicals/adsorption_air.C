@@ -98,7 +98,7 @@ static struct AdsorptionAirSyntax : DeclareModel
   }
   AdsorptionAirSyntax ()
     : DeclareModel (Adsorption::component, "air", "\
-Henry's law, fixed ration between cocentration in air and water.")
+Henry's law, fixed ratio between concentration in air and water.")
   { }
   void load_frame (Frame& frame) const
   {
@@ -110,10 +110,10 @@ Henry's law, fixed ration between cocentration in air and water.")
 K_wa = Ca / Cw\n\
 where Ca is mass per volume air, and Cw is mass per volume water.");
     frame.declare ("T_ref", "dg C", Check::none (), Attribute::Const, 
-		   "Temperature for which K_aw is valid.");
+		   "Temperature at which K_aw is valid.");
     frame.set ("T_ref", 25.0);
     frame.declare ("B", "K", Check::positive (), Attribute::Const, 
-		   "Temperature effect coefficint.");
+		   "Temperature effect coefficient.");
 
   }
 } AdsorptionAir_syntax;
