@@ -104,9 +104,9 @@ Henry's law, fixed ration between cocentration in air and water.")
   {
     frame.set_strings ("cite", "henry2023");
     frame.add_check (check_alist);
-    frame.declare ("K_wa", Attribute::None (), Check::positive (), 
-		Attribute::Const, 
-		"Ratio between concentration in air and in water.\n\
+    frame.declare ("K_wa", Attribute::None (), Check::positive (),
+		   Attribute::Const, 
+		   "Ratio between concentration in air and in water.\n\
 K_wa = Ca / Cw\n\
 where Ca is mass per volume air, and Cw is mass per volume water.");
     frame.declare ("T_ref", "dg C", Check::none (), Attribute::Const, 
