@@ -26,6 +26,7 @@
 #include "object_model/librarian.h"
 #include "object_model/treelog.h"
 #include "object_model/frame.h"
+#include <cmath>
 
 struct AdsorptionAir : public Adsorption
 {
@@ -52,9 +53,9 @@ struct AdsorptionAir : public Adsorption
 
     // Saturated soil.
     if (air <= 0.0)
-      return Theta * C;
+      return Theta * Cw;
 
-    Hs = find_Hs (T); // []
+    const double Hs = find_Hs (T); // []
 
     // Hs = Ca / Cw => Ca = Hs Cw
     // M = Ca air + Cw Theta => M = Hs Cw air + Cw Theta
@@ -69,6 +70,7 @@ struct AdsorptionAir : public Adsorption
     if (air <= 0.0)
       return M / Theta;
 
+    const double Hs = find_Hs (T); // []
     // M = Hs Cw air + Cw Theta
     // => Cw = M / (Hs * air + Theta)
     return M / (Hs * air + Theta);
