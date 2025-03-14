@@ -28,7 +28,7 @@
 #include "util/assertion.h"
 #include "object_model/metalib.h"
 
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/process.hpp>
 #include <sstream>
@@ -97,7 +97,7 @@ struct ProgramSpawn : public Program
   int running;
   std::vector<std::shared_ptr<bp::child>> children;
   std::vector<std::shared_ptr<Cleaner>> cleaners;
-  boost::asio::io_service ios;
+  boost::asio::io_context ios;
 
   bool done () const
   { return index >= length; }
@@ -205,7 +205,7 @@ struct ProgramSpawn : public Program
 	ios.run_one ();
 	spawn_all (msg);
       }
-    ios.reset ();
+    ios.restart ();
     ios.run ();
     msg.message ("Done");
     return true;
