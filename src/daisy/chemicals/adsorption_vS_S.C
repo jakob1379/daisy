@@ -267,7 +267,7 @@ static struct Adsorption_vS_S_oldSyntax : DeclareModel
     : DeclareModel (Adsorption::component, "vS_S_old", "\
 Buggy implementation included as vS_S before Daisy 6.47.\n\
 Included here as reference.\n\
-Note, linear sorption was used as default for NH4 as slong as memeory serve.")
+Note, linear sorption was used as default for NH4 as long as memory serve.")
   { }
   void load_frame (Frame& frame) const
   { }

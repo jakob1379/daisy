@@ -3190,7 +3190,6 @@ Turnover rate above which pools will contribute to 'CO2_fast'.");
     frame.declare_object ("smb", SMB::component, Attribute::State, Attribute::Variable, "\
 Soil MicroBiomass pools.\n\
 Initial value will be estimated based on equilibrium with AM and SOM pools.");
-    frame.set_strings ("smb", "SMB-SLOW", "SMB-FAST");
     frame.declare_object ("som", SOM::component, Attribute::State, Attribute::Variable,
                       "Soil Organic Matter pools.");
     frame.set_strings ("som", "SOM-SLOW", "SOM-FAST", "SOM-INERT");
@@ -3275,14 +3274,34 @@ expect the first will be assumed to be in equilibrium as well.",
 static struct Organic2000Syntax : public DeclareParam
 {
   Organic2000Syntax ()
-    : DeclareParam (OrganicMatter::component, "SMB-2000", "default", "\
-Using pre Daisy v7 parameterization of SMB-FAST.")
+    : DeclareParam (OrganicMatter::component, "SOM2000", "default", "\
+Using pre Daisy v7 parameterization of SMB-FAST.\n\
+Also, disable respiration for bioincorporation.")
   { }
   void load_frame (Frame& frame) const
   {
     frame.set_strings ("smb", "SMB-SLOW", "SMB-FAST-2000");
+
+    // Overwrite Bioincorporation::respiration.
+    boost::shared_ptr<FrameSubmodel> bio
+      (new FrameSubmodelValue (frame.submodel ("Bioincorporation"),
+			       Frame::parent_link));
+    bio->set ("respiration", 0.5);
+    frame.set ("Bioincorporation", bio);
   }
 } Organic2000_syntax;
+
+static struct Organic2025 : public DeclareParam
+{
+  Organic2025 ()
+    : DeclareParam (OrganicMatter::component, "SOM2025", "default", "\
+Using Daisy v7 parameterization of SMB-FAST.")
+  { }
+  void load_frame (Frame& frame) const
+  {
+    frame.set_strings ("smb", "SMB-SLOW", "SMB-FAST");
+  }
+} Organic2025_syntax;
 
 
 // organic_std.C ends here.

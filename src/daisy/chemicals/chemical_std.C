@@ -2999,10 +2999,23 @@ Adsorption of ammonium.")
   { }
   void load_frame (Frame& frame) const
   {
+    frame.set ("K_clay", 23.);
+    frame.set ("K_OC", 213.);
+  }
+} AdsorptionNH4_syntax;
+
+static struct AdsorptionNH4_HansenSyntax : public DeclareParam
+{ 
+  AdsorptionNH4_HansenSyntax ()
+    : DeclareParam (Adsorption::component, "NH4_Hansen", "linear", "\
+Adsorption of ammonium, traditional value.")
+  { }
+  void load_frame (Frame& frame) const
+  {
     frame.set ("K_clay", 117.116);
     frame.set ("K_OC", 117.116);
   }
-} AdsorptionNH4_syntax;
+} AdsorptionNH4_Hansen_syntax;
 
 static struct InitialNH4Syntax : public DeclareParam
 { 

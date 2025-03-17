@@ -324,7 +324,7 @@ The formula is speed = (R_max * litter) / (k_half + litter).");
   // Incorporation amounts.
   frame.declare_fraction ("respiration", Attribute::Const,
 		       "Fraction of C lost in respiration.");
-  frame.set ("respiration", 0.5);
+  frame.set ("respiration", 0.0);
   frame.declare ("DM", "g DM/m^2/h", Attribute::LogOnly, 
 	      "DM removed from surface.");
   frame.declare ("C_removed", "g C/m^2/h", Attribute::LogOnly,

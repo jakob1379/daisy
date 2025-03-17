@@ -1,6 +1,15 @@
+2025-03-17  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/column_std.C (OrganicMatter): Make 'SOM-2025' default.
+	* src/daisy/organic_matter/organic_std.C (SOM2000, SOM2025): New
+	parameterization.
+	(default): Don't give 'smb' a default value.
+	* src/daisy/organic_matter/bioincorporation.C (respiration): Set
+	to zero by default.
+
 2025-03-04  Per Abrahamsen  <pa@plen.ku.dk>
 
-	* include/daisy/chemicals/adsorption.h: 
+	* include/daisy/chemicals/adsorption.h:
 	* src/daisy/chemicals/adsorption.C (M_to_C_bisect):
 	New function.
 	* src/daisy/chemicals/adsorption_Python.C (M_to_C): Use
