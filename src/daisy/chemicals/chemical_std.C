@@ -2995,11 +2995,11 @@ static struct AdsorptionNH4Syntax : public DeclareParam
 { 
   AdsorptionNH4Syntax ()
     : DeclareParam (Adsorption::component, "NH4", "linear", "\
-Adsorption of ammonium.")
+Adsorption of ammonium, fitted by Styczen for Daisy 7.")
   { }
   void load_frame (Frame& frame) const
   {
-    frame.set ("K_clay", 23.);
+    frame.set ("K_clay", 28.);
     frame.set ("K_OC", 213.);
   }
 } AdsorptionNH4_syntax;

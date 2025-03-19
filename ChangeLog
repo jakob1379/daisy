@@ -1,6 +1,6 @@
 2025-03-17  Per Abrahamsen  <pa@plen.ku.dk>
 
-	* src/daisy/column_std.C (OrganicMatter): Make 'SOM-2025' default.
+	* src/daisy/column_std.C (OrganicMatter): Make 'SOM2025' default.
 	* src/daisy/organic_matter/organic_std.C (SOM2000, SOM2025): New
 	parameterization.
 	(default): Don't give 'smb' a default value.
