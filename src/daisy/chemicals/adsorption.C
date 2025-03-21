@@ -90,18 +90,27 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
 			   double C_lower, double C_upper) const
 {
   double M_lower = C_to_M (soil, Theta, T, i, C_lower, sf);
-  double M_upper = C_to_M (soil, Theta, T, i, C_upper, sf);
-  daisy_assert (M >= M_lower);
-  daisy_assert (M <= M_upper);
+  if (M <= M_lower)
+    return C_lower;
+  daisy_assert (M > M_lower);
 
+  double M_upper = C_to_M (soil, Theta, T, i, C_upper, sf);
+  if (M >= M_upper)
+    return C_upper;
+  daisy_assert (M < M_upper);
+
+  const double pad = 1e-9;
+  const double upper_pad = 1.0 + pad;
+  const double lower_pad = 1.0 - pad;
+  
   while (true)
     {
       const double C_guess = (C_lower + C_upper) / 2.0;
       const double M_guess = C_to_M (soil, Theta, T, i, C_guess, sf);
 
-      if (M_guess > M)
+      if (M_guess > M * upper_pad)
 	C_upper = C_guess;
-      else if (M_guess < M)
+      else if (M_guess < M * lower_pad)
 	C_lower = C_guess;
       else
 	return C_guess;
@@ -129,7 +138,10 @@ which among other things affects how large a fraction can be\n\
 transported with the water.")
   { }
   void load_frame (Frame& frame) const
-  { Model::load_model (frame); }
+  {
+    Model::load_model (frame);
+    
+  }
 } Adsorption_init;
 
 // "none" model.
