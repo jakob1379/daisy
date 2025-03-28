@@ -80,7 +80,8 @@ Based on data collected by Fulai Liu, 2007."
   (Canopy (LeafAIMod (0.0 2.2) (0.4 1.1)(1.5 1.1)(2.0 0.3))))
 
 ;; Weather data.
-(weather default "dk-jyndevad.dwf")
+(weather default "dk-jyndevad.dwf"
+	 (CO2 420 [ppm]))
 
 ;; Soil for the Danish 2005 FertOrgaNic experiment.
 (defhorizon "Jyn_15h" ISSS4
