@@ -28,6 +28,8 @@
 #include "object_model/librarian.h"
 #include "util/mathlib.h"
 
+#include <sstream>
+
 // "adsorption" component.
 
 const char *const Adsorption::component = "adsorption";
@@ -89,6 +91,9 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
 			   int i, double M, double sf,
 			   double C_lower, double C_upper) const
 {
+  if (iszero (M))
+    return 0.0;
+  daisy_assert (M > 0.0);
   double M_lower = C_to_M (soil, Theta, T, i, C_lower, sf);
   if (M <= M_lower)
     return C_lower;
@@ -102,12 +107,27 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
   const double pad = 1e-9;
   const double upper_pad = 1.0 + pad;
   const double lower_pad = 1.0 - pad;
-  
+  int count = 0;
+  static int max_count = 32;
   while (true)
     {
       const double C_guess = (C_lower + C_upper) / 2.0;
       const double M_guess = C_to_M (soil, Theta, T, i, C_guess, sf);
 
+      if ((++count) % max_count == 0)
+	{
+	  std::ostringstream tmp;
+	  tmp << "bisect count = " << count
+	      << " C [" << C_lower
+	      << ":" << C_guess
+	      << " :" << C_upper 
+	      << " ] M = " << M 
+	      << " M_guess = " << M_guess;
+	  Assertion::message (tmp.str ());
+
+	  max_count *= 2;
+	  daisy_assert (max_count > 0);
+	}
       if (M_guess > M * upper_pad)
 	C_upper = C_guess;
       else if (M_guess < M * lower_pad)

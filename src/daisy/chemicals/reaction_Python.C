@@ -119,6 +119,8 @@ struct ReactionPython : public Reaction
 	  }
 
 	// "extra".
+	if (extra.find ("Theta_sat") != extra.end ())
+	  kwargs["Theta_sat"] = soil.Theta_sat (i);
 	if (extra.find ("Theta") != extra.end ())
 	  kwargs["Theta"] = soil_water.Theta (i);
 	if (extra.find ("Theta_primary") != extra.end ())
@@ -473,7 +475,8 @@ Options include:\n\
 \n\
   z [cm]: Height above soil surface (always negative).\n\
   rho_b [g S/cm^3]: Soil dry bulk density.\n\
-  Theta [cm^3 W/cm^3 V]: Water per system volume.\n\
+  Theta_sat [cm^3 W/cm^3 V]: Saturated water per system volume.\n\
+  Theta [cm^3 W/cm^3 V]: Actual water per system volume.\n \
   Theta_primary [cm^3 W/cm^3 V]: Water in primary domain per system volume.\n\
   Theta_secondary [cm^3 W/cm^3 V]: Water in secondary domain per sys. volume.\n\
   h [cm]: Soil water potential.\n\
@@ -488,6 +491,7 @@ Options include:\n\
       {
 	add ("z");
 	add ("rho_b");
+	add ("Theta_sat");
 	add ("Theta");
 	add ("Theta_primary");
 	add ("Theta_secondary");

@@ -31,6 +31,8 @@
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
 
+#include <sstream>
+
 static const double c_fraction_in_humus = 0.587;
 
 struct AdsorptionPython : public Adsorption
@@ -122,6 +124,21 @@ public:
       {
 	Assertion::message ("Call to Python function '"
 			    + pC_to_M + "' in '" + pmodule + "' failed");
+	const double Theta_sat = soil.Theta_sat (i);	// [cm^3 W/cm^3 Sp]
+	const double rho_b = soil.dry_bulk_density (i); // [g/cm^3 Sp]
+	const double f_OC = soil.humus (i) * c_fraction_in_humus; // [g/g]
+	const double f_clay = soil.clay (i); // [g/g]
+	const double d50 = soil.texture_fractile (i, 0.5); // [um]
+	std::ostringstream tmp;
+	tmp << "C = " << C
+	    << ", Theta_sat = " << Theta_sat
+	    << ", Theta = " << Theta
+	    << ", rho_b = " << rho_b
+	    << ", f_OC = " << f_OC
+	    << ", f_clay = " << f_clay
+	    << ", d50 = " << d50
+	    << ", T = " << T;
+	Assertion::message (tmp.str ());
 	state = state_t::error;
 	return NAN;
       }
@@ -151,6 +168,21 @@ public:
       {
 	Assertion::message ("Call to Python function '"
 			    + pM_to_C + "' in '" + pmodule + "' failed");
+	const double Theta_sat = soil.Theta_sat (i);	// [cm^3 W/cm^3 Sp]
+	const double rho_b = soil.dry_bulk_density (i); // [g/cm^3 Sp]
+	const double f_OC = soil.humus (i) * c_fraction_in_humus; // [g/g]
+	const double f_clay = soil.clay (i); // [g/g]
+	const double d50 = soil.texture_fractile (i, 0.5); // [um]
+	std::ostringstream tmp;
+	tmp << "M = " << M
+	    << ", Theta_sat = " << Theta_sat
+	    << ", Theta = " << Theta
+	    << ", rho_b = " << rho_b
+	    << ", f_OC = " << f_OC
+	    << ", f_clay = " << f_clay
+	    << ", d50 = " << d50
+	    << ", T = " << T;
+	Assertion::message (tmp.str ());
 	state = state_t::error;
 	return NAN;
       }

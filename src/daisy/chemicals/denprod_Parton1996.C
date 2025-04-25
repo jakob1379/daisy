@@ -175,7 +175,7 @@ struct DenprodParton1996 : public Denprod
 	const double Theta = soil_water.Theta (c);	// [cm^3 W/cm^3 S]
 	const double wfps = Theta / soil.Theta_sat (c); // [0-1]
 
-	const double no3_in = soil_NO3.C_primary (c); // [g N/cm^3 S]
+	const double no3_in = soil_NO3.M_primary (c); // [g N/cm^3 S]
 	const double dry_bulk_density // [g S/cm^3 S]
 	  = soil.dry_bulk_density (c);
 	const double NO3 = micro * no3_in / dry_bulk_density; // [ug N/g S]

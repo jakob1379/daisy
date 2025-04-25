@@ -1,22 +1,73 @@
 -TODO ---things that needs to be done with Daisy -*- outline -*-
 
-* Change between 7.0.0 (oktober) 7.0.7
+* Daisy use cases
 
-** DONE Make simple setup
+Predict outputs from inputs
 
-** Use old NH4 absorbtion in 7.0.7
+Optimize inputs for desired outputs.
 
-* N2O denit
+* Inputs (GEM)
 
-** Make PLF gnuplots in ref manual work on windows
+** Genetics
 
-** convert P96 units
+*** Crop varieties
 
+** Environment
+
+*** Weather, climate, climate change
+
+*** Soil quality (BioChar)
+
+** Management
+
+*** Fertilizer and irrigation strategies
+
+*** Crop rotation
+
+*** Tillage
+
+*** Pesticide application
+
+* Outputs
+
+** Yield (DM, N)
+
+** greenhouse gas emissions (N2O, C)
+
+** N leaching
+
+** Pesticide leaching
+
+** Other leaching: PFAS and natural toxings
+
+** Perkolation
+
+** Changes in soil quality, e.g. depletion or compaction
+
+* PFAS
+
+** Kør lange simuleringer
+
+*** Prøv at slette små tal
+
+*** bisect: log skala?
+
+** Adsorption Python interface
+
+*** Vælg parametre
+
+*** a_awi (ikke stof afhængig)
+
+*** K_awi (ikke jord afhængig)
+
+** Adsorption AWI modul
+
+** Test samme resultat
 
 * GMSR
 
 ** Færdiggør rapport
-
+ 
 * hysteresis
 
 ** Math:
