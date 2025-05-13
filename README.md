@@ -161,7 +161,9 @@ and activate it
 
     source ~/.venvs/daisy/bin/activate
 
-Then you can use `pip` to install `daispy-test`
+Then you can use `pip` to install `daispy-test`.
+
+NOTE: This will most likely fail if you have already built daisy and try to setup the test environment from the build directory. The reason is that python binaries are copied to the build direcotry. The solution is to run the commands from another directory or specify the full path to the msys installed python binary.
 
 
 ## Code coverage
