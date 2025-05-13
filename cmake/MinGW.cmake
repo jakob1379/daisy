@@ -12,7 +12,10 @@ target_link_libraries(${DAISY_CORE_NAME} PUBLIC
   Boost::filesystem
 )
 target_link_options(${DAISY_CORE_NAME} PRIVATE ${LINKER_OPTIONS})
+
 add_library(windows SHARED)
+target_include_directories(windows PUBLIC include)
+target_link_options(windows PRIVATE ${LINKER_OPTIONS})
 add_subdirectory(src/windows)
 target_link_libraries(${DAISY_CORE_NAME} PUBLIC
   windows
