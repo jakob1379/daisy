@@ -6,10 +6,11 @@ Visual Studio Code is an ide and text editor that provides syntax highlighting a
     - If you only want syntax highlighting have a look at https://marketplace.visualstudio.com/items?itemName=mattn.Lisp
     - If you also want completion have a look at https://marketplace.visualstudio.com/items?itemName=qingpeng.common-lisp
 3. Set the language mode for .dai files
-    1. Press `Ctrl + Shift + p`
-    2. Type "change languange mode" and select it
-    3. Select "Configure File Association for '.dai'..."
-    4. Type "lisp" and select the extension you want to use
+    1. Open a .dai file
+    2. Press `Ctrl + Shift + p`
+    3. Type "change language mode" and select it
+    4. Select "Configure File Association for '.dai'..."
+    5. Type "lisp" and select the extension you want to use
 4. (a) Open the tasks file
     1. Press `Ctrl + Shift + p`
     2. Type "configure task" and select it
@@ -55,7 +56,7 @@ Visual Studio Code is an ide and text editor that provides syntax highlighting a
         "command": "workbench.action.tasks.runTask",
         "args" : "daisy-7.1.0"
     },
-]    
+]
 ```
 6. Test by opening  dai file. Then press and release `Ctrl + r` followed by `1`
 
