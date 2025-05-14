@@ -96,10 +96,10 @@ Install build environment
     pacman -S git mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-ninja
 
 Install daisy dependencies
-    
+
     pacman -S mingw-w64-ucrt-x86_64-suitesparse mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-pybind11 mingw-w64-ucrt-x86_64-python
-	
-   
+
+
 Download the source code and setup a build dir
 
     git clone git@github.com:daisy-model/daisy.git
@@ -108,7 +108,7 @@ Download the source code and setup a build dir
 
 
 Download a python distribution from https://www.python.org/downloads/windows/ and unpack to `daisy/python/<python-release-name>`. Then update `Python_ROOT_DIR` in `cmake/python.cmake` to point to the directory you just unpacked.
-    
+
 Build it
 
     cmake ../../ --preset mingw-gcc-native
@@ -116,7 +116,7 @@ Build it
 
 At time of writing, it was not possible to use the latest python (3.13.2) because the development module was not found. Version 3.12.9 works fine.
 
-For some reason Daisy ends up looking for `libpython3.12.dll`, but the embeddable python distribution contains `python312.dll`. A workaround for now is to make a copy of `python312.dll` called `libpython3.12.dll` and place it in the `daisy/python/<python-release-name>` directory. We cannot just rename, because "Find_Python" looks for "python312.dll`. 
+For some reason Daisy ends up looking for `libpython3.12.dll`, but the embeddable python distribution contains `python312.dll`. A workaround for now is to make a copy of `python312.dll` called `libpython3.12.dll` and place it in the `daisy/python/<python-release-name>` directory. We cannot just rename, because "Find_Python" looks for "python312.dll`.
 
 
 #### Build for distribution
@@ -132,6 +132,10 @@ Install dependencies
 Make an installer
 
 	cpack
+
+Make a zip file that does not require installation
+
+    cpack -G ZIP
 
 ## Testing
 ### Install test dependencies
@@ -171,7 +175,7 @@ To get code coverage you need to set the build type to `Coverage`. This will dis
 There is a coverage preset defined for gcc.
 
     git clone git@github.com:daisy-model/daisy.git
-    mkdir -p daisy/build/coverage 
+    mkdir -p daisy/build/coverage
     cd daisy/build/coverage
     cmake ../.. --preset linux-gcc-coverage
     make -j 8
