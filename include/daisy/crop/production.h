@@ -60,6 +60,7 @@ public:
   const double E_Stem;		// Conversion efficiency, stem
   const double E_SOrg;		// Conversion efficiency, stor. org.
 private:
+  const PLF& MaintResp_DS;      // Maint. resp. reduction due to senescence
   const double r_Root;		// Maint. resp. coeff., root
   const double r_Leaf;		// Maint. resp. coeff., leaf
   const double r_Stem;		// Maint. resp. coeff., stem

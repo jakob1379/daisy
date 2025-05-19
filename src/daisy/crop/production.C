@@ -191,16 +191,16 @@ Production::tick (const double AirT, const double SoilT,
 
   // Maintenance respiration.
   double RMLeaf                 // [g CH2O/m^2/h]
-    = maintenance_respiration (r_Leaf, WLeaf, AirT);
+    = maintenance_respiration (r_Leaf, WLeaf, AirT) * MaintResp_DS(DS);
   daisy_assert (std::isfinite (RMLeaf));
   const double RMStem           // [g CH2O/m^2/h]
-    = maintenance_respiration (r_Stem, WStem, AirT);
+    = maintenance_respiration (r_Stem, WStem, AirT) * MaintResp_DS(DS);
   daisy_assert (std::isfinite (RMStem));
   const double RMSOrg           // [g CH2O/m^2/h]
-    = maintenance_respiration (r_SOrg, WSOrg, AirT);
+    = maintenance_respiration (r_SOrg, WSOrg, AirT) * MaintResp_DS(DS);
   daisy_assert (std::isfinite (RMSOrg));
   const double RMRoot           // [g CH2O/m^2/h]
-    = maintenance_respiration (r_Root, WRoot, SoilT);
+    = maintenance_respiration (r_Root, WRoot, SoilT) * MaintResp_DS(DS);
   daisy_assert (std::isfinite (RMRoot));
 
   // Water stress stops leaf respiration.
@@ -727,6 +727,9 @@ Production::load_syntax (Frame& frame)
   frame.set ("E_Stem", 0.66);
   frame.declare ("E_SOrg", "g DM-C/g Ass-C", Attribute::Const,
 	      "Conversion efficiency, storage organ.");
+  frame.declare ("MaintResp_DS", "DS", Attribute::None (), Attribute::Const,
+          "Reduction of maintenance respiration with crop senescence");
+  frame.set ("MaintResp_DS", PLF::always_1 ());
   frame.declare ("r_Root", "d^-1", Attribute::Const,
 	      "Maintenance respiration coefficient, root.");
   frame.set ("r_Root", 0.015);
@@ -946,6 +949,7 @@ Production::Production (const FrameSubmodel& al)
     E_Leaf (al.number ("E_Leaf")),
     E_Stem (al.number ("E_Stem")),
     E_SOrg (al.number ("E_SOrg")),
+    MaintResp_DS (al.plf ("MaintResp_DS")),
     r_Root (al.number ("r_Root")),
     r_Leaf (al.number ("r_Leaf")),
     r_Stem (al.number ("r_Stem")),
