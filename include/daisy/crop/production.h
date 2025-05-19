@@ -46,8 +46,10 @@ class Production
   // Remobilization.
 private:
   const double ShldResC;	// Capacity of Shielded Reserves
+  const double ReMobilEff;      // Remobilization efficiency
   const double ReMobilDS;	// Remobilization, Initial DS
   const double ReMobilRt;	// Remobilization, release rate
+  const PLF& ReMobil_Mod;	// Remobilization, release rate modifier
   double StemRes;		// Shielded Reserves in Stems
   double remobilization (const double DS, const double dt);
 

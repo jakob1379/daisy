@@ -66,7 +66,7 @@ Production::remobilization (const double DS, const double dt)
     }
   else
     {
-      const double ReMobilization = ReMobilRt / 24. * StemRes;
+      const double ReMobilization = ReMobilRt / 24. * ReMobil_Mod (DS) * StemRes;
       StemRes -= ReMobilization * dt;
       return ReMobilization;
     }
@@ -165,7 +165,7 @@ Production::tick (const double AirT, const double SoilT,
   const double ReMobil = remobilization (DS, dt); // [g DM/m^2/h]
   const double CH2OReMobil                        // [g CH2O/m^2/h]
     = ReMobil * DM_to_C_factor (E_Stem) * 30.0/12.0;
-  const double ReMobilResp = CH2OReMobil - ReMobil; // [g CH2O/m^2/h]
+  const double ReMobilResp = (1 - ReMobilEff) * CH2OReMobil; // [g CH2O/m^2/h]
   // Note:  We used to have "CH2OPool += Remobil", but that does not
   // give C balance.  ReMobilResp was invented, and gets it's strange
   // value, to get the same result but with a mass balance.  
@@ -702,12 +702,18 @@ Production::load_syntax (Frame& frame)
   frame.declare ("ShldResC", Attribute::Fraction (), Attribute::Const,
 	      "Capacity of shielded reserves (fraction of stem DM).");
   frame.set ("ShldResC", 0.0);
+  frame.declare ("ReMobilEff", Attribute::Fraction (), Attribute::Const,
+          "Efficiency of reserve mobilization");
+  frame.set ("ReMobilEff", 0.85);
   frame.declare ("ReMobilDS", "DS", Attribute::Const,
 	      "Remobilization, Initial DS.");
   frame.set ("ReMobilDS", 1.20);
   frame.declare ("ReMobilRt", "d^-1", Attribute::Const,
 	      "Remobilization, release rate.");
   frame.set ("ReMobilRt", 0.1);
+  frame.declare ("ReMobil_Mod", "DS", Attribute::None (), Attribute::Const,
+        "Modifier of remobilization rate depending on DS.");
+  frame.set ("ReMobil_Mod", PLF::always_1 ());
   frame.declare ("StemRes", "g DM/m^2", Attribute::State,
 	      "Shielded reserves in stems.");
   frame.set ("StemRes", 0.0);
@@ -940,8 +946,10 @@ Production::initialize (const Metalib& metalib, const symbol name,
 
 Production::Production (const FrameSubmodel& al)
   : ShldResC (al.number ("ShldResC")),
+    ReMobilEff (al.number ("ReMobilEff")),
     ReMobilDS (al.number ("ReMobilDS")),
     ReMobilRt (al.number ("ReMobilRt")),
+    ReMobil_Mod (al.plf ("ReMobil_Mod")),
     StemRes (al.number ("StemRes")),
     // Parameters.
     CH2OReleaseRate (al.number ("CH2OReleaseRate")),
