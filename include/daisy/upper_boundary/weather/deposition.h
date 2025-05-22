@@ -21,8 +21,9 @@
 #ifndef DEPOSITION_H
 #define DEPOSITION_H
 
-#include "object_model/model_derived.h"
+#include "object_model/model_framed.h"
 #include "object_model/symbol.h"
+#include "daisy/daisy_time.h"
 #include "daisy/chemicals/im.h"
 
 class Vegetation;
@@ -32,7 +33,7 @@ class BlockModel;
 
 // The 'deposition' component.
 
-class Deposition : public ModelDerived
+class Deposition : public ModelFramed
 {
   // Content.
 public:
@@ -44,7 +45,8 @@ public:
   
   // Use.
 public:
-  virtual void tick (const Vegetation&, const Weather&, Treelog& msg) = 0;
+  virtual void tick (const Time&, const Vegetation&, const Weather&,
+		     Treelog& msg) = 0;
   const IM& deposit () const;
   void output (Log&) const;
 

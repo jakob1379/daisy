@@ -91,7 +91,8 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
 			   int i, double M, double sf,
 			   double C_lower, double C_upper) const
 {
-  if (iszero (M))
+  static double M_min = 1e-25;	// Less than one molecule per cm^3
+  if (M < M_min)
     return 0.0;
   daisy_assert (M > 0.0);
   double M_lower = C_to_M (soil, Theta, T, i, C_lower, sf);
@@ -111,7 +112,9 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
   static int max_count = 32;
   while (true)
     {
-      const double C_guess = (C_lower + C_upper) / 2.0;
+      const double C_guess = (C_lower > 0.0)
+	? (C_lower + C_upper) / 2.0
+	: C_upper * 1e-6;
       const double M_guess = C_to_M (soil, Theta, T, i, C_guess, sf);
 
       if ((++count) % max_count == 0)

@@ -25,6 +25,7 @@
 #include "daisy/upper_boundary/weather/weather.h"
 #include "object_model/block_model.h"
 #include "object_model/librarian.h"
+#include "object_model/units.h"
 
 // The 'deposition' component.
 
@@ -46,7 +47,7 @@ Deposition::output (Log& log) const
 { output_submodule (deposit (), "deposit", log); }
 
 Deposition::Deposition (const BlockModel& al)
-  : ModelDerived (al.type_name ()),
+  : ModelFramed (al),
     my_deposit (al, "deposit")    // For the units...
 { }
 
@@ -73,7 +74,7 @@ Deposition of inorganic material from atmosphere.")
 
 struct DepositionWeather : public Deposition
 {
-  void tick (const Vegetation&, const Weather& weather, Treelog&)
+  void tick (const Time&, const Vegetation&, const Weather& weather, Treelog&)
   { my_deposit = weather.deposit (); }
 
   DepositionWeather (const BlockModel& al)
@@ -93,28 +94,81 @@ Rely solely on weather model for deposition.")
   { }
 } DepositionWeather_syntax;
 
-// The 'gundersen' model.
+// The 'const' model.
 
-struct DepositionGundersen : public Deposition
+struct DepositionConst : public Deposition
 {
-  void tick (const Vegetation&, const Weather& weather, Treelog&)
-  { my_deposit = weather.deposit (); }
+  const Units& units;
+  const Time before;
+  const Time after;
+  const IM wet;
+  const IM dry;
+  
+  void tick (const Time& time, const Vegetation&, const Weather& weather,
+	     Treelog&)
+  {
+    if (time > before || time <= after)
+      {
+	my_deposit.clear ();
+	return;
+      }
+#if 1
+    const double precip = weather.rain () + weather.snow (); // [mm/h]
+    
+    const Unit& u_flux = units.get_unit (IM::flux_unit ());
+    const Unit& u_solute = units.get_unit (IM::solute_unit ());
+    const Unit& u_precip = units.get_unit (Units::mm_per_h ());
+    const IM x_dry (u_flux, dry);
+    const IM solute (u_solute, wet);
+    const IM x_wet (solute.multiply (Scalar (precip, u_precip), u_flux));
+    my_deposit = x_dry + x_wet;
+#endif
+  }
 
-  DepositionGundersen (const BlockModel& al)
-    : Deposition (al)
+  DepositionConst (const BlockModel& al)
+    : Deposition (al),
+      units (al.units ()),
+      before (al.submodel ("before")),
+      after (al.submodel ("after")),
+      wet (al, "wet"),
+      dry (al, "dry")
+      
   { }
 };
 
-static struct DepositionGundersenSyntax : public DeclareModel
+static struct DepositionConstSyntax : public DeclareModel
 {
+  static const symbol dry_deposit_unit ()
+  {
+    static const symbol unit ("kg/ha/y");
+    return unit;
+  }
+  
+  static void load_ppm (Frame& frame)
+  { IM::add_syntax (frame, Attribute::Const, Units::ppm ()); }
+
+  static void load_dry (Frame& frame)
+  { IM::add_syntax (frame, Attribute::Const, dry_deposit_unit ()); }
+
   Model* make (const BlockModel& al) const
-  { return new DepositionGundersen (al); }
-  DepositionGundersenSyntax ()
-    : DeclareModel (Deposition::component, "Gundersen_et_al", "\
-Currently identical to weather. Should take vegetation height into account.")
+  { return new DepositionConst (al); }
+  DepositionConstSyntax ()
+    : DeclareModel (Deposition::component, "const", "\
+Constant deposition in time interval.")
   { }
   void load_frame (Frame& frame) const
-  { }
-} DepositionGundersen_syntax;
+  {
+    frame.declare_submodule ("before", Attribute::Const, "\
+Only deposit before or at this time.", Time::load_syntax);
+    frame.declare_submodule ("after", Attribute::Const, "\
+Only deposit after this time.", Time::load_syntax);
+    frame.declare_submodule_sequence ("wet", Attribute::Const, "\
+Solutes in precipitaion.", load_ppm);
+    frame.set_empty ("wet");
+    frame.declare_submodule_sequence ("dry", Attribute::Const, "\
+Dry deposition.", load_dry);
+    frame.set_empty ("dry");
+}
+} DepositionConst_syntax;
 
 // deposition.C ends here.

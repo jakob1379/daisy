@@ -1,49 +1,5 @@
 -TODO ---things that needs to be done with Daisy -*- outline -*-
 
-* Daisy use cases
-
-Predict outputs from inputs
-
-Optimize inputs for desired outputs.
-
-* Inputs (GEM)
-
-** Genetics
-
-*** Crop varieties
-
-** Environment
-
-*** Weather, climate, climate change
-
-*** Soil quality (BioChar)
-
-** Management
-
-*** Fertilizer and irrigation strategies
-
-*** Crop rotation
-
-*** Tillage
-
-*** Pesticide application
-
-* Outputs
-
-** Yield (DM, N)
-
-** greenhouse gas emissions (N2O, C)
-
-** N leaching
-
-** Pesticide leaching
-
-** Other leaching: PFAS and natural toxings
-
-** Perkolation
-
-** Changes in soil quality, e.g. depletion or compaction
-
 * PFAS
 
 ** Kør lange simuleringer
@@ -54,7 +10,7 @@ Optimize inputs for desired outputs.
 
 ** Adsorption Python interface
 
-*** Vælg parametre
+*** DONE Vælg parametre
 
 *** a_awi (ikke stof afhængig)
 
@@ -63,6 +19,16 @@ Optimize inputs for desired outputs.
 ** Adsorption AWI modul
 
 ** Test samme resultat
+
+** Solute in rain water (time -> concentration)
+
+* PHISHES
+
+** CZ data 03
+
+** Pak taske
+
+* Gas transport
 
 * GMSR
 
