@@ -1,3 +1,10 @@
+2025-05-25  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption_Python.C (area_AWI): New parameter.
+	* src/daisy/chemicals/adsorption_linear.C (K_AWI): New parameter.
+	* src/daisy/column_std.C (awi): New parameter.
+	* all: Update.
+
 2025-05-23  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/daisy/chemicals/awi.C: New component.

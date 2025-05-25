@@ -1,62 +1,8 @@
 -TODO ---things that needs to be done with Daisy -*- outline -*-
 
-* Fie
-
-** Bo
-
-** Slidgigt
-
-30 maj læge 
-
 * PFAS
 
-AWI component
-
-AWIBrusseau2023 model
-
-AWI::find_area (double Theta, double Theta_sat, double dt50)
-
-AWI::tick (const Soil&, const SoilWater&)
-
-AWI::output
-
-double
-AWI::area (size_t c) const; // [cm^2/cm^3]
-
-# function estimating the air water interface area from Brusseau 2023
-def a_aw (Theta, Theta_sat, d50_cm):
-    a_aw = (-2.85*(Theta/Theta_sat)+3.6)*((1-(Theta/Theta_sat))*3.9*d50_cm**-1.2)
-    #print("a_aw", a_aw)
-    return a_aw
-
-https://www.sciencedirect.com/science/article/pii/S0048969723023513
-Equation 5
-
-** Kør lange simuleringer
-
-*** Prøv at slette små tal
-
-*** bisect: log skala?
-
-** Adsorption Python interface
-
-*** DONE Vælg parametre
-
-*** a_awi (ikke stof afhængig)
-
-*** K_awi (ikke jord afhængig)
-
-** Adsorption AWI modul
-
-** Test samme resultat
-
-** Solute in rain water (time -> concentration)
-
-* PHISHES
-
-** CZ data 03
-
-** Pak taske
+** Python interface area_AWI
 
 * Gas transport
 

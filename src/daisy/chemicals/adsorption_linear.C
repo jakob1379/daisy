@@ -27,6 +27,7 @@
 #include "object_model/librarian.h"
 #include "object_model/treelog.h"
 #include "object_model/frame.h"
+#include "daisy/chemicals/awi.h"
 
 static const double c_fraction_in_humus = 0.587;
 
@@ -36,10 +37,11 @@ class AdsorptionLinear : public Adsorption
   const double K_d;
   const double K_clay;
   const double K_OC;
+  const double K_AWI;
 
   // Simulation.
 public:
-  double K (const Soil& soil, size_t c) const
+  double K_soil (const Soil& soil, size_t c) const
   { 
     if (K_d >= 0.0)
       return K_d;
@@ -48,19 +50,23 @@ public:
       + soil.humus (c) * c_fraction_in_humus * K_OC;
   }
 
-  double C_to_M (const Soil& soil, double Theta, double T, int i, 
+  double C_to_M (const Soil& soil, const AWI& awi,
+		 double Theta, double T, int i, 
                  double C, double sf) const
   {
-    const double K = this->K (soil, i);
+    const double K_soil = this->K_soil (soil, i);
     const double rho = soil.dry_bulk_density (i);
-    return C * (K * rho * sf + Theta);
+    const double area_AWI = awi.area (i); // [cm^2/cm^3]
+    return C * ((K_soil * rho + K_AWI * area_AWI) * sf + Theta);
   }
-  double M_to_C (const Soil& soil, double Theta, double T, int i, 
+  double M_to_C (const Soil& soil, const AWI& awi,
+		 double Theta, double T, int i, 
                  double M, double sf) const
   {
-    const double K = this->K (soil, i);
+    const double K_soil = this->K_soil (soil, i);
     const double rho = soil.dry_bulk_density (i);
-    return M / (Theta + K * rho * sf);
+    const double area_AWI = awi.area (i); // [cm^2/cm^3]
+    return M / (Theta + (K_soil * rho + K_AWI * area_AWI) * sf);
   }
 
   // Create.
@@ -69,7 +75,8 @@ public:
     : Adsorption (al),
       K_d (al.number ("K_d", -1.0)),
       K_clay (al.number ("K_clay", 0.0)),
-      K_OC (al.check ("K_OC") ? al.number ("K_OC") : K_clay)
+      K_OC (al.check ("K_OC") ? al.number ("K_OC") : K_clay),
+      K_AWI (al.number ("K_AWI"))
   { }
 };
 
@@ -115,6 +122,10 @@ the 'K_d' factor.  If 'K_OC' is specified, 'K_clay' defaults to 0.");
 		"Humus dependent distribution parameter.\n\
 It is multiplied with the soil organic carbon fraction to get the\n\
 carbon part of the 'K_d' factor.  By default, 'K_OC' is equal to 'K_clay'.");
+    frame.declare ("K_AWI", "cm^3/cm^2", Check::non_negative (), 
+		Attribute::Const, 
+		"Sorption to air-water interface.");
+    frame.set ("K_AWI", 0.0);
 
   }
 } AdsorptionLinear_syntax;

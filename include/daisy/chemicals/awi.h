@@ -51,7 +51,7 @@ public:
   void output (Log&) const;
   void tick (const Geometry&, const Soil&, const SoilWater&);
   double area (size_t c) const // [cm^2/cm^3]
-  { return AWI_area[c]; }
+  { return (c < AWI_area.size ()) ? AWI_area[c] : 0.0; }
 
   // Create and Destroy.
 protected:

@@ -33,6 +33,7 @@ class SoilHeat;
 class DOE;
 class Chemical;
 class Adsorption;
+class AWI;
 class Surface;
 class Groundwater;
 class Weather;
@@ -88,7 +89,7 @@ public:
                      Groundwater&, const Time&, const Scope&, const Weather&, 
                      double dt, Treelog&) = 0;
   virtual void solute (const Soil&, const SoilWater&, const SoilHeat&,
-                       const double J_above, Chemical&,
+                       const double J_above, const AWI&, Chemical&,
 		       double dt, const Scope&, Treelog&) = 0;
   virtual void element (const Soil&, const SoilWater&, 
                         DOE&, double diffusion_coefficient, 

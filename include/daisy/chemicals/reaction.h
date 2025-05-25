@@ -29,6 +29,7 @@ class Geometry;
 class Soil;
 class SoilWater;
 class SoilHeat;
+class AWI;
 class Surface;
 class OrganicMatter;
 class Chemistry;
@@ -57,7 +58,8 @@ public:
 			     OrganicMatter&, Chemistry&, const double dt,
                              Treelog& msg);
   virtual void tick_soil (const Geometry&, const Soil&, const SoilWater&,
-                          const SoilHeat&, OrganicMatter&, Chemistry&,
+                          const SoilHeat&, const AWI&,
+			  OrganicMatter&, Chemistry&,
                           const double dt, Treelog&);
 
   // Create and Destroy.

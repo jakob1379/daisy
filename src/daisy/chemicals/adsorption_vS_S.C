@@ -39,9 +39,9 @@ class Adsorption_vS_S : public Adsorption
   // Simulation.
 public:
   double C_to_A (const Soil& soil, int i, double C, double sf) const;
-  double C_to_M (const Soil&, double Theta, double T,
+  double C_to_M (const Soil&, const AWI&, double Theta, double T,
 		 int, double C, double sf) const;
-  double M_to_C (const Soil&, double Theta, double T,
+  double M_to_C (const Soil&, const AWI&, double Theta, double T,
 		 int, double M, double sf) const;
 
   // Chemical soil constants.
@@ -77,7 +77,7 @@ Adsorption_vS_S::C_to_A (const Soil& soil, int i, double C, double sf) const
 }
 
 double 
-Adsorption_vS_S::C_to_M (const Soil& soil, double Theta, double,
+Adsorption_vS_S::C_to_M (const Soil& soil, const AWI&, double Theta, double,
 			 int i, double C,
                          double sf) const
 {
@@ -85,7 +85,8 @@ Adsorption_vS_S::C_to_M (const Soil& soil, double Theta, double,
 }
 
 double 
-Adsorption_vS_S::M_to_C (const Soil& soil, double Theta, double T,
+Adsorption_vS_S::M_to_C (const Soil& soil, const AWI& awi,
+			 double Theta, double T,
 			 int i, double M, double sf) const
 {
   const double ve = v_edge (soil, i, sf); 
@@ -107,7 +108,7 @@ Adsorption_vS_S::M_to_C (const Soil& soil, double Theta, double T,
       const double d = - M * Kp * Ke;
     
       C = single_positive_root_of_cubic_equation (a, b, c, d);
-      const double new_M = C_to_M (soil, Theta, T, i, C, sf);
+      const double new_M = C_to_M (soil, awi, Theta, T, i, C, sf);
       if (!approximate (M, new_M, 0.01))
 	{
 	  std::ostringstream tmp;
@@ -184,8 +185,10 @@ class Adsorption_vS_S_old : public Adsorption
   // Simulation.
 public:
   double C_to_A (const Soil& soil, int i, double C, double sf) const;
-  double C_to_M (const Soil&, double Theta, double, int, double C, double sf) const;
-  double M_to_C (const Soil&, double Theta, double, int, double M, double sf) const;
+  double C_to_M (const Soil&, const AWI&,
+		 double Theta, double, int, double C, double sf) const;
+  double M_to_C (const Soil&, const AWI&,
+		 double Theta, double, int, double M, double sf) const;
 
   // Chemical soil constants.
   double K_planar () const
@@ -225,14 +228,16 @@ Adsorption_vS_S_old::C_to_A (const Soil& soil, int i, double C, double sf) const
 }
 
 double 
-Adsorption_vS_S_old::C_to_M (const Soil& soil, double Theta, double,
+Adsorption_vS_S_old::C_to_M (const Soil& soil, const AWI&,
+			     double Theta, double,
 			     int i, double C, double sf) const
 {
   return C_to_A (soil, i, C, sf) + Theta * C;
 }
 
 double 
-Adsorption_vS_S_old::M_to_C (const Soil& soil, double Theta, double T,
+Adsorption_vS_S_old::M_to_C (const Soil& soil, const AWI& awi,
+			     double Theta, double T,
 			     int i, double M, double sf) const
 {
   const double ve = v_edge (soil, i, sf); 
@@ -254,7 +259,7 @@ Adsorption_vS_S_old::M_to_C (const Soil& soil, double Theta, double T,
       const double d = - M * Kp * Ke;
     
       C = single_positive_root_of_cubic_equation (a, b, c, d);
-      daisy_assert (approximate (M, C_to_M (soil, Theta, T, i, C, sf)));
+      daisy_assert (approximate (M, C_to_M (soil, awi, Theta, T, i, C, sf)));
     }
   return C;
 }

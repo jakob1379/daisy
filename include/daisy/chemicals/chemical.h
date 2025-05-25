@@ -36,6 +36,7 @@ class SoilHeat;
 class OrganicMatter;
 class Adsorption;
 class Chemistry;
+class AWI;
 class Volume;
 class VCheck;
 class Treelog;
@@ -66,7 +67,7 @@ public:
 
   // Table.
 public:
-  virtual void sorption_table (const Soil& soil, const size_t cell, 
+  virtual void sorption_table (const Soil& soil, const AWI&, const size_t cell, 
                                const double Theta, const double start,
                                const double factor, const int intervals,
                                Treelog& msg) const = 0;
@@ -103,11 +104,11 @@ public:
   // Transport.
 public:
   virtual void set_primary (const Soil& soil, const SoilWater& soil_water,
-			    const SoilHeat& soil_heat,
+			    const SoilHeat& soil_heat, const AWI& awi,
                             const std::vector<double>& M,
                             const std::vector<double>& J) = 0;
   virtual void set_secondary (const Soil& soil, const SoilWater& soil_water,
-			      const SoilHeat&,
+			      const SoilHeat&, const AWI&,
                               const std::vector<double>& M,
                               const std::vector<double>& J) = 0;
   virtual void set_tertiary (const std::vector<double>& S_p, 
@@ -135,7 +136,8 @@ public:
 public:
   virtual void remove_all () = 0;
   virtual double total_content (const Geometry&) const = 0; // [g/m^2]
-  virtual void update_C (const Soil&, const SoilWater&, const SoilHeat&) = 0;
+  virtual void update_C (const Soil&, const SoilWater&, const SoilHeat&,
+			 const AWI&) = 0;
   virtual void deposit (double flux /* [g/m^2/h] */) = 0;
   virtual void spray_overhead (double amount /* [g/m^2] */) = 0;
   virtual void spray_surface (double amount /* [g/m^2] */) = 0;
@@ -146,10 +148,10 @@ public:
   virtual void incorporate (const Geometry&, double amount /* [g/m^2] */, 
 			    const Volume& volume) = 0;
   virtual void mix (const Geometry& geo, const Soil&, const SoilWater&,
-		    const SoilHeat&, 
+		    const SoilHeat&, const AWI&, 
 		    double from, double to, double penetration) = 0;
   virtual void swap (const Geometry& geo, const Soil&, const SoilWater&,
-		     const SoilHeat&,
+		     const SoilHeat&, const AWI&,
 		     double from, double middle, double to) = 0;
 
   // Simulation.
@@ -168,6 +170,7 @@ public:
 			     const double T /* [dg C] */,
                              const Geometry& geo, 
                              const Soil& soil, const SoilWater& soil_water,
+			     const AWI&,
                              const double z_mixing /* [cm] */,
                              Treelog& msg) = 0;
   virtual void tick_soil (const Geometry&, const Soil&, const SoilWater&,
@@ -199,9 +202,10 @@ public:
   virtual bool check (const Scope&, 
                       const Geometry&, const Soil&, const SoilWater&,
 		      const SoilHeat&, const OrganicMatter&, const Chemistry&,
-		      Treelog&) const = 0;
+		      const AWI&, Treelog&) const = 0;
   virtual void initialize (const Scope&, const Geometry&,
                            const Soil&, const SoilWater&, const SoilHeat&,
+			   const AWI&,
 			   Treelog&) = 0;
 private:
   Chemical ();

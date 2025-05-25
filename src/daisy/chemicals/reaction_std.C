@@ -49,7 +49,7 @@ struct ReactionStandard : public Reaction
   // Simulation.
   void tick_soil (const Geometry& geo,
                   const Soil& soil, const SoilWater& soil_water, 
-                  const SoilHeat& soil_heat, OrganicMatter&,
+                  const SoilHeat& soil_heat, const AWI&, OrganicMatter&,
                   Chemistry& chemistry, const double dt, Treelog& msg) // FIXME: dt not used
   {
     TREELOG_MODEL (msg);

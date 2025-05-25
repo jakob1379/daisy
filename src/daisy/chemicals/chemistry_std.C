@@ -53,14 +53,14 @@ struct ChemistryStandard : public Chemistry
   Chemical& find (symbol chem); 
   const Chemical& find (symbol chem) const; 
   const std::vector<Chemical*>& all () const;
-  void sorption_table (const Soil& soil, const size_t cell, 
+  void sorption_table (const Soil& soil, const AWI&, const size_t cell, 
                        const double Theta, const double start,
                        const double factor, const int intervals,
                        Treelog& msg) const;
  
   // Management.
   void update_C (const Soil& soil, const SoilWater& soil_water,
-		 const SoilHeat&);
+		 const SoilHeat&, const AWI&);
   void mass_balance (const Geometry& geo, const SoilWater& soil_water) const;
   void deposit (symbol chem, double flux, Treelog&);
   void spray_overhead (symbol chem, double amount, Treelog&);
@@ -68,8 +68,10 @@ struct ChemistryStandard : public Chemistry
   void dissipate_surface (symbol chem, double amount  /* [g/m^2] */, Treelog&);
   void harvest (double removed, double surface);
   void mix (const Geometry&, const Soil&, const SoilWater&, const SoilHeat&,
+	    const AWI&,
             double from, double to, double penetration);
   void swap (const Geometry&, const Soil&, const SoilWater&, const SoilHeat&,
+	     const AWI&,
 	     double from, double middle, double to);
   void incorporate (const Geometry& geo,
 		    const symbol chem, const double amount,
@@ -99,7 +101,7 @@ struct ChemistryStandard : public Chemistry
 		 const double surface_runoff_rate, // [h^-1]
 		 const double surface_water /* [mm] */,
 		 const double total_rain /* [mm/h] */,
-                 OrganicMatter&, Chemistry& chemistry, 
+                 const AWI&, OrganicMatter&, Chemistry& chemistry, 
                  const double dt, // [h]
 		 Treelog&);
   void infiltrate (const Geometry&, 
@@ -107,8 +109,8 @@ struct ChemistryStandard : public Chemistry
                    double R_mixing /* [h/mm] */, const double dt /* [h] */);
   void tick_soil (const Scope&, const Geometry& geo, double ponding /* [mm] */,
                   double R_mixing /* [h/mm] */, 
-                  const Soil&, const SoilWater&, const SoilHeat&, Movement&,
-                  OrganicMatter&, Chemistry&, 
+                  const Soil&, const SoilWater&, const SoilHeat&, const AWI&,
+		  Movement&, OrganicMatter&, Chemistry&, 
 		  double dt, Treelog&);
   void clear ();
   void output (Log&) const;
@@ -117,11 +119,11 @@ struct ChemistryStandard : public Chemistry
   void initialize (const Scope& scope, const Geometry& geo,
                    const Soil&, const SoilWater&, const SoilHeat&, 
                    const OrganicMatter&, const Chemistry&,
-		   const Surface&, Treelog&);
+		   const AWI&, const Surface&, Treelog&);
   bool check (const Scope& scope, const Geometry&,
 	      const Soil&, const SoilWater&, const SoilHeat&,
 	      const OrganicMatter&, const Chemistry&,
-	      Treelog&) const;
+	      const AWI&, Treelog&) const;
   explicit ChemistryStandard (const BlockModel& al);
 };
 
@@ -164,22 +166,24 @@ ChemistryStandard::all () const
 { return chemicals; }
 
 void 
-ChemistryStandard::sorption_table (const Soil& soil, const size_t cell, 
+ChemistryStandard::sorption_table (const Soil& soil, const AWI& awi,
+				   const size_t cell, 
                                    const double Theta, const double start,
                                    const double factor, const int intervals,
                                    Treelog& msg) const
 {
   for (size_t c = 0; c < chemicals.size (); c++)
-    chemicals[c]->sorption_table (soil, cell, Theta, start, factor, intervals,
+    chemicals[c]->sorption_table (soil, awi,
+				  cell, Theta, start, factor, intervals,
                                   msg); 
 }
 
 void 
 ChemistryStandard::update_C (const Soil& soil, const SoilWater& soil_water,
-			     const SoilHeat& soil_heat)
+			     const SoilHeat& soil_heat, const AWI& awi)
 {
   for (size_t c = 0; c < chemicals.size (); c++)
-    chemicals[c]->update_C (soil, soil_water, soil_heat); 
+    chemicals[c]->update_C (soil, soil_water, soil_heat, awi); 
 }
 
 void 
@@ -264,24 +268,24 @@ ChemistryStandard::harvest (const double removed, const double surface)
 void 
 ChemistryStandard::mix (const Geometry& geo, const Soil& soil, 
                         const SoilWater& soil_water,
-			const SoilHeat& soil_heat,
+			const SoilHeat& soil_heat, const AWI& awi,
                         const double from, const double to,
                         const double penetration)
 {
   for (size_t c = 0; c < chemicals.size (); c++)
-    chemicals[c]->mix (geo, soil, soil_water, soil_heat,
+    chemicals[c]->mix (geo, soil, soil_water, soil_heat, awi,
 		       from, to, penetration); 
 }
 
 void 
 ChemistryStandard::swap (const Geometry& geo,
                          const Soil& soil, const SoilWater& soil_water,
-			 const SoilHeat& soil_heat,
+			 const SoilHeat& soil_heat, const AWI& awi,
                          const double from, const double middle, 
                          const double to)
 { 
   for (size_t c = 0; c < chemicals.size (); c++)
-    chemicals[c]->swap (geo, soil, soil_water, soil_heat, from, middle, to); 
+    chemicals[c]->swap (geo, soil, soil_water, soil_heat, awi, from, middle, to); 
 }
 
 void 
@@ -374,6 +378,7 @@ ChemistryStandard::tick_top (const Geometry& geo,
                              const double surface_runoff_rate, // [h^-1]
                              const double surface_water /* [mm] */,
                              const double total_rain /* [mm/h] */,
+			     const AWI& awi,
                              OrganicMatter& organic,
 			     Chemistry& chemistry,
                              const double dt, // [h]
@@ -397,7 +402,7 @@ ChemistryStandard::tick_top (const Geometry& geo,
       chemicals[c]->tick_top (vegetation, bioclimate, litter,
                               chemistry, surface_runoff_rate, dt, msg);
       chemicals[c]->tick_surface (pond_rain, T,
-                                  geo, soil, soil_water, z_mixing, msg);
+                                  geo, soil, soil_water, awi, z_mixing, msg);
     }
 }
 
@@ -428,7 +433,8 @@ ChemistryStandard::tick_soil (const Scope& scope,
                               const Geometry& geo, const double ponding,
                               const double R_mixing,
                               const Soil& soil, const SoilWater& soil_water,
-                              const SoilHeat& soil_heat, Movement& movement,
+                              const SoilHeat& soil_heat, const AWI& awi,
+			      Movement& movement,
                               OrganicMatter& organic,
 			      Chemistry& chemistry,
                               const double dt, Treelog& msg)
@@ -444,7 +450,7 @@ ChemistryStandard::tick_soil (const Scope& scope,
                              chemistry, dt, msg); 
 
   for (size_t r = 0; r < reactions.size (); r++)
-    reactions[r]->tick_soil (geo, soil, soil_water, soil_heat, 
+    reactions[r]->tick_soil (geo, soil, soil_water, soil_heat, awi,
                              organic, chemistry, dt, msg);
   
   for (size_t c = 0; c < chemicals.size (); c++)
@@ -456,8 +462,8 @@ ChemistryStandard::tick_soil (const Scope& scope,
                           + chemicals[c]->objid + ": transport");
       // [g/m^2/h down -> g/cm^2/h up]
       const double J_above = -chemicals[c]->down () / (100.0 * 100.0);
-      movement.solute (soil, soil_water, soil_heat, J_above, *chemicals[c], 
-		       dt, scope, msg); 
+      movement.solute (soil, soil_water, soil_heat, J_above, awi,
+		       *chemicals[c], dt, scope, msg); 
     }
   
   for (size_t c = 0; c < chemicals.size (); c++)
@@ -489,10 +495,11 @@ ChemistryStandard::initialize (const Scope& scope,
 			       const SoilHeat& soil_heat,
 			       const OrganicMatter& organic,
 			       const Chemistry& chemistry,
+			       const AWI& awi,
 			       const Surface& surface, Treelog& msg)
 {
   for (size_t c = 0; c < chemicals.size (); c++)
-    chemicals[c]->initialize (scope, geo, soil, soil_water, soil_heat, 
+    chemicals[c]->initialize (scope, geo, soil, soil_water, soil_heat, awi,
 			      msg);
 
   for (size_t r = 0; r < reactions.size (); r++)
@@ -508,7 +515,7 @@ ChemistryStandard::check (const Scope& scope,
 			  const SoilHeat& soil_heat,
 			  const OrganicMatter& organic,
 			  const Chemistry& chemistry,
-			  Treelog& msg) const
+			  const AWI& awi, Treelog& msg) const
 { 
   bool ok = true; 
   for (size_t c = 0; c < chemicals.size (); c++)
@@ -516,7 +523,7 @@ ChemistryStandard::check (const Scope& scope,
       Treelog::Open nest (msg, "Chemical: '" + chemicals[c]->objid  + "'");
       if (!chemicals[c]->check ( scope, 
 				 geo, soil, soil_water, soil_heat, organic,
-				 chemistry, msg))
+				 chemistry, awi, msg))
 	ok = false;
     }
 

@@ -28,6 +28,7 @@
 #include "object_model/frame.h"
 #include "util/assertion.h"
 #include "object_model/vcheck.h"
+#include "daisy/chemicals/awi.h"
 
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -105,7 +106,8 @@ struct AdsorptionPython : public Adsorption
   
   // Simulation.
 public:
-  double C_to_M (const Soil& soil, double Theta, double T, int i, 
+  double C_to_M (const Soil& soil, const AWI& awi,
+		 double Theta, double T, int i, 
                  double C, double sf) const
   {
     initialize ();
@@ -130,6 +132,8 @@ public:
 	  kwargs["f_clay"] = soil.clay (i); // [g/g]
 	if (extra.find ("d50") != extra.end ())
 	  kwargs["d50"] = soil.texture_fractile (i, 0.5); // [um]
+	if (extra.find ("area_AWI") != extra.end ())
+	  kwargs["area_AWI"] = awi.area (i); // [um]
 	if (extra.find ("T") != extra.end ())
 	  kwargs["T"] = T;
 	pybind11::object py_object = py_C_to_M (**kwargs);
@@ -144,6 +148,7 @@ public:
 	const double f_OC = soil.humus (i) * c_fraction_in_humus; // [g/g]
 	const double f_clay = soil.clay (i); // [g/g]
 	const double d50 = soil.texture_fractile (i, 0.5); // [um]
+	const double area_AWI = awi.area (i); // [um]
 	std::ostringstream tmp;
 	tmp << "C = " << C
 	    << ", Theta_sat = " << Theta_sat
@@ -152,13 +157,15 @@ public:
 	    << ", f_OC = " << f_OC
 	    << ", f_clay = " << f_clay
 	    << ", d50 = " << d50
+	    << ", area_AWI = " << area_AWI
 	    << ", T = " << T;
 	Assertion::message (tmp.str ());
 	state = state_t::error;
 	return NAN;
       }
   }
-  double M_to_C (const Soil& soil, double Theta, double T, int i, 
+  double M_to_C (const Soil& soil, const AWI& awi,
+		 double Theta, double T, int i, 
                  double M, double sf) const
   {
     initialize ();
@@ -166,7 +173,7 @@ public:
       return NAN;
 
     if (pM_to_C == Attribute::None ())
-      return M_to_C_bisect (soil, Theta, T, i, M, sf, 0.0, 1.0);
+      return M_to_C_bisect (soil, awi, Theta, T, i, M, sf, 0.0, 1.0);
 
     try
       {
@@ -186,6 +193,8 @@ public:
 	  kwargs["f_clay"] = soil.clay (i); // [g/g]
 	if (extra.find ("d50") != extra.end ())
 	  kwargs["d50"] = soil.texture_fractile (i, 0.5); // [um]
+	if (extra.find ("area_AWI") != extra.end ())
+	  kwargs["area_AWI"] = awi.area (i); // [um]
 	if (extra.find ("T") != extra.end ())
 	  kwargs["T"] = T;
 	pybind11::object py_object = py_M_to_C (**kwargs);
@@ -200,6 +209,7 @@ public:
 	const double f_OC = soil.humus (i) * c_fraction_in_humus; // [g/g]
 	const double f_clay = soil.clay (i); // [g/g]
 	const double d50 = soil.texture_fractile (i, 0.5); // [um]
+	const double area_AWI = awi.area (i); // [um]
 	std::ostringstream tmp;
 	tmp << "M = " << M
 	    << ", Theta_sat = " << Theta_sat
@@ -208,6 +218,7 @@ public:
 	    << ", f_OC = " << f_OC
 	    << ", f_clay = " << f_clay
 	    << ", d50 = " << d50
+	    << ", area_AWI = " << area_AWI
 	    << ", T = " << T;
 	Assertion::message (tmp.str ());
 	state = state_t::error;
@@ -268,6 +279,7 @@ Options include:\n\
   f_OC [g OC/g SOIL]: organic carbon content in soil\n\
   f_clay [g clay/g SOIL]: soil clay fraction\n\
   d50 [um]: median particle diameter\n\
+  area_AWI [cm^2/cm^3]: air-water interface area\n\
   T [dg C]: soil temperature.");
     static struct ExtraCheck : public VCheck::Enum
     {
@@ -280,6 +292,7 @@ Options include:\n\
 	add ("f_OC");
 	add ("f_clay");
 	add ("d50");
+	add ("area_AWI");
 	add ("T");
       }
     } extra_check;

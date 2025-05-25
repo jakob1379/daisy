@@ -57,9 +57,10 @@ struct ReactionAdsorption : public Reaction
   { output_variable (adsorption_source, log); }
 
   // Simulation.
-  void tick_soil (const Geometry& geo, const Soil& soil,
-                  const SoilWater& soil_water, const SoilHeat& soil_heat, 
-		  OrganicMatter&, Chemistry& chemistry,
+  void tick_soil (const Geometry& geo, const Soil& soil,  
+                  const SoilWater& soil_water,
+		  const SoilHeat& soil_heat,  const AWI& awi,
+		  OrganicMatter&, Chemistry& chemistry, 
                   const double dt, Treelog& msg)
   { 
     const size_t cell_size = geo.cell_size ();
@@ -77,7 +78,7 @@ struct ReactionAdsorption : public Reaction
 	const double has_sorbed = sorbed.M_primary (c);
 	const double has_M = has_solute + has_sorbed;
 	const double want_C
-	  = equilibrium->M_to_C1 (soil, Theta_new, T, c, has_M);
+	  = equilibrium->M_to_C1 (soil, awi, Theta_new, T, c, has_M);
 	const double want_solute = want_C * Theta_new;
 	const double want_sorbed = has_M - want_solute;
 

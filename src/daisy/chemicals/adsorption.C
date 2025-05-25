@@ -50,44 +50,48 @@ Adsorption::output (Log&) const
 { }
 
 double 
-Adsorption::C_to_M_total (const Soil& soil, double Theta, double T, int i, double C) const
-{ return C_to_M (soil, Theta, T, i, C, 1.0); }
+Adsorption::C_to_M_total (const Soil& soil, const AWI& awi,
+			  double Theta, double T, int i, double C) const
+{ return C_to_M (soil, awi, Theta, T, i, C, 1.0); }
 
 double 
-Adsorption::M_to_C_total (const Soil& soil, double Theta, double T, int i, double M) const
-{ return M_to_C (soil, Theta, T, i, M, 1.0); }
+Adsorption::M_to_C_total (const Soil& soil, const AWI& awi,
+			  double Theta, double T, int i, double M) const
+{ return M_to_C (soil, awi, Theta, T, i, M, 1.0); }
 
 double 
-Adsorption::C_to_M1 (const Soil& soil, double Theta, double T, int i, double C) const
+Adsorption::C_to_M1 (const Soil& soil, const AWI& awi, double Theta, double T, int i, double C) const
 {
   const double sf = soil.primary_sorption_fraction (i);
-  return C_to_M (soil, Theta, T, i, C, sf);
+  return C_to_M (soil, awi, Theta, T, i, C, sf);
 }
 
 double 
-Adsorption::M_to_C1 (const Soil& soil, double Theta, double T, int i, double M) const
+Adsorption::M_to_C1 (const Soil& soil, const AWI& awi, double Theta, double T, int i, double M) const
 {
   const double sf = soil.primary_sorption_fraction (i);
-  return M_to_C (soil, Theta, T, i, M, sf);
+  return M_to_C (soil, awi, Theta, T, i, M, sf);
 }
 
 double 
-Adsorption::C_to_M2 (const Soil& soil, double Theta, double T, int i, double C) const
+Adsorption::C_to_M2 (const Soil& soil, const AWI& awi,
+		     double Theta, double T, int i, double C) const
 {
   const double sf = 1.0 - soil.primary_sorption_fraction (i);
-  return C_to_M (soil, Theta, T, i, C, sf);
+  return C_to_M (soil, awi, Theta, T, i, C, sf);
 }
 
 double 
-Adsorption::M_to_C2 (const Soil& soil,
+Adsorption::M_to_C2 (const Soil& soil, const AWI& awi,
 		     double Theta, double T, int i, double M) const
 {
   const double sf = 1.0 - soil.primary_sorption_fraction (i);
-  return M_to_C (soil, Theta, T, i, M, sf);
+  return M_to_C (soil, awi, Theta, T, i, M, sf);
 }
 
 double
-Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
+Adsorption::M_to_C_bisect (const Soil& soil, const AWI& awi,
+			   double Theta, double T,
 			   int i, double M, double sf,
 			   double C_lower, double C_upper) const
 {
@@ -95,12 +99,12 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
   if (M < M_min)
     return 0.0;
   daisy_assert (M > 0.0);
-  double M_lower = C_to_M (soil, Theta, T, i, C_lower, sf);
+  double M_lower = C_to_M (soil, awi, Theta, T, i, C_lower, sf);
   if (M <= M_lower)
     return C_lower;
   daisy_assert (M > M_lower);
 
-  double M_upper = C_to_M (soil, Theta, T, i, C_upper, sf);
+  double M_upper = C_to_M (soil, awi, Theta, T, i, C_upper, sf);
   if (M >= M_upper)
     return C_upper;
   daisy_assert (M < M_upper);
@@ -115,7 +119,7 @@ Adsorption::M_to_C_bisect (const Soil& soil, double Theta, double T,
       const double C_guess = (C_lower > 0.0)
 	? (C_lower + C_upper) / 2.0
 	: C_upper * 1e-6;
-      const double M_guess = C_to_M (soil, Theta, T, i, C_guess, sf);
+      const double M_guess = C_to_M (soil, awi, Theta, T, i, C_guess, sf);
 
       if ((++count) % max_count == 0)
 	{
@@ -173,10 +177,10 @@ class AdsorptionNone : public Adsorption
 {
   // Simulation.
 public:
-  double C_to_M (const Soil&, double Theta, double,
+  double C_to_M (const Soil&, const AWI&, double Theta, double,
 		 int, double C, double) const
   { return C * Theta; }
-  double M_to_C (const Soil&, double Theta, double,
+  double M_to_C (const Soil&, const AWI&, double Theta, double,
 		 int, double M, double) const
   { return M / Theta; }
 
@@ -218,7 +222,8 @@ public:
   bool full () const
   { return true; }
 
-  double C_to_M (const Soil&, double Theta, double, int, double C, double) const
+  double C_to_M (const Soil&, const AWI&,
+		 double Theta, double, int, double C, double) const
   { 
     if (fabs (C) < 1.0e-100)
       return 0.0;
@@ -226,7 +231,8 @@ public:
     // If we initialized a non-zero C, put it all in M right away.
     return C * Theta;
   }
-  double M_to_C (const Soil&, double, double, int, double, double) const
+  double M_to_C (const Soil&, const AWI&,
+		 double, double, int, double, double) const
   { return 0; }
 
   // Create.
