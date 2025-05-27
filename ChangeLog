@@ -1,3 +1,8 @@
+2025-05-26  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption_guo2020.C: New model.
+	* src/daisy/chemicals/awi.C (Costanza2008x): New model.
+
 2025-05-25  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/daisy/chemicals/adsorption_Python.C (area_AWI): New parameter.

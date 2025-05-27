@@ -29,6 +29,7 @@
 #include "util/assertion.h"
 #include "object_model/vcheck.h"
 #include "daisy/chemicals/awi.h"
+#include "daisy/chemicals/chemical.h"
 
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -106,7 +107,7 @@ struct AdsorptionPython : public Adsorption
   
   // Simulation.
 public:
-  double C_to_M (const Soil& soil, const AWI& awi,
+  double C_to_M (const Soil& soil, const Chemical& chemical, const AWI& awi,
 		 double Theta, double T, int i, 
                  double C, double sf) const
   {
@@ -134,6 +135,8 @@ public:
 	  kwargs["d50"] = soil.texture_fractile (i, 0.5); // [um]
 	if (extra.find ("area_AWI") != extra.end ())
 	  kwargs["area_AWI"] = awi.area (i); // [um]
+	if (extra.find ("molar_mass") != extra.end ())
+	  kwargs["molar_mass"] = chemical.molar_mass (); // [um]
 	if (extra.find ("T") != extra.end ())
 	  kwargs["T"] = T;
 	pybind11::object py_object = py_C_to_M (**kwargs);
@@ -164,7 +167,7 @@ public:
 	return NAN;
       }
   }
-  double M_to_C (const Soil& soil, const AWI& awi,
+  double M_to_C (const Soil& soil, const Chemical& chemical, const AWI& awi,
 		 double Theta, double T, int i, 
                  double M, double sf) const
   {
@@ -173,7 +176,7 @@ public:
       return NAN;
 
     if (pM_to_C == Attribute::None ())
-      return M_to_C_bisect (soil, awi, Theta, T, i, M, sf, 0.0, 1.0);
+      return M_to_C_bisect (soil, chemical, awi, Theta, T, i, M, sf, 0.0, 1.0);
 
     try
       {
@@ -195,6 +198,8 @@ public:
 	  kwargs["d50"] = soil.texture_fractile (i, 0.5); // [um]
 	if (extra.find ("area_AWI") != extra.end ())
 	  kwargs["area_AWI"] = awi.area (i); // [um]
+	if (extra.find ("molar_mass") != extra.end ())
+	  kwargs["molar_mass"] = chemical.molar_mass (); // [um]
 	if (extra.find ("T") != extra.end ())
 	  kwargs["T"] = T;
 	pybind11::object py_object = py_M_to_C (**kwargs);
@@ -280,6 +285,7 @@ Options include:\n\
   f_clay [g clay/g SOIL]: soil clay fraction\n\
   d50 [um]: median particle diameter\n\
   area_AWI [cm^2/cm^3]: air-water interface area\n\
+  molar_mass [g/mol]: molar mass of compound\n\
   T [dg C]: soil temperature.");
     static struct ExtraCheck : public VCheck::Enum
     {
@@ -293,6 +299,7 @@ Options include:\n\
 	add ("f_clay");
 	add ("d50");
 	add ("area_AWI");
+	add ("molar_mass");
 	add ("T");
       }
     } extra_check;

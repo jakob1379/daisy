@@ -114,4 +114,41 @@ Estimate AWI area from water and median particle size (Equation 5).")
   }
 } AWIBrusseau2023_syntax;
 
+// The 'Costanza2008x' AWI model.
+
+struct AWICostanza2008x : public AWI
+{
+  double find_area (double Theta, double Theta_sat,
+		    double d50 /* [cm] */) const // [cm^2/cm^3]
+  {
+    const double Sw = Theta/Theta_sat;
+
+    // Equation 2.
+    const double SA = 6.0 * (1.0 - Theta_sat) / d50;
+
+    // Equation 1.
+    const double area = SA * (-0.9112 * Sw + 0.9031); // [cm^2/cm^3]
+
+    return std::max (0.0, area);
+  }
+  
+  explicit AWICostanza2008x (const BlockModel& al)
+    : AWI (al)
+  { }      
+};
+
+static struct AWICostanza2008xSyntax : public DeclareModel
+{
+  Model* make (const BlockModel& al) const
+  { return new AWICostanza2008x (al); }
+  AWICostanza2008xSyntax ()
+    : DeclareModel (AWI::component, "Costanza2008x", "\
+Estimate AWI area from water and median particle size (Equation 1 and 2).")
+  { }
+  void load_frame (Frame& frame) const
+  {
+    frame.set_strings ("cite", "costanza2008x");
+  }
+} AWICostanza2008x_syntax;
+
 // AWI.C ends here.

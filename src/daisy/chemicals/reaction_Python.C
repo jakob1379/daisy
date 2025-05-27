@@ -87,7 +87,8 @@ struct ReactionPython : public Reaction
   // Simulation.
   void tick_soil (const Geometry& geo,
                   const Soil& soil, const SoilWater& soil_water, 
-                  const SoilHeat& soil_heat, OrganicMatter& organic_matter,
+                  const SoilHeat& soil_heat, const AWI&,
+		  OrganicMatter& organic_matter,
                   Chemistry& chemistry, const double dt, Treelog& msg)
   {
     if (psoil == Attribute::None () || state != state_t::working)

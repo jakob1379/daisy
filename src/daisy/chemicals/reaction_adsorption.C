@@ -78,7 +78,7 @@ struct ReactionAdsorption : public Reaction
 	const double has_sorbed = sorbed.M_primary (c);
 	const double has_M = has_solute + has_sorbed;
 	const double want_C
-	  = equilibrium->M_to_C1 (soil, awi, Theta_new, T, c, has_M);
+	  = equilibrium->M_to_C1 (soil, solute, awi, Theta_new, T, c, has_M);
 	const double want_solute = want_C * Theta_new;
 	const double want_sorbed = has_M - want_solute;
 

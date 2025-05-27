@@ -334,7 +334,8 @@ ChemicalBase::Product::Product (const Block& al)
 { }
 
 void 
-ChemicalBase::sorption_table (const Soil& soil, const AWI& awi,
+ChemicalBase::sorption_table (const Soil& soil, 
+			      const AWI& awi,
 			      const size_t cell, 
 			      const double Theta, 
 			      const double start, const double factor,
@@ -357,7 +358,7 @@ ChemicalBase::sorption_table (const Soil& soil, const AWI& awi,
       double C = start;
       for (int i = 0; i < intervals; i++)
         {
-          const double M = adsorption_->C_to_M_total (soil, awi,
+          const double M = adsorption_->C_to_M_total (soil, *this, awi,
 						      Theta, T, cell, C);
           tmp << "\n" << C << "\t" << M;
           if (std::isnormal (factor))
@@ -488,7 +489,7 @@ ChemicalBase::set_primary (const Soil& soil, const SoilWater& soil_water,
       const double Theta_primary = soil_water.Theta_primary (c);
       const double T = soil_heat.T (c);
       C_primary_[c] 
-        = adsorption_->M_to_C1 (soil, awi, Theta_primary, T, c, M_primary_[c]);
+        = adsorption_->M_to_C1 (soil, *this, awi, Theta_primary, T, c, M_primary_[c]);
     }
 
   update_matrix (soil, soil_water, soil_heat, awi);
@@ -531,7 +532,7 @@ ChemicalBase::update_matrix (const Soil& soil, const SoilWater& soil_water,
       
       if (Theta_secondary > 0.0)
         C_secondary_[c]
-          = adsorption_->M_to_C2 (soil, awi,
+          = adsorption_->M_to_C2 (soil,*this, awi,
 				  Theta_secondary, T, c, M_secondary_[c]);
       else
 	{
@@ -850,9 +851,9 @@ ChemicalBase::update_C (const Soil& soil, const SoilWater& soil_water,
       const double M1 = M - M2;
       daisy_assert (T1 > 0.0);
       daisy_assert (M1 >= 0.0);
-      const double C1 = adsorption_->M_to_C1 (soil, awi, T1, Temp, c, M1);
+      const double C1 = adsorption_->M_to_C1 (soil, *this, awi, T1, Temp, c, M1);
       const double C2 = (T2 > 0.0)
-	? adsorption_->M_to_C2 (soil, awi, T2, Temp, c, M2)
+	? adsorption_->M_to_C2 (soil, *this, awi, T2, Temp, c, M2)
 	: C1;
       const double C = (C1 * T1 + C2 * T2) / (T1 + T2);
 
@@ -1258,7 +1259,7 @@ ChemicalBase::tick_surface (const double pond /* [cm] */,
       const double Theta = soil_water.Theta (cell) + Theta_pond;
       daisy_assert (Theta > 0.0);
       const double C 
-        = adsorption_->M_to_C_total (soil, awi, Theta, T, cell, M); // [g/cm^3]
+        = adsorption_->M_to_C_total (soil, *this, awi, Theta, T, cell, M); // [g/cm^3]
       daisy_assert (C >= 0.0);
       // Accumulate based on cell surface area.
       const double area = geo.edge_area (edge); // [cm^2]
@@ -1797,7 +1798,7 @@ ChemicalBase::check (const Scope& scope,
       try 
         {   
           if (Theta_secondary > 0.0 && 
-              !approximate (adsorption_->M_to_C2 (soil, awi,
+              !approximate (adsorption_->M_to_C2 (soil, *this, awi,
 						  Theta_secondary, T, i, 
                                                   M_secondary),
                             C_secondary))
@@ -1805,7 +1806,7 @@ ChemicalBase::check (const Scope& scope,
               std::ostringstream tmp;
               tmp << "Theta_secondary = " << Theta_secondary 
                   << ", M_secondary = " << M_secondary
-                  << ", M2C = " << (adsorption_->M_to_C2 (soil, awi,
+                  << ", M2C = " << (adsorption_->M_to_C2 (soil, *this, awi,
 							  Theta_secondary,
 							  T,
                                                           i, M_secondary))
@@ -1813,7 +1814,7 @@ ChemicalBase::check (const Scope& scope,
               msg.message (tmp.str ());
               throw "C_secondary does not match M_secondary";
             }
-          if (!approximate (adsorption_->M_to_C1 (soil, awi,
+          if (!approximate (adsorption_->M_to_C1 (soil, *this, awi,
 						  Theta_primary, T, i, 
                                                   M_primary),
                             C_primary))
@@ -1966,9 +1967,9 @@ ChemicalBase::initialize (const Scope& parent_scope,
         // No secondary water.
         {
           if (!has_C_avg)
-            C_avg_.push_back (adsorption_->M_to_C1 (soil, awi, Theta, T, i, 
+            C_avg_.push_back (adsorption_->M_to_C1 (soil, *this, awi, Theta, T, i, 
                                                     M_total_[i]));
-          M_primary_.push_back (adsorption_->C_to_M1 (soil, awi, Theta, T, i, 
+          M_primary_.push_back (adsorption_->C_to_M1 (soil, *this, awi, Theta, T, i, 
                                                       C_avg_[i])); 
           if (!has_M_secondary)
             M_secondary_.push_back (0.0);
@@ -1985,18 +1986,18 @@ ChemicalBase::initialize (const Scope& parent_scope,
           daisy_assert (has_C_avg || has_M_total);
 
           if (!has_C_avg)
-            C_avg_.push_back (adsorption_->M_to_C_total (soil, awi,
+            C_avg_.push_back (adsorption_->M_to_C_total (soil, *this, awi,
 							 Theta, T, i, 
                                                          M_total_[i]));
           if (!has_M_total) 
-            M_total_.push_back (adsorption_->C_to_M_total (soil, awi,
+            M_total_.push_back (adsorption_->C_to_M_total (soil, *this, awi,
 							   Theta, T, i, 
                                                            C_avg_[i])); 
           C_primary_.push_back (C_avg_[i]);
           C_secondary_.push_back (C_avg_[i]);
-          M_primary_.push_back (adsorption_->C_to_M1 (soil, awi, Theta_primary,
+          M_primary_.push_back (adsorption_->C_to_M1 (soil, *this, awi, Theta_primary,
 						      T, i, C_primary_[i]));
-          M_secondary_.push_back (adsorption_->C_to_M2 (soil, awi, 
+          M_secondary_.push_back (adsorption_->C_to_M2 (soil, *this, awi, 
                                                         Theta_secondary, T, i, 
                                                         C_secondary_[i]));
         }
@@ -2006,12 +2007,12 @@ ChemicalBase::initialize (const Scope& parent_scope,
 	  Treelog::Open nest (msg, "cell", i, "c");
           daisy_assert (has_C_secondary || has_M_secondary);
           if (!has_C_secondary)
-            C_secondary_.push_back (adsorption_->M_to_C2 (soil, awi,
+            C_secondary_.push_back (adsorption_->M_to_C2 (soil, *this, awi,
 							  Theta_secondary,
                                                           T, i,
 							  M_secondary_[i]));
           if (!has_M_secondary)
-            M_secondary_.push_back (adsorption_->C_to_M2 (soil, awi,
+            M_secondary_.push_back (adsorption_->C_to_M2 (soil, *this, awi,
 							  Theta_secondary,
                                                           T, i,
 							  C_secondary_[i]));
@@ -2022,7 +2023,7 @@ ChemicalBase::initialize (const Scope& parent_scope,
 					   - Theta_secondary * C_secondary_[i])
 					  / Theta_primary,
 					  0.0));
-          M_primary_.push_back (adsorption_->C_to_M1 (soil, awi,
+          M_primary_.push_back (adsorption_->C_to_M1 (soil, *this, awi,
 						      Theta_primary, T,
 						      i, C_primary_[i]));
           if (!has_M_total)
@@ -2034,18 +2035,18 @@ ChemicalBase::initialize (const Scope& parent_scope,
 	  Treelog::Open nest (msg, "cell", i, "d");
           daisy_assert (has_C_secondary || has_M_secondary);
           if (!has_C_secondary)
-            C_secondary_.push_back (adsorption_->M_to_C2 (soil, awi,
+            C_secondary_.push_back (adsorption_->M_to_C2 (soil, *this, awi,
 							  Theta_secondary,
 							  T, i, 
                                                           M_secondary_[i]));
           if (!has_M_secondary)
-            M_secondary_.push_back (adsorption_->C_to_M2 (soil, awi,
+            M_secondary_.push_back (adsorption_->C_to_M2 (soil, *this, awi,
 							  Theta_secondary,
                                                           T, i, 
                                                           C_secondary_[i]));
           daisy_assert (has_M_total);
           M_primary_.push_back (std::max (M_total_[i] - M_secondary_[i], 0.0));
-          C_primary_.push_back (adsorption_->M_to_C1 (soil, awi,
+          C_primary_.push_back (adsorption_->M_to_C1 (soil, *this, awi,
                                                       Theta_primary,
                                                       T, i,
                                                       M_primary_[i]));

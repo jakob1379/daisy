@@ -50,7 +50,7 @@ public:
       + soil.humus (c) * c_fraction_in_humus * K_OC;
   }
 
-  double C_to_M (const Soil& soil, const AWI& awi,
+  double C_to_M (const Soil& soil, const Chemical&, const AWI& awi,
 		 double Theta, double T, int i, 
                  double C, double sf) const
   {
@@ -59,7 +59,7 @@ public:
     const double area_AWI = awi.area (i); // [cm^2/cm^3]
     return C * ((K_soil * rho + K_AWI * area_AWI) * sf + Theta);
   }
-  double M_to_C (const Soil& soil, const AWI& awi,
+  double M_to_C (const Soil& soil, const Chemical&, const AWI& awi,
 		 double Theta, double T, int i, 
                  double M, double sf) const
   {

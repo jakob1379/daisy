@@ -28,6 +28,7 @@
 class Log;
 class Soil;
 class BlockModel;
+class Chemical;
 
 class AWI;
 
@@ -43,26 +44,30 @@ public:
   virtual bool full () const;
   virtual void output (Log&) const;
 private:
-  virtual double C_to_M (const Soil&, const AWI&, double Theta, double T,
+  virtual double C_to_M (const Soil&, const Chemical&, const AWI&,
+			 double Theta, double T,
 			 int i, double C, double sf) const = 0;
-  virtual double M_to_C (const Soil&, const AWI&, double Theta, double T,
+  virtual double M_to_C (const Soil&, const Chemical&, const AWI&,
+			 double Theta, double T,
 			 int i, double M, double sf) const = 0;
 protected:
-  double M_to_C_bisect (const Soil&, const AWI&, double Theta, double T,
+  double M_to_C_bisect (const Soil&, const Chemical&, const AWI&,
+			double Theta, double T,
 			int i, double M, double sf,
 			double C_lower, double C_upper) const;
 public:
-  double C_to_M_total (const Soil&, const AWI&, double Theta, double T,
+  double C_to_M_total (const Soil&, const Chemical&, const AWI&,
+		       double Theta, double T,
 		       int i, double C) const;
-  double M_to_C_total (const Soil&, const AWI&,
+  double M_to_C_total (const Soil&, const Chemical&, const AWI&,
 		       double Theta, double T, int i, double M) const;
-  double C_to_M1 (const Soil&, const AWI&,
+  double C_to_M1 (const Soil&, const Chemical&, const AWI&,
 		  double Theta, double T, int i, double C) const;
-  double M_to_C1 (const Soil&, const AWI&,
+  double M_to_C1 (const Soil&, const Chemical&, const AWI&,
 		  double Theta, double T, int i, double M) const;
-  double C_to_M2 (const Soil&, const AWI&,
+  double C_to_M2 (const Soil&, const Chemical&, const AWI&,
 		  double Theta, double T, int i, double C) const;
-  double M_to_C2 (const Soil&, const AWI&,
+  double M_to_C2 (const Soil&, const Chemical&, const AWI&,
 		  double Theta, double T, int i, double M) const;
 
   // Create and Destroy.

@@ -1254,7 +1254,7 @@ Drainage.");
                           "Chemical compounds in the system.");
     frame.set ("Chemistry", "nutrient");
     frame.declare_object ("AWI", AWI::component, 
-                          Attribute::LogOnly, Attribute::Singleton,
+                          Attribute::State, Attribute::Singleton,
                           "Air-water interface area.");
     frame.set ("AWI", "Brusseau2023");
     frame.declare ("yield_DM", "g/m^2/h", Attribute::LogOnly, 

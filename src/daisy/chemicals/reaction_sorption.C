@@ -71,10 +71,10 @@ struct ReactionSorption : public Reaction
   }
 
   // Simulation.
-  void tick_soil (const Geometry& geo, // FIXME: geo not used
+  void tick_soil (const Geometry&,
                   const Soil& soil, const SoilWater& soil_water, 
-                  const SoilHeat& soil_heat, // FIXME: soil_heat not used
-                  OrganicMatter&, Chemistry& chemistry,
+                  const SoilHeat&, const AWI&,
+                  const OrganicMatter&, Chemistry& chemistry,
 		  const double /* dt */, Treelog& msg)
   { 
     TREELOG_MODEL (msg);
