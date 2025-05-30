@@ -719,6 +719,16 @@ Connvert to SI base units by multiplying with a factor.")
     add ("mmol/m^2/s", p_m, -2, 0, -1, 0, 0, 1, 0,
          "Millimole per square meter per second.");
 
+    // Amount of substance per volume.
+    add ("mol/m^3", 1.0, -3, 0, 0, 0, 0, 1, 0,
+         "Mole per cubic meter.");
+    add ("mol/cm^3", 1.0 / p_c_3, -3, 0, 0, 0, 0, 1, 0,
+         "Mole per cubic centimeter.");
+    add ("mmol/cm^3", p_m / p_c_3, -3, 0, 0, 0, 0, 1, 0,
+         "Millimole per cubic centimeter.");
+    add ("umol/cm^3", p_u / p_c_3, -3, 0, 0, 0, 0, 1, 0,
+         "Micromole per cubic centimeter.");
+
     // Amount of substance per mass.
     add ("mol/kg", 1.0, 0, -1, 0, 0, 0, 1, 0,
          "Mole per kilogram.");

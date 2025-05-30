@@ -69,7 +69,7 @@ struct ReactionDOM : public Reaction
   // Simulation.
   void tick_soil (const Geometry& geo,
                   const Soil& soil, const SoilWater& soil_water, 
-                  const SoilHeat& soil_heat,
+                  const SoilHeat& soil_heat, const AWI&,
                   OrganicMatter& organic_matter, Chemistry& chemistry,
 		  const double dt, Treelog& msg);
 
@@ -103,7 +103,7 @@ ReactionDOM::output (Log& log) const
 void 
 ReactionDOM::tick_soil (const Geometry& geo,
 			const Soil& soil, const SoilWater& soil_water, // FIXME: soil not used
-			const SoilHeat& soil_heat,
+			const SoilHeat& soil_heat, const AWI&,
 			OrganicMatter& organic, 
 			Chemistry& chemistry, 
 			const double dt, Treelog& msg) // FIXME: msg not used

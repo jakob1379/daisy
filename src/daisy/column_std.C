@@ -38,6 +38,7 @@
 #include "daisy/upper_boundary/weather/wsource.h"
 #include "daisy/chemicals/chemistry.h"
 #include "daisy/chemicals/chemical.h"
+#include "daisy/chemicals/awi.h"
 #include "daisy/organic_matter/organic.h"
 #include "daisy/chemicals/im.h"
 #include "daisy/organic_matter/am.h"
@@ -80,6 +81,7 @@ struct ColumnStandard : public Column
   std::unique_ptr<SoilWater> soil_water;
   std::unique_ptr<SoilHeat> soil_heat;
   std::unique_ptr<Chemistry> chemistry;
+  std::unique_ptr<AWI> awi;
   std::unique_ptr<OrganicMatter> organic_matter;
   double second_year_utilization_;
   std::vector<double> tillage_age;
@@ -222,7 +224,7 @@ ColumnStandard::sorption_table (const size_t cell,
                                 const double Theta, const double start,
                                 const double factor, const int intervals,
                                 Treelog& msg) const
-{ chemistry->sorption_table (*soil, cell, Theta, start, factor, intervals,
+{ chemistry->sorption_table (*soil, *awi, cell, Theta, start, factor, intervals,
                              msg); }
 
 void 
@@ -451,7 +453,7 @@ ColumnStandard::mix_it (const double from, const double to,
     = soil_water->mix (geometry, *soil, *soil_heat, from, to, msg);
   overflow (extra, msg);
   soil_heat->set_energy (geometry, *soil, *soil_water, from, to, energy);
-  chemistry->mix (geometry, *soil, *soil_water, *soil_heat,
+  chemistry->mix (geometry, *soil, *soil_water, *soil_heat, *awi,
 		  from, to, penetration);
   organic_matter->mix (geometry, *soil, *soil_water, from, to, penetration);
   // Reset tillage age.
@@ -476,7 +478,8 @@ ColumnStandard::swap (const double from, const double middle, const double to,
     = soil_water->swap (geometry, *soil, *soil_heat, from, middle, to, msg);
   overflow (extra, msg);
   soil_heat->swap (geometry, from, middle, to);
-  chemistry->swap (geometry, *soil, *soil_water, *soil_heat, from, middle, to);
+  chemistry->swap (geometry, *soil, *soil_water, *soil_heat, *awi,
+		   from, middle, to);
   organic_matter->swap (geometry, *soil, *soil_water, from, middle, to);
 }
 
@@ -497,7 +500,7 @@ ColumnStandard::set_porosity (const double at, const double Theta, Treelog& msg)
       soil->set_porosity (i, Theta); 
   const double extra = soil_water->overflow (geometry, *soil, *soil_heat, msg);
   overflow (extra, msg);
-  chemistry->update_C (*soil, *soil_water, *soil_heat);
+  chemistry->update_C (*soil, *soil_water, *soil_heat, *awi);
 }
 
 void
@@ -785,7 +788,7 @@ ColumnStandard::tick_move (const Metalib& metalib,
 		       *litter,
                        surface->runoff_rate (),
                        old_pond,
-                       my_weather.rain (),
+                       my_weather.rain (), *awi,
                        *organic_matter, *chemistry,
                        dt, msg);
   
@@ -820,10 +823,11 @@ ColumnStandard::tick_move (const Metalib& metalib,
   soil_water->mass_balance (geometry, dt, msg);
   soil_heat->tick_after (geometry.cell_size (), *soil, *soil_water, msg);
   // Is Theta_old * C != M here?
+  awi->tick (geometry, *soil, *soil_water); // New Theta, old C/M.
   chemistry->tick_soil (scope, geometry, 
                         surface->ponding_average (),
                         surface->mixing_resistance (),
-                        *soil, *soil_water, *soil_heat, 
+                        *soil, *soil_water, *soil_heat, *awi, 
                         *movement, *organic_matter, *chemistry, dt, msg);
   organic_matter->transport (units, geometry, 
                              *soil, *soil_water, *soil_heat, msg);
@@ -851,7 +855,7 @@ ColumnStandard::tick_move (const Metalib& metalib,
       overflow (extra, msg);
       chemistry->mass_balance (geometry, *soil_water);
     }
-  chemistry->update_C (*soil, *soil_water, *soil_heat);
+  chemistry->update_C (*soil, *soil_water, *soil_heat, *awi);
   chemistry->mass_balance (geometry, *soil_water);
 }
 
@@ -920,7 +924,7 @@ ColumnStandard::check (const Weather* global_weather,
   {
     Treelog::Open nest (msg, "Chemistry");
     if (!chemistry->check (scope, geometry, *soil, *soil_water, *soil_heat,
-                           *organic_matter, *chemistry, msg))
+                           *organic_matter, *chemistry, *awi, msg))
       ok = false;
   }
   {
@@ -999,6 +1003,7 @@ ColumnStandard::output (Log& log) const
   output_submodule (*soil_water, "SoilWater", log);
   output_submodule (*soil_heat, "SoilHeat", log);
   output_object (chemistry, "Chemistry", log);
+  output_derived (awi, "AWI", log);
   output_derived (vegetation, "Vegetation", log);
   output_derived (litter, "Litter", log);
   output_derived (organic_matter, "OrganicMatter", log);
@@ -1057,6 +1062,7 @@ ColumnStandard::ColumnStandard (const BlockModel& al)
     soil_water (submodel<SoilWater> (al, "SoilWater")),
     soil_heat (submodel<SoilHeat> (al, "SoilHeat")),
     chemistry (Librarian::build_item<Chemistry> (al, "Chemistry")),
+    awi (Librarian::build_item<AWI> (al, "AWI")),
     organic_matter (Librarian::build_item<OrganicMatter> 
                     (al, "OrganicMatter")),
     second_year_utilization_ (al.number ("second_year_utilization")),
@@ -1147,7 +1153,7 @@ ColumnStandard::initialize (const Metalib& metalib,
   
   // Solutes depends on water and heat.
   chemistry->initialize (scope, geometry, *soil, *soil_water, *soil_heat, 
-                         *organic_matter, *chemistry, *surface, msg);
+                         *organic_matter, *chemistry, *awi, *surface, msg);
 
   // Movement depends on soil, soil_water, and groundwater
   if (!movement->initialize (units, *soil, *soil_water, *groundwater,
@@ -1247,6 +1253,10 @@ Drainage.");
                           Attribute::State, Attribute::Singleton,
                           "Chemical compounds in the system.");
     frame.set ("Chemistry", "nutrient");
+    frame.declare_object ("AWI", AWI::component, 
+                          Attribute::State, Attribute::Singleton,
+                          "Air-water interface area.");
+    frame.set ("AWI", "Brusseau2023");
     frame.declare ("yield_DM", "g/m^2/h", Attribute::LogOnly, 
                    "Amount of DM removed as yield this hour.\n\
 This is the economic part of the storage organ, e.g. the grains.");

@@ -55,7 +55,7 @@ struct ReactionFilter : public Reaction
 
   // Simulation.
   void tick_soil (const Geometry& geo, const Soil& soil,
-                  const SoilWater& soil_water, const SoilHeat&, 
+                  const SoilWater& soil_water, const SoilHeat&, const AWI&, 
                   OrganicMatter&, Chemistry& chemistry,
 		  const double dt, Treelog& msg) // FIXME: msg not used
   { 

@@ -1,6 +1,6 @@
-// deposition.h --- Deposition of inorganic material from atmosphere.
+// awi.h --- Air-Water Interface area.
 // 
-// Copyright 2013 KU.
+// Copyright 2025 KU.
 //
 // This file is part of Daisy.
 // 
@@ -18,43 +18,46 @@
 // along with Daisy; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#ifndef DEPOSITION_H
-#define DEPOSITION_H
 
-#include "object_model/model_framed.h"
+#ifndef AWI_H
+#define AWI_H
+
+#include "object_model/model_derived.h"
 #include "object_model/symbol.h"
-#include "daisy/daisy_time.h"
-#include "daisy/chemicals/im.h"
+#include <vector>
 
-class Vegetation;
-class Weather;
+class Geometry;
+class Soil;
+class SoilWater;
 class Treelog;
 class BlockModel;
 
-// The 'deposition' component.
-
-class Deposition : public ModelFramed
+class AWI : public ModelDerived
 {
   // Content.
 public:
-  const symbol name;
-  symbol library_id () const;
   static const char *const component;
+  symbol library_id () const;
 
-  IM my_deposit;                // [g [stuff] /cm²/h]
-  
-  // Use.
+  // Calculated.
+  std::vector<double> AWI_area;
+
+  // Simulation.
+protected:
+  virtual double find_area (double Theta, double Theta_sat,
+			    double d50 /* [cm] */) const = 0; // [cm^2/cm^3]
+
 public:
-  virtual void tick (const Time&, const Vegetation&, const Weather&,
-		     Treelog& msg) = 0;
-  const IM& deposit () const;
   void output (Log&) const;
+  void tick (const Geometry&, const Soil&, const SoilWater&);
+  double area (size_t c) const // [cm^2/cm^3]
+  { return (c < AWI_area.size ()) ? AWI_area[c] : 0.0; }
 
   // Create and Destroy.
 protected:
-  explicit Deposition (const BlockModel&);
+  AWI (const BlockModel&);
 public:
-  virtual ~Deposition ();
+  ~AWI ();
 };
 
-#endif // DEPOSITION_H
+#endif // AWI_H

@@ -51,7 +51,7 @@ private:
 				   const SoilHeat&,
                                    const std::map<size_t, double>& J_forced,
                                    const std::map<size_t, double>& C_border,
-                                   Chemical& solute, 
+                                   const AWI&, Chemical& solute, 
                                    std::vector<double>& S_extra,
                                    const double dt, 
                                    const Scope& scope, Treelog& msg);
@@ -63,7 +63,7 @@ private:
                                  const size_t transport_iteration,
                                  const std::map<size_t, double>& J_forced,
                                  const std::map<size_t, double>& C_border,
-                                 Chemical& solute, 
+                                 const AWI&, Chemical& solute, 
                                  const std::vector<double>& S_extra,
                                  const double dt,
                                  const Scope& scope, Treelog& msg);
@@ -84,7 +84,7 @@ private:
                         std::map<size_t, double>& J_secondary,
                         std::map<size_t, double>& J_tertiary);
   void solute (const Soil& soil, const SoilWater& soil_water, const SoilHeat&,
-               double J_above, Chemical&, 
+               double J_above, const AWI&, Chemical&, 
 	       double dt, const Scope&, Treelog&);
   void element (const Soil& soil, const SoilWater& soil_water,
                 DOE& element, 

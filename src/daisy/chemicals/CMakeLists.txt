@@ -1,4 +1,6 @@
 target_sources(${DAISY_CORE_NAME} PRIVATE
+  adsorption_guo2020.C
+  awi.C
   reaction_Python.C
   denprod_Parton1996.C
   denprod.C

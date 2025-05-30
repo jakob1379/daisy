@@ -1,3 +1,32 @@
+2025-05-26  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption_guo2020.C: New model.
+	* src/daisy/chemicals/awi.C (Costanza2008x): New model.
+
+2025-05-25  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption_Python.C (area_AWI): New parameter.
+	* src/daisy/chemicals/adsorption_linear.C (K_AWI): New parameter.
+	* src/daisy/column_std.C (awi): New parameter.
+	* all: Update.
+
+2025-05-23  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/awi.C: New component.
+
+2025-05-21  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/upper_boundary/bioclimate/bioclimate_std.C
+	(deposition): Made it a list.
+
+	* src/daisy/upper_boundary/weather/deposition.C
+	(DepositionGundersen): Delete model.
+	(const): New model.
+
+2025-05-19  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/adsorption_Python.C (extra): New parameter.
+
 2025-04-25  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* CMakeLists.txt (VERSION): 7.0.9.

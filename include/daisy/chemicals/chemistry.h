@@ -32,6 +32,7 @@ class Geometry;
 class Soil;
 class SoilWater;
 class SoilHeat;
+class AWI;
 class OrganicMatter;
 class Surface;
 class Movement;
@@ -64,13 +65,14 @@ public:
 
   // Table.
 public:
-  virtual void sorption_table (const Soil& soil, const size_t cell, 
+  virtual void sorption_table (const Soil& soil, const AWI&, const size_t cell, 
                                const double Theta, const double start,
                                const double factor, const int intervals,
                                Treelog& msg) const = 0;
 
 public:
-  virtual void update_C (const Soil&, const SoilWater&, const SoilHeat&) = 0;
+  virtual void update_C (const Soil&, const SoilWater&, const SoilHeat&,
+			 const AWI&) = 0;
   virtual void mass_balance (const Geometry&, const SoilWater&) const = 0;
   void deposit (const IM& im, Treelog&);
   virtual void deposit (symbol chem, double flux /* [g/m^2/h] */,
@@ -85,10 +87,10 @@ public:
                                   Treelog&) = 0;
   virtual void harvest (double removed, double surface) = 0;
   virtual void mix (const Geometry&, const Soil&, const SoilWater&,
-		    const SoilHeat&,
+		    const SoilHeat&, const AWI&,
                     double from, double to, double penetration) = 0;
   virtual void swap (const Geometry&, const Soil&, const SoilWater&,
-		     const SoilHeat&,
+		     const SoilHeat&, const AWI&,
                      double from, double middle, double to) = 0;
   void incorporate (const Geometry& geo, const IM& im, 
 		    const double from, const double to, Treelog& msg);
@@ -126,13 +128,15 @@ public:
 			 const double surface_runoff_rate, // [h^-1]
 			 const double surface_water /* [mm] */,
 			 const double total_rain /* [mm/h] */,
+			 const AWI&,
                          OrganicMatter&, Chemistry& chemistry, 
                          double dt /* [h] */,
 			 Treelog&) = 0;
   virtual void tick_soil (const Scope&, 
                           const Geometry& geo, double ponding /* [mm] */,
                           double R_mixing /* [h/mm] */,
-                          const Soil&, const SoilWater&, const SoilHeat&, 
+                          const Soil&, const SoilWater&, const SoilHeat&,
+			  const AWI&,
 			  Movement&, OrganicMatter&, Chemistry&, 
 			  double dt, Treelog&) = 0;
   virtual void clear () = 0;
@@ -143,11 +147,11 @@ public:
   virtual void initialize (const Scope&, const Geometry& geo,
                            const Soil&, const SoilWater&, const SoilHeat&,
 			   const OrganicMatter&, const Chemistry&,
-			   const Surface&, Treelog&) = 0;
+			   const AWI&, const Surface&, Treelog&) = 0;
   virtual bool check (const Scope&, const Geometry&,
 		      const Soil&, const SoilWater&, const SoilHeat&,
 		      const OrganicMatter&, const Chemistry&,
-		      Treelog&) const = 0;
+		      const AWI&, Treelog&) const = 0;
 protected:
   explicit Chemistry (const BlockModel& al);
 public:

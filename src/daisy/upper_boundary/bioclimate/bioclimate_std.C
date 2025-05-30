@@ -51,6 +51,8 @@
 #include "daisy/upper_boundary/bioclimate/resistance.h"
 #include "daisy/chemicals/im.h"
 #include "daisy/soil/soil_water.h"
+#include "util/memutils.h"
+#include "object_model/units.h"
 #include <sstream>
 
 struct BioclimateStandard : public Bioclimate
@@ -215,8 +217,9 @@ struct BioclimateStandard : public Bioclimate
   double air_pressure_;         // From weather [Pa]
 
   // Deposition.
-  const std::unique_ptr<Deposition> deposition;  // Deposition model.
-
+  const auto_vector<Deposition*> deposition;  // Deposition models.
+  IM deposit_sum;
+  
   // Initialization.
   const bool fixed_pet;
   const bool fixed_difrad;
@@ -418,7 +421,7 @@ struct BioclimateStandard : public Bioclimate
     return litter_wash_off / litter_water_old;
   }
   const IM& deposit () const
-  { return deposition->deposit (); }
+  { return deposit_sum; }
 
   // Create.
   void initialize (const Weather&, Treelog&);
@@ -625,7 +628,8 @@ BioclimateStandard::BioclimateStandard (const BlockModel& al)
     air_pressure_ (-42.42e42),
 
     // Deposition.
-    deposition (Librarian::build_item<Deposition> (al, "deposition")),
+    deposition (Librarian::build_vector<Deposition> (al, "deposition")),
+    deposit_sum (al.units ().get_unit (IM::flux_unit ())),
 
     // For initialization and weather data shifts.
     fixed_pet (pet.get ()),
@@ -1359,7 +1363,12 @@ BioclimateStandard::tick (const Time& time,
     }
   else
     wind_speed_field_ = NAN;
-  deposition->tick (vegetation, weather, msg);
+  deposit_sum.clear ();
+  for (auto d: deposition)
+    {
+      d->tick (time, vegetation, weather, msg);
+      deposit_sum += d->deposit ();
+    }
 }
 
 void
@@ -1478,8 +1487,10 @@ BioclimateStandard::output (Log& log) const
   output_value (global_radiation_
 		- incoming_PAR_radiation - incoming_NIR_radiation,
 		"outgoing_Short_radiation", log);
+
   // Deposition.
-  output_derived (deposition, "deposition", log);
+  static const symbol deposition_lib (Deposition::component);
+  output_list (deposition, "deposition", log, deposition_lib);
 }
 
 void
@@ -1816,8 +1827,9 @@ use these (the weather difrad model). Otherwise Daisy wil use the DPF model.");
     frame.declare ("outgoing_Short_radiation", "W/m^2", Attribute::LogOnly,
 		   "Outgoing shortware radiation.");
 
-    frame.declare_object ("deposition", Deposition::component, 
-                          "Deposition model.");
+    frame.declare_object ("deposition", Deposition::component,
+			  Attribute::State, Attribute::Variable,
+			  "Deposition models.");
   }
 } BioclimateStandard_syntax;
 
@@ -1838,7 +1850,7 @@ Use best models given available data.")
     frame.set ("svat", "none");
     frame.set ("raddist", "default");
     // Choose 'difrad' based on weather data.
-    frame.set ("deposition", "weather");
+    frame.set_strings ("deposition", "weather");
   }
 } BioclimateDefault_syntax;
 

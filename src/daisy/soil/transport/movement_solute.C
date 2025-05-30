@@ -191,6 +191,7 @@ MovementSolute::secondary_transport (const Geometry& geo,
 				     const SoilHeat& soil_heat,
                                      const std::map<size_t, double>& J_forced,
                                      const std::map<size_t, double>& C_border,
+				     const AWI& awi,
                                      Chemical& solute, 
                                      std::vector<double>& S_extra,
                                      const double dt,
@@ -311,7 +312,7 @@ MovementSolute::secondary_transport (const Geometry& geo,
       total_Mn += Mn[c] * V;
     }
 
-  solute.set_secondary (soil, soil_water, soil_heat, Mn, J);
+  solute.set_secondary (soil, soil_water, soil_heat, awi, Mn, J);
 
   // Mass balance
   const double increase = total_Mn - total_A - total_Mf;
@@ -355,6 +356,7 @@ MovementSolute::primary_transport (const Geometry& geo, const Soil& soil,
                                    const size_t transport_iteration,
                                    const std::map<size_t, double>& J_forced,
                                    const std::map<size_t, double>& C_border,
+				   const AWI& awi,
                                    Chemical& solute, 
                                    const std::vector<double>& S_extra,
                                    const double dt,
@@ -473,7 +475,7 @@ MovementSolute::primary_transport (const Geometry& geo, const Soil& soil,
         }
     }
 
-  solute.set_primary (soil, soil_water, soil_heat, M, J);
+  solute.set_primary (soil, soil_water, soil_heat, awi, M, J);
 }
 
 void
@@ -663,7 +665,8 @@ MovementSolute::zero_top (const Geometry& geo,
 void
 MovementSolute::solute (const Soil& soil, const SoilWater& soil_water,
 			const SoilHeat& soil_heat,
-                        const double J_above, Chemical& chemical, 
+                        const double J_above, const AWI& awi,
+			Chemical& chemical, 
                         const double dt,
                         const Scope& scope, Treelog& msg)
 {
@@ -772,18 +775,18 @@ MovementSolute::solute (const Soil& soil, const SoilWater& soil_water,
           else
             S_extra[c] = 0.0;
         }
-      chemical.set_secondary (soil, soil_water, soil_heat, Mn, J2);
+      chemical.set_secondary (soil, soil_water, soil_heat, awi, Mn, J2);
 
       // Primary "transport".
       primary_transport (geometry (), soil, soil_water, soil_heat,
                          *matrix_solid, sink_sorbed, 0, J_primary, C_border,
-                         chemical, S_extra, dt, scope, msg);
+			 awi, chemical, S_extra, dt, scope, msg);
       return;
     }
 
   // Secondary transport activated.
   secondary_transport (geometry (), soil, soil_water, soil_heat,
-		       J_secondary, C_border,
+		       J_secondary, C_border, awi,
                        chemical, S_extra, dt, scope, msg);
 
   // Solute primary transport.
@@ -800,7 +803,7 @@ MovementSolute::solute (const Soil& soil, const SoilWater& soil_water,
             primary_transport (geometry (), soil, soil_water, soil_heat,
                                *matrix_solute[i], sink_sorbed, 
                                transport_iteration,
-                               J_primary, C_border,
+                               J_primary, C_border, awi,
                                chemical, S_extra, dt, scope, msg);
             if (i > 0 && !daisy_full_debug ())
               msg.debug ("Succeeded");
