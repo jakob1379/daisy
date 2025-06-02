@@ -51,7 +51,8 @@ Reaction::tick_surface (const Geometry&,
 
 void 
 Reaction::tick_soil (const Geometry&, const Soil&, const SoilWater&,
-                     const SoilHeat&, const AWI&, OrganicMatter&, Chemistry&,
+                     const SoilHeat&, const AWI&, OrganicMatter&,
+		     Chemistry&,
                      const double, Treelog&)
 { }
 

@@ -1,3 +1,8 @@
+2025-06-02  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* src/daisy/chemicals/reaction_sorption.C (tick_soil): Wrong const
+	qualifier, never called.
+
 2025-05-26  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* src/daisy/chemicals/adsorption_guo2020.C: New model.
