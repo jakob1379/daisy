@@ -1,5 +1,8 @@
 2025-06-02  Per Abrahamsen  <pa@plen.ku.dk>
 
+	* lib/log.dai ("Surface Chemicals"): Typo (decomposes instead of
+	decomposed).
+
 	* src/daisy/chemicals/reaction_sorption.C (tick_soil): Wrong const
 	qualifier, never called.
 
