@@ -84,10 +84,12 @@ static struct DifradBRLSyntax : public DeclareModel
   { return new DifradBRL (al); }
   DifradBRLSyntax ()
     : DeclareModel (Difrad::component, "BRL", "\
-Diffuse radiation calculation based on the model of Ridley et al., 2010. Last predictor (persistence) is not taken into account.")
+Diffuse radiation calculation based on the model of Ridley et al., 2010.\n\
+Last predictor (persistence) is not taken into account.")
   { }
   void load_frame (Frame& frame) const
   {
+    frame.set_strings ("cite", "ridley2010modelling");
     frame.declare ("beta0", Attribute::None (), Attribute::Const, "1st parameter (constant) of BRL model.");
     frame.set ("beta0", -2.4);
     frame.declare ("beta1", Attribute::None (), Attribute::Const, "2nd parameter (hourly clearness index) of BRL model.");
