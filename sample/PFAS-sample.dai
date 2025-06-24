@@ -1,0 +1,94 @@
+;;; PFAS-sample.dai -- Example of how to simulate PFAS transpor.. 
+::
+;; Three ways to model PFAS input are examplified here: 
+;; PFAS added as atomospheric deposition assumuing a decline in precipitation concentration
+;; PFAS added with slurry using the subsurface irrigation function. Alternatively use the spray function, if PFAS contaminated organic fertilizer are applied on the surface.
+;; PFAS added to field using PFAS contaminated effluent wastewater for irrigation
+(input file "PFAS.dai")
+(input file "dk-soil.dai")
+(input file "tillage.dai") 
+(input file "fertilizer.dai")
+(input file "crop.dai")
+(input file "log.dai")
+
+;; PFAS input as atmospheric deposition 
+(defdeposition high const ;; asumming a higher precipitation content before  
+	(before 2000 1 1) 
+	(after 1950 1 1) 
+	(wet 
+	  (PFOS 1e-5 [ppm]) 
+	  (PFOA 1e-5 [ppm])
+	  (PFHxA 1e-5 [ppm])
+	  (PFBA 1e-5 [ppm])))
+
+(defdeposition low const ;; asumming decrease in precpitation concentration
+	(before 2050 1 1)
+	(after 2000 1 1) 
+	(wet 
+	  (PFOS_Guo 1e-6 [ppm]) ; estimated input based on Jakobsen et al. (2025)
+	  (PFOA 1e-6 [ppm])
+	  (PFHxA 1e-6 [ppm])
+	  (PFBA 1e-6 [ppm])))
+
+;; Defining column
+(defcolumn Sand Jyndevad
+  "A sand soil with free drainage."
+  (Chemistry original  (combine PFAS &old))
+  (AWI Brusseau2023) ; default
+  (Bioclimate original (deposition high low &old))) ;; adding PFAS deposition 
+
+;; Repeated winterwheat (WW) with irrigation. Adding PFAS contaminated pig slurry and irrigation water
+(defaction "WW with PFAS cont slurry" activity
+  (wait_mm_dd 09 10)(seed_bed_preparation)(sow "Winter Wheat")
+  (wait_mm_dd 03 20)
+  (fertilize ("pig_slurry" (volatilization 10 [%])
+    (weight 40 [T w.w./ha]))(to -1 [cm]))
+    (irrigate_subsoil 0.1 [mm/h] (hours 1) (to -1 [cm]) (solute (PFBA 0.0001 [ppm]))) ;; PFAS added together with slurry using subsoil irrigation function (Estimate based on 'Jensen et al. 2025: PFAS i restprodukter til landbrugsmæssig anvendelse').
+  (wait (or (crop_ds_after "Winter Wheat" 2.0)(mm_dd 9 1)))
+  (harvest "Winter Wheat" (stub 8 [cm])(stem 0.0)(leaf 0.0))
+  (wait_mm_dd 9 02)(plowing))
+
+(defaction "WW with PFAS cont irrigation" activity 
+  (wait (and (after_mm_dd 05 01)
+  (before_mm_dd 09 01)
+    (not(soil_water_pressure_above (height -25 [cm])(potential -300 [cm])))))
+    (irrigate_overhead 10 [mm/h] (hours 3) (solute (PFOS 5.1e-6 [ppm])(PFOA 7e-6 [ppm]))) ;; Wastewater effluent contaminated with PFAS. Estimate from 'Simulating PFAS transport in effluent-irrigated farmland usingPRZM5, LEACHM, and HYDRUS-1D models' https://doi.org/10.1002/jeq2.20639
+  (wait_days 3))
+          
+(defaction "PFAS cont WW" activity
+  (while "WW with PFAS cont slurry" (repeat "WW with PFAS cont irrigation")))
+
+;; Function to log AWI area
+(deflog "AWI" column
+  (where "${colfid}AWI.dlf")
+  (when hourly)
+  (entries (array (path column "${column}" AWI component area)
+                  (spec AWI component area)
+                  (handle current))))
+
+(defprogram JB1_PFAS Daisy
+  (column (Sand))
+  (weather default "dk-jyndevad.dwf")
+  (manager (repeat "PFAS cont WW"))
+  (time 1998 1 1 1)
+  (activate_output (after 2000 1 1))
+  (stop 2005 1 1)
+  (output
+  ("Field water" (when monthly)) ; water balance
+  ("Chemical Content" (chemical PFOS) (when monthly)) ; soil profile, chemical content in system 
+  ("Chemical Content" (chemical PFOA) (when monthly))
+  ("Chemical Content" (chemical PFHxA) (when monthly))
+  ("Chemical Content" (chemical PFBA) (when monthly))
+  ("Chemical Concentration" (chemical PFOS) (when monthly)) ; soil profile, chemical content in soil water
+  ("Chemical Concentration" (chemical PFOA) (when monthly))
+  ("Chemical Concentration" (chemical PFHxA) (when monthly))
+  ("Chemical Concentration" (chemical PFBA) (when monthly))
+  ("Field chemical" (chemical PFOS) (when monthly)) ; chemical ballance  
+  ("Field chemical" (chemical PFOA) (when monthly))
+  ("Field chemical" (chemical PFHxA) (when monthly))
+  ("Field chemical" (chemical PFBA) (when monthly))
+  ("AWI" (when daily)))) 
+
+(run JB1_PFAS)
+
+;;; PFAS-sample.dai ends here.

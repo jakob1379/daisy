@@ -1,0 +1,112 @@
+;; PFAS.dai - overview of ways to defining PFAS compounds
+
+;; Defining PFAS as a chemcial group
+(defchemical PFAS default 
+  (decompose_rate 0.0 [h^-1]) ; not degraded (stable)
+  (canopy_dissipation_rate 0.0 [h^-1]) ; no canopy dissipation
+  (canopy_washoff_coefficient 1.0 []) ; all is washed off
+  (crop_uptake_reflection_factor 1.0 [])) ; not taken up
+
+;; Defining PFOS with linear adsorption
+(defchemical PFOS PFAS
+  (cite "Gauthier2024") ;; add to Daisy bib https://doi.org/10.1021/acsestwater.4c00631
+  (description "Aqueous diffusion coefficient from Table 1")
+  (molar_mass 550.13 [g/mol])
+  (diffusion_coefficient 5.27e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") ;; add to Daisy bib Brusseau2021x: https://doi.org/10.1016/j.chemosphere.2021.130829 Jakobsen2005x: ?
+  (description "KOC and Kclay estimates from Jakobsen et al. (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 1.51e-2 [cm^3/cm^2]) 
+    (K_OC 606 [ml/g]) 
+    (K_clay 54 [ml/g])))
+  
+;; Defining PFOS with non-linear AWI adsorption
+(defchemical PFOS_Guo PFOS
+  (adsorption Guo2020
+  (cite "guo2020mathematical" "Jakobsen2025") 
+  (description "a and b from section 4 'Data and Parameters' in Guo et al. (2020). KOC and Kclay estimated from Jakobsen et al. (2025)")
+    (a 3.4e-03 [umol/cm^3]) 
+    (b 0.107 [])
+    (K_OC 606 [ml/g]) 
+    (K_clay 54 [ml/g])))
+
+;; Defining PFOA with linear adsorption
+(defchemical PFOA PFAS
+  (cite "Gauthier2024")
+  (description "Aqueous diffusion coefficient from Table 1")
+  (molar_mass 414.07 [g/mol])
+  (diffusion_coefficient 5.46e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") 
+  (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 3.37e-03 [cm^3/cm^2])  
+    (K_OC 94 [ml/g])
+    (K_clay 6 [ml/g])))
+  
+;; Defining PFOA with non-linear AWI adsorption 
+(defchemical PFOA_Guo PFOA
+  (adsorption Guo2020
+  (cite "Constanza2019x" "Jakobsen2025x") ;; add to Daisy https://doi.org/10.1021/acs.estlett.9b00355
+  (description "a and b from Constanza et al. (2019) Table S1. KOC and Kclay estimated from Jakobsen et al. (2025)")
+    (a 1.16e-02 [umol/cm^3]) 
+    (b 0.033 [])
+    (K_OC 94 [ml/g])
+    (K_clay 6 [ml/g])))
+
+;; Defining PFHxA with linear adsorption
+(defchemical PFHxA PFAS
+  (cite "Gauthier2024")
+  (description "Aqueous diffusion coefficient from Table 1")
+  (molar_mass 314.05 [g/mol])
+  (diffusion_coefficient 5.93e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") 
+  (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 1.96e-4 [cm^3/cm^2])
+    (K_OC 14 [ml/g])
+    (K_clay 5 [ml/g])))
+  
+;; Defining PFPeA with linear adsorption
+(defchemical PFPeA PFAS
+  (cite "Gauthier2024")
+  (description "Aqueous diffusion coefficient from Table 1")  
+  (molar_mass 264.05 [g/mol])
+  (diffusion_coefficient 6.33e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") 
+  (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 7.09e-05 [cm^3/cm^2])
+    (K_OC 51 [ml/g])
+    (K_clay 10 [ml/g])))
+    
+;; Defining PFBA with linear adsorption
+(defchemical PFBS PFAS
+  (cite "Gauthier2024") 
+  (description "Aqueous diffusion coefficient from Table 1")
+  (molar_mass 338.19 [g/mol])
+  (diffusion_coefficient 6.79e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") 
+  (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 2.94e-04 [cm^3/cm^2]) 
+    (K_OC 9 [ml/g])
+    (K_clay 14 [ml/g])))
+  
+;; Defining PFBA with linear adsorption
+(defchemical PFBA PFAS
+  (cite "Gauthier2024")
+  (description "Aqueous diffusion coefficient from Table 1")
+  (molar_mass 214.04 [g/mol])
+  (diffusion_coefficient 6.73e-6 [cm^2/s])
+  (adsorption linear
+  (cite "Brusseau2021x" "Jakobsen2025x") 
+  (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
+    (K_AWI 2.36e-5 [cm^3/cm^2]) 
+    (K_OC 3 [ml/g])
+    (K_clay 9 [ml/g])))
+  
+  
+(defchemistry PFAS default
+   (trace PFOS PFOA PFOS_Guo PFOA_Guo PFHxA PFPeA PFBS PFBA))
+
+;;; PFAS.dai ends here.

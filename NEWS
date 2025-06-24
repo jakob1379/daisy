@@ -6,6 +6,26 @@ headlines of the changes since the last version.  For more detailed
 information on changes, read the 'ChangeLog' file from the source
 release.
 
+* 7.1
+
+** PFAS / AWI support / Deposition (Per / Camilla)
+
+** Laura fixes to SSOC / Farquhar / difrad
+
+** Laura additions to crop
+
+** rate-halftime (Per)
+
+** New installer (Silas) 
+
+** Python interface (7.0?)
+
+*** reaction
+
+*** adsorption
+
+** chemistry tracer colloid (?)
+
 * 7.0
 
 ** Changes in the organic matter component.
@@ -21,8 +41,6 @@ These should make the model work better with no-tillage agriculture.
 This has the old smb value, and a 50 % cost of bioincorporation.
 
 *** New SOM2025 parameterization.
-
-
 
 * 6.47
 
