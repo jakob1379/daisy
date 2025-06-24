@@ -1,3 +1,8 @@
+2025-06-24  Per Abrahamsen  <pa@plen.ku.dk>
+
+	* txt/daisy.bib (Constanza2019x,Brusseau2021x,Jakobsen2025x)
+	(Gauthier2024): New entries for PFAS.
+
 2025-06-02  Per Abrahamsen  <pa@plen.ku.dk>
 
 	* lib/log.dai ("Surface Chemicals"): Typo (decomposes instead of

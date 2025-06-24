@@ -9,10 +9,11 @@
 (input file "chemistry.dai")
 (input file "vegetation.dai")
 
-(input file "dk-horizon.dai")
-(input file "dk-soil.dai")
-(input file "dk-crop.dai")
-(input file "dk-fertilizer.dai")
+;;(input file "dk-horizon.dai")
+;;(input file "dk-soil.dai")
+;;(input file "dk-crop.dai")
+;;(input file "dk-fertilizer.dai")
+(input file "PFAS.dai")
 
 ;;; all.dai ends here.
 
