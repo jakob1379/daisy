@@ -97,7 +97,7 @@ struct ProgramSpawn : public Program {
 	    msg.message (tmp.str ());
 	    return;
     }
-	  std::string cmd = exe.name()
+	  std::string cmd = "\"" + exe.name() + "\""
       + " -d " + directory_one.name()
       + " -D " + input_directory.name()
 			+ " -q " + file_one.name ();
