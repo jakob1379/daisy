@@ -1,9 +1,8 @@
 #ifndef DAISY_WINDOWS_UTIL_H
 #define DAISY_WINDOWS_UTIL_H
-#if defined(_WIN32) || (__CYGWIN__32__)
+#if defined(_WIN32) || defined(__CYGWIN__32__)
 #include <string>
 #include <Windows.h>
-
 
 // From https://stackoverflow.com/a/54491532
 template <typename TChar, typename TStringGetterFunc>
@@ -36,5 +35,6 @@ std::basic_string<TChar> GetStringFromWindowsApi( TStringGetterFunc stringGetter
 
 std::basic_string<TCHAR> get_exe_path();
 std::basic_string<TCHAR> get_daisy_home_from_exe_path();
+//std::basic_string<TCHAR> run_cmd(std::basic_string<TCHAR> exe, std::basic_string<TCHAR> args, std::basic_string<TCHAR> name);
 #endif
 #endif

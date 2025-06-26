@@ -34,17 +34,13 @@
 #include <chrono>
 #include <future>
 #include <list>
-#include <cstdlib>
 #include <sstream>
 #include <vector>
 #include <memory>
 #include <thread>
 #include <fstream>
 
-std::string run_cmd(std::string cmd, std::string name) {
-  std::system(cmd.c_str());
-  return name;
-}
+#include "util/run_cmd.h"
 
 struct ProgramSpawn : public Program {
   // Content.
@@ -97,12 +93,11 @@ struct ProgramSpawn : public Program {
 	    msg.message (tmp.str ());
 	    return;
     }
-	  std::string cmd = "\"" + exe.name() + "\""
-      + " -d " + directory_one.name()
-      + " -D " + input_directory.name()
-			+ " -q " + file_one.name ();
+	  std::string cmd = " -d " + quote_if_unquoted(directory_one.name())
+                    + " -D " + quote_if_unquoted(input_directory.name())
+			              + " -q " + quote_if_unquoted(file_one.name());
     if (program_one != Attribute::None()) {
-      cmd += " -p " + program_one.name();
+      cmd += " -p " + quote_if_unquoted(program_one.name());
     }
     cmds.push_back(cmd);
     names.push_back(directory_one.name());
@@ -126,7 +121,7 @@ struct ProgramSpawn : public Program {
         }
       }
       msg.message("Running " + names[idx]);
-      progs.push_back(std::async(std::launch::async, run_cmd, cmds[idx], names[idx]));
+      progs.push_back(std::async(std::launch::async, run_cmd, exe.name(), cmds[idx], names[idx]));
       ++running;
     }
     // Wait for all tasks to finish
