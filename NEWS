@@ -8,23 +8,75 @@ release.
 
 * 7.1
 
-** PFAS / AWI support / Deposition (Per / Camilla)
+** New installer
 
-** Laura fixes to SSOC / Farquhar / difrad
+** Python interface
 
-** Laura additions to crop
+*** New 'Python' reaction model
 
-** rate-halftime (Per)
+This allows transformation of chemicals in the soil.
 
-** New installer (Silas) 
+*** New 'Python' adsorption model
 
-** Python interface (7.0?)
+This allows the relationship between disolved and total compound to be
+described in Python.
 
-*** reaction
+*** New 'Python' function model
 
-*** adsorption
+This allows some functions (R -> R) in Daisy to be written in Python.
 
-** chemistry tracer colloid (?)
+** 'colloid' and 'Tracer' now in chemistry.dai file
+
+** PFAS is now supported
+
+*** adsorption 'linear' now include K_AWI
+
+For sorption to the air-water interface.
+
+*** New 'Guo2020' adsorption model
+
+This allows K_AWI to be calculated dynamically based on temperature
+and concentration.
+
+*** New 'AWI' column parameter (and component)
+
+For calculating the air-water interface area.  You can choose between
+'Brusseau2023' and 'Costanza2008x' models.
+
+*** The 'deposition' parameter in Bioclimate is now a list
+
+This allows to mix many sources.
+
+*** New 'const' deposition model
+
+Allow precipitation to contain any solutes in a specific period.
+
+*** New 'PFAS.dai' file in lib
+
+This contains definitions of various common PFAS compounds.
+
+*** New 'PFAS-sample.dai' file in sample
+
+This contains examples of how to include PFAS in Daisy simulations and
+how to log it.
+
+** New 'ReMobilEff' and 'ReMobil_Mod' production parameters
+** Various fixed to Farquhar photosynthesis
+** New '' difrad model
+
+All contributed by Laura Delhez.
+
+** rate vs halftime cleanup
+
+Most first order degradation processes used to be specified by one of
+two parameters, 'turnover_halftime' and 'turnover_rate'.  Now they are
+specified by one parameter, 'turnover', whose value can be a rate or a
+halftime.  You could not specify both, meaning a rate could not be
+overwritten by a halftime, or vice-versa.
+
+Now this is one parameter with the model, 'rate' and 'halftime'.  So
+overwriting works.  But the '_' before 'rate' and 'halftime' should no
+longer be used.
 
 * 7.0
 
