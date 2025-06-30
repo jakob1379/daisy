@@ -62,7 +62,7 @@ how to log it.
 
 ** New 'ReMobilEff' and 'ReMobil_Mod' production parameters
 ** Various fixed to Farquhar photosynthesis
-** New '' difrad model
+** New 'BRL' difrad model
 
 All contributed by Laura Delhez.
 
