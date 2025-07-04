@@ -42,10 +42,9 @@ If you open a Daisy setup file with a file name suffix of ".dai" with TextPad, y
 6. Press "Apply".
 7. Click the box next to "Tools" to view the available tools.
 8. Select "Daisy".
-9. Copy the string "start /b /wait daisy.exe $File" into the text field names "Parameters"
-10. Copy the exact string ([^:\\]+):(\d+):(\d+) to text field named "Regular expression to match output", replacing the old content. Use cut and paste to get it right.
-11. Choose "1" from the "File" drop down, choose "2" from the line drop down, and choose "3" from the "Column" drop down menu.
-12. Press Apply.
-13. Exit TextPad to make the changes take effect.
+9. Copy the exact string ([^:\\]+):(\d+):(\d+) to text field named "Regular expression to match output", replacing the old content. Use cut and paste to get it right.
+10. Choose "1" from the "File" drop down, choose "2" from the line drop down, and choose "3" from the "Column" drop down menu.
+11. Press Apply.
+12. Exit TextPad to make the changes take effect.
 
 If you open a Daisy setup file, you should now be able to run the simulation by opening the "Tools" menu, the "External tools" submenu, and then selecting "Daisy". The output from the simulation will be placed in another window. If an error message contain a file name and line number, you will (sometimes) be able to go directly to the specified location by double clicking on the error message.
