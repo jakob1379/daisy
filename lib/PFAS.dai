@@ -17,8 +17,8 @@
   (cite "Brusseau2021x" "Jakobsen2025x") ;; add to Daisy bib Brusseau2021x: https://doi.org/10.1016/j.chemosphere.2021.130829 Jakobsen2005x: ?
   (description "KOC and Kclay estimates from Jakobsen et al. (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
     (K_AWI 1.51e-2 [cm^3/cm^2]) 
-    (K_OC 606 [ml/g]) 
-    (K_clay 54 [ml/g])))
+    (K_OC 604 [ml/g]) 
+    (K_clay 63 [ml/g])))
   
 ;; Defining PFOS with non-linear AWI adsorption
 (defchemical PFOS_Guo PFOS
@@ -27,8 +27,8 @@
   (description "a and b from section 4 'Data and Parameters' in Guo et al. (2020). KOC and Kclay estimated from Jakobsen et al. (2025)")
     (a 3.4e-03 [umol/cm^3]) 
     (b 0.107 [])
-    (K_OC 606 [ml/g]) 
-    (K_clay 54 [ml/g])))
+    (K_OC 604 [ml/g]) 
+    (K_clay 63 [ml/g])))
 
 ;; Defining PFOA with linear adsorption
 (defchemical PFOA PFAS
@@ -40,8 +40,8 @@
   (cite "Brusseau2021x" "Jakobsen2025x") 
   (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
     (K_AWI 3.37e-03 [cm^3/cm^2])  
-    (K_OC 94 [ml/g])
-    (K_clay 6 [ml/g])))
+    (K_OC 91 [ml/g])
+    (K_clay 4 [ml/g])))
   
 ;; Defining PFOA with non-linear AWI adsorption 
 (defchemical PFOA_Guo PFOA
@@ -50,8 +50,8 @@
   (description "a and b from Constanza et al. (2019) Table S1. KOC and Kclay estimated from Jakobsen et al. (2025)")
     (a 1.16e-02 [umol/cm^3]) 
     (b 0.033 [])
-    (K_OC 94 [ml/g])
-    (K_clay 6 [ml/g])))
+    (K_OC 91 [ml/g])
+    (K_clay 4 [ml/g])))
 
 ;; Defining PFHxA with linear adsorption
 (defchemical PFHxA PFAS
@@ -76,8 +76,8 @@
   (cite "Brusseau2021x" "Jakobsen2025x") 
   (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
     (K_AWI 7.09e-05 [cm^3/cm^2])
-    (K_OC 51 [ml/g])
-    (K_clay 10 [ml/g])))
+    (K_OC 55 [ml/g])
+    (K_clay 8 [ml/g])))
     
 ;; Defining PFBA with linear adsorption
 (defchemical PFBS PFAS
@@ -90,7 +90,7 @@
   (description "KOC and Kclay estimates from Jakobsen et al., (2025). KAWI calculated from equation in Figure 5 from Brusseau & Van Glubt (2021)")
     (K_AWI 2.94e-04 [cm^3/cm^2]) 
     (K_OC 9 [ml/g])
-    (K_clay 14 [ml/g])))
+    (K_clay 11 [ml/g])))
   
 ;; Defining PFBA with linear adsorption
 (defchemical PFBA PFAS
