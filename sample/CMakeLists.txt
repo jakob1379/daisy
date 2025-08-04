@@ -1,4 +1,5 @@
 install(FILES
+  PFAS-sample.dai
   afforestation.dai
   batch.dai
   checkpoint-1988-4-1+1.dai

@@ -1,4 +1,5 @@
 install(FILES
+  PFAS.dai
   all.dai
   beet-old.dai
   beetroot.dai
