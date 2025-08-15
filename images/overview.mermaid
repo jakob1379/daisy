@@ -1,0 +1,174 @@
+flowchart TD
+    %% Build & Packaging
+    subgraph "Build & Packaging"
+        CMakeConfig["CMake Configuration"]:::build
+        CMakePresets["CMake Presets"]:::build
+        CMakeDir["cmake/"]:::build
+        CI[".github/workflows"]:::build
+    end
+
+    %% Core Engine
+    subgraph "Core Engine" 
+        TimestepH["timestep.h"]:::core
+        TimestepC["timestep.C"]:::core
+        DaisyC["daisy.C"]:::core
+        DaisyTime["daisy_time.C"]:::core
+    end
+
+    %% Domain Modules
+    subgraph "Domain Modules"
+        ChemHdr["Chemicals Headers"]:::domain
+        ChemSrc["Chemicals Sources"]:::domain
+        SoilHdr["Soil & Transport Headers"]:::domain
+        SoilSrc["Soil & Transport Sources"]:::domain
+        CropHdr["Crop Growth Headers"]:::domain
+        CropSrc["Crop Growth Sources"]:::domain
+        OrgHdr["Organic Matter Headers"]:::domain
+        OrgSrc["Organic Matter Sources"]:::domain
+        UpHdr["Upper Boundary Headers"]:::domain
+        UpSrc["Upper Boundary Sources"]:::domain
+        LowHdr["Lower Boundary Headers"]:::domain
+        LowSrc["Lower Boundary Sources"]:::domain
+    end
+
+    %% Object Model & Parser
+    subgraph "Object Model & Parser"
+        OMHdr["Headers"]:::parser
+        OMSrc["Sources"]:::parser
+    end
+
+    %% Utility Layer
+    subgraph "Utility Layer"
+        UtilHdr["Headers"]:::util
+        UtilSrc["Sources"]:::util
+        SuiteSparse["SuiteSparse Config"]:::util
+    end
+
+    %% Interfaces
+    subgraph "Interfaces"
+        CLI["CLI / UI"]:::interface
+        PythonBinding["Python Binding"]:::interface
+    end
+
+    %% Scenario Library & Samples
+    subgraph "Scenario Library & Samples"
+        Lib["Scenario Library"]:::library
+        Sample["Samples"]:::library
+    end
+
+    %% Output & Visualization
+    subgraph "Output & Visualization"
+        OutputHdr["Output Headers"]:::output
+        OutputSrc["Output Sources"]:::output
+        GpHdr["Gnuplot Headers"]:::output
+        GpSrc["Gnuplot Sources"]:::output
+    end
+
+    %% Programs / Executables
+    subgraph "Programs / Executables"
+        Programs["Programs"]:::programs
+    end
+
+    %% Testing Framework
+    subgraph "Testing Framework"
+        Unit["Unit Tests"]:::tests
+        SystemTests["System Tests"]:::tests
+        PyTest["Python Test Harness"]:::tests
+    end
+
+    %% External Dependencies
+    subgraph "External Dependencies"
+        Boost["Boost"]:::external
+        SuiteSparseExt["SuiteSparse"]:::external
+        PythonExt["Python Interpreter"]:::external
+    end
+
+    %% Data Flow
+    ScenarioFile[".dai Scenario File"]:::external
+    ScenarioFile -->|parses| OMHdr
+    OMSrc -->|builds object model| TimestepH
+    TimestepH -->|drives loop| TimestepC
+    TimestepC -->|initializes| DaisyC
+    DaisyC --> DaisyTime
+    DaisyTime -->|"executes modules"| ChemHdr
+    DaisyTime --> SoilHdr
+    DaisyTime --> CropHdr
+    DaisyTime --> OrgHdr
+    DaisyTime --> UpHdr
+    DaisyTime --> LowHdr
+
+    DaisyTime -->|"formats results"| OutputHdr
+    OutputSrc -->|"generates plots"| GpHdr
+
+    CLI -->|invokes| DaisyC
+    PythonBinding -->|wraps API| DaisyC
+
+    Lib -->|provides .dai| ScenarioFile
+    Sample -->|examples| ScenarioFile
+
+    Unit -->|tests via CLI| CLI
+    Unit -->|tests via Python| PythonBinding
+    SystemTests --> CLI
+    PyTest --> PythonBinding
+
+    %% Build dependencies
+    CMakeConfig --> TimestepH
+    CMakePresets --> TimestepC
+    CMakeDir --> ChemHdr
+    CI -->|runs builds| CLI
+
+    Boost -->|links| DaisyC
+    SuiteSparseExt -->|used by| SuiteSparse
+    PythonExt -->|embedded| PythonBinding
+
+    %% Click Events
+    click CMakeConfig "https://github.com/daisy-model/daisy/blob/main/CMakeLists.txt"
+    click CMakePresets "https://github.com/daisy-model/daisy/blob/main/CMakePresets.json"
+    click CMakeDir "https://github.com/daisy-model/daisy/tree/main/cmake/"
+    click CI "https://github.com/daisy-model/daisy/tree/main/.github/workflows/"
+    click TimestepH "https://github.com/daisy-model/daisy/blob/main/include/daisy/timestep.h"
+    click TimestepC "https://github.com/daisy-model/daisy/blob/main/src/daisy/timestep.C"
+    click DaisyC "https://github.com/daisy-model/daisy/blob/main/src/daisy/daisy.C"
+    click DaisyTime "https://github.com/daisy-model/daisy/blob/main/src/daisy/daisy_time.C"
+    click ChemHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/chemicals/"
+    click ChemSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/chemicals/"
+    click SoilHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/soil/"
+    click SoilSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/soil/"
+    click CropHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/crop/"
+    click CropSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/crop/"
+    click OrgHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/organic_matter/"
+    click OrgSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/organic_matter/"
+    click UpHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/upper_boundary/"
+    click UpSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/upper_boundary/"
+    click LowHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/lower_boundary/"
+    click LowSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/lower_boundary/"
+    click OMHdr "https://github.com/daisy-model/daisy/tree/main/include/object_model/"
+    click OMSrc "https://github.com/daisy-model/daisy/tree/main/src/object_model/"
+    click UtilHdr "https://github.com/daisy-model/daisy/tree/main/include/util/"
+    click UtilSrc "https://github.com/daisy-model/daisy/tree/main/src/util/"
+    click SuiteSparse "https://github.com/daisy-model/daisy/blob/main/include/util/SuiteSparse_config.h"
+    click CLI "https://github.com/daisy-model/daisy/tree/main/src/ui/"
+    click PythonBinding "https://github.com/daisy-model/daisy/tree/main/python/"
+    click Lib "https://github.com/daisy-model/daisy/tree/main/lib/"
+    click Sample "https://github.com/daisy-model/daisy/tree/main/sample/"
+    click OutputHdr "https://github.com/daisy-model/daisy/tree/main/include/daisy/output/"
+    click OutputSrc "https://github.com/daisy-model/daisy/tree/main/src/daisy/output/"
+    click GpHdr "https://github.com/daisy-model/daisy/tree/main/include/gnuplot/"
+    click GpSrc "https://github.com/daisy-model/daisy/tree/main/src/gnuplot/"
+    click Programs "https://github.com/daisy-model/daisy/tree/main/src/programs/"
+    click Unit "https://github.com/daisy-model/daisy/tree/main/test/cxx-unit-tests/"
+    click SystemTests "https://github.com/daisy-model/daisy/tree/main/test/dai-system-tests/"
+    click PyTest "https://github.com/daisy-model/daisy/tree/main/sample/python/"
+
+    %% Styles
+    classDef build fill:#e0e0e0,stroke:#333,stroke-width:1px;
+    classDef core fill:#aec7e8,stroke:#333,stroke-width:1px;
+    classDef domain fill:#1f77b4,stroke:#fff,stroke-width:1px;
+    classDef parser fill:#c7c7c7,stroke:#333,stroke-width:1px;
+    classDef util fill:#ffbb78,stroke:#333,stroke-width:1px;
+    classDef interface fill:#2ca02c,stroke:#fff,stroke-width:1px;
+    classDef library fill:#dbdb8d,stroke:#333,stroke-width:1px;
+    classDef output fill:#ff9896,stroke:#333,stroke-width:1px;
+    classDef programs fill:#9467bd,stroke:#fff,stroke-width:1px;
+    classDef tests fill:#c49c94,stroke:#333,stroke-width:1px;
+    classDef external fill:#ff7f0e,stroke:#333,stroke-width:1px;

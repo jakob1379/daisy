@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="User documentation for the Daisy agricultural simulation model" name="description"/>
+<link href="https://daisy-model.github.io/daisy/getting-started/windows/" rel="canonical"/>
+<link href="../macos/" rel="prev"/>
+<link href="../../editors/vscode/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.16" name="generator"/>
+<title>Windows - Daisy User Guide</title>
+<link href="../../assets/stylesheets/main.7e37652d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../assets/stylesheets/panzoom.css" rel="stylesheet"/><meta content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}' name="panzoom-data"/><meta content="material" name="panzoom-theme"/></head>
+<body data-md-color-accent="light-green" data-md-color-primary="green" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#getting-started-on-windows">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Daisy User Guide" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Daisy User Guide">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Daisy User Guide
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Windows
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="light-green" data-md-color-media="" data-md-color-primary="green" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="light-green" data-md-color-media="" data-md-color-primary="green" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../overview/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../editors/vscode/">
+          
+  
+  
+  Editor Setup
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../python-setup/">
+        
+  
+  
+    
+  
+  Python Setup
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Daisy User Guide" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Daisy User Guide">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Daisy User Guide
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../overview/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../macos/">
+<span class="md-ellipsis">
+    MacOS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Windows
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Windows
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#download-daisy">
+<span class="md-ellipsis">
+      Download Daisy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#setting-up-your-development-environment">
+<span class="md-ellipsis">
+      Setting up Your Development Environment
+    </span>
+</a>
+<nav aria-label="Setting up Your Development Environment" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#recommended-editors">
+<span class="md-ellipsis">
+      Recommended Editors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-your-first-daisy-program">
+<span class="md-ellipsis">
+      Running Your First Daisy Program
+    </span>
+</a>
+<nav aria-label="Running Your First Daisy Program" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sample-files-location">
+<span class="md-ellipsis">
+      Sample Files Location
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-by-step-tutorial">
+<span class="md-ellipsis">
+      Step-by-Step Tutorial
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#expected-output-files">
+<span class="md-ellipsis">
+      Expected Output Files
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#understanding-output-files">
+<span class="md-ellipsis">
+      Understanding Output Files
+    </span>
+</a>
+<nav aria-label="Understanding Output Files" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#recommended-analysis-tools">
+<span class="md-ellipsis">
+      Recommended Analysis Tools
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      Next Steps
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      Troubleshooting
+    </span>
+</a>
+<nav aria-label="Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-issues">
+<span class="md-ellipsis">
+      Common Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-line-usage">
+<span class="md-ellipsis">
+      Command Line Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-help">
+<span class="md-ellipsis">
+      Getting Help
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Editor Setup
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Editor Setup
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../editors/vscode/">
+<span class="md-ellipsis">
+    Visual Studio Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../editors/textpad/">
+<span class="md-ellipsis">
+    TextPad
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../python-setup/">
+<span class="md-ellipsis">
+    Python Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#download-daisy">
+<span class="md-ellipsis">
+      Download Daisy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#setting-up-your-development-environment">
+<span class="md-ellipsis">
+      Setting up Your Development Environment
+    </span>
+</a>
+<nav aria-label="Setting up Your Development Environment" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#recommended-editors">
+<span class="md-ellipsis">
+      Recommended Editors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-your-first-daisy-program">
+<span class="md-ellipsis">
+      Running Your First Daisy Program
+    </span>
+</a>
+<nav aria-label="Running Your First Daisy Program" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sample-files-location">
+<span class="md-ellipsis">
+      Sample Files Location
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-by-step-tutorial">
+<span class="md-ellipsis">
+      Step-by-Step Tutorial
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#expected-output-files">
+<span class="md-ellipsis">
+      Expected Output Files
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#understanding-output-files">
+<span class="md-ellipsis">
+      Understanding Output Files
+    </span>
+</a>
+<nav aria-label="Understanding Output Files" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#recommended-analysis-tools">
+<span class="md-ellipsis">
+      Recommended Analysis Tools
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      Next Steps
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      Troubleshooting
+    </span>
+</a>
+<nav aria-label="Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-issues">
+<span class="md-ellipsis">
+      Common Issues
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-line-usage">
+<span class="md-ellipsis">
+      Command Line Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-help">
+<span class="md-ellipsis">
+      Getting Help
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="getting-started-on-windows">Getting Started on Windows<a class="headerlink" href="#getting-started-on-windows" title="Permanent link">¶</a></h1>
+<p>This guide will help you install and set up Daisy on Windows systems.</p>
+<h2 id="download-daisy">Download Daisy<a class="headerlink" href="#download-daisy" title="Permanent link">¶</a></h2>
+<p>Download the latest release from <a href="https://github.com/daisy-model/daisy/releases/latest">GitHub Releases</a>.</p>
+<p>We provide two distribution options:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Windows Installer (Recommended)</label><label for="__tabbed_1_2">Zip Archive</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li><strong>File</strong>: <code>daisy-setup.exe</code> (or similar)</li>
+<li><strong>Pros</strong>: Automatic installation, Start menu integration</li>
+<li><strong>Cons</strong>: Requires administrator privileges</li>
+<li><strong>Installation Path</strong>: Usually <code>C:\Program Files\daisy 7.1.0</code></li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><strong>File</strong>: <code>daisy-windows.zip</code> (or similar)  </li>
+<li><strong>Pros</strong>: No admin rights needed, portable</li>
+<li><strong>Cons</strong>: Manual setup required</li>
+<li><strong>Installation</strong>: Extract to your preferred location</li>
+</ul>
+</div>
+</div>
+</input></input></div>
+<div class="admonition note">
+<p class="admonition-title">Installation Directory</p>
+<p>In the following instructions, we refer to <code>&lt;daisy-dir&gt;</code>. This is the folder where you install Daisy.</p>
+<ul>
+<li><strong>Installer</strong>: Usually <code>C:\Program Files\daisy 7.1.0</code></li>
+<li><strong>Zip</strong>: Wherever you extracted the files</li>
+</ul>
+</div>
+<h2 id="setting-up-your-development-environment">Setting up Your Development Environment<a class="headerlink" href="#setting-up-your-development-environment" title="Permanent link">¶</a></h2>
+<p>While you can run Daisy from the command line, we strongly recommend using a text editor for the best experience.</p>
+<h3 id="recommended-editors">Recommended Editors<a class="headerlink" href="#recommended-editors" title="Permanent link">¶</a></h3>
+<p>Choose one of these editors for optimal Daisy development:</p>
+<ul>
+<li><strong><a href="../../editors/vscode/">Visual Studio Code</a></strong> - Modern, feature-rich editor (recommended)</li>
+<li><strong><a href="../../editors/textpad/">TextPad</a></strong> - Lightweight, Windows-native editor</li>
+</ul>
+<p>Both editors can be configured with:
+- Syntax highlighting for <code>.dai</code> files
+- Integrated Daisy execution
+- Error highlighting and navigation</p>
+<h2 id="running-your-first-daisy-program">Running Your First Daisy Program<a class="headerlink" href="#running-your-first-daisy-program" title="Permanent link">¶</a></h2>
+<p>Daisy includes several sample programs to help you get started.</p>
+<h3 id="sample-files-location">Sample Files Location<a class="headerlink" href="#sample-files-location" title="Permanent link">¶</a></h3>
+<p>Sample programs are located in: <code>&lt;daisy-dir&gt;\sample\</code></p>
+<h3 id="step-by-step-tutorial">Step-by-Step Tutorial<a class="headerlink" href="#step-by-step-tutorial" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Create a workspace folder</strong></li>
+<li>Right-click on your Desktop</li>
+<li>Select "New" → "Folder"</li>
+<li>
+<p>Name it <code>daisy</code></p>
+</li>
+<li>
+<p><strong>Copy the test file</strong></p>
+</li>
+<li>Navigate to <code>&lt;daisy-dir&gt;\sample\</code></li>
+<li>Copy <code>test.dai</code></li>
+<li>
+<p>Paste it into your Desktop <code>daisy</code> folder</p>
+</li>
+<li>
+<p><strong>Open the file in your editor</strong></p>
+</li>
+<li>Open your configured editor (<a href="../../editors/vscode/">VSCode</a> or <a href="../../editors/textpad/">TextPad</a>)</li>
+<li>
+<p>Open the <code>test.dai</code> file from your Desktop <code>daisy</code> folder</p>
+</li>
+<li>
+<p><strong>Run the simulation</strong></p>
+</li>
+<li>Use your editor's run command (typically F5 or Ctrl+R)</li>
+<li>Or run from command line: <code>"&lt;daisy-dir&gt;\bin\daisy.exe" test.dai</code></li>
+</ol>
+<h3 id="expected-output-files">Expected Output Files<a class="headerlink" href="#expected-output-files" title="Permanent link">¶</a></h3>
+<p>After running the simulation, you should see these files in your <code>daisy</code> folder:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checkpoint-1987-8-7+6.dai</code></td>
+<td>Simulation state for hot-starting</td>
+</tr>
+<tr>
+<td><code>daisy.log</code></td>
+<td>Simulation log file</td>
+</tr>
+<tr>
+<td><code>field_nitrogen.dlf</code></td>
+<td>Field nitrogen data</td>
+</tr>
+<tr>
+<td><code>field_water.dlf</code></td>
+<td>Field water data</td>
+</tr>
+<tr>
+<td><code>harvest.dlf</code></td>
+<td>Harvest data</td>
+</tr>
+<tr>
+<td><code>sbarley.dlf</code></td>
+<td>Spring barley data</td>
+</tr>
+<tr>
+<td><code>soil_nitrogen.dlf</code></td>
+<td>Soil nitrogen data</td>
+</tr>
+<tr>
+<td><code>soil_water.dlf</code></td>
+<td>Soil water data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="understanding-output-files">Understanding Output Files<a class="headerlink" href="#understanding-output-files" title="Permanent link">¶</a></h3>
+<p>The <code>.dlf</code> files are tab-separated data files with custom headers that can be:</p>
+<ul>
+<li><strong>Opened in Excel</strong> or other spreadsheet applications</li>
+<li><strong>Analyzed with programming languages</strong> (R, Python, etc.)</li>
+</ul>
+<h4 id="recommended-analysis-tools">Recommended Analysis Tools<a class="headerlink" href="#recommended-analysis-tools" title="Permanent link">¶</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><input id="__tabbed_2_3" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">R Users</label><label for="__tabbed_2_2">Python Users</label><label for="__tabbed_2_3">Excel Users</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Use RStudio with the <a href="https://github.com/daisy-model/daisyrVis">daisyrVis</a> package:
+<div class="language-r highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nf">install.packages</span><span class="p">(</span><span class="s">"devtools"</span><span class="p">)</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">"daisy-model/daisyrVis"</span><span class="p">)</span>
+</span></code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p>Use Python with the <a href="https://github.com/daisy-model/daisypy-vis">daispy-vis</a> package:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/daisy-model/daisypy-vis
+</span></code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<ol>
+<li>Open Excel</li>
+<li>File → Open → Select a <code>.dlf</code> file</li>
+<li>Choose "Delimited" in the Text Import Wizard</li>
+<li>Select "Tab" as the delimiter</li>
+</ol>
+</div>
+</div>
+</input></input></input></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p>Now that you have Daisy running:</p>
+<ol>
+<li><strong>Configure an Editor</strong> - Set up <a href="../../editors/vscode/">Visual Studio Code</a> or <a href="../../editors/textpad/">TextPad</a></li>
+<li><strong>Explore More Samples</strong> - Try other example files in the <code>sample</code> directory  </li>
+<li><strong>Learn the Language</strong> - Study the <code>.dai</code> file syntax and structure</li>
+<li><strong>Read Documentation</strong> - Visit <a href="https://daisy.ku.dk/">daisy.ku.dk</a> for detailed model documentation</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">¶</a></h3>
+<details class="question">
+<summary>Daisy executable not found</summary>
+<p><strong>Solution</strong>: Verify your installation path and ensure <code>daisy.exe</code> exists in <code>&lt;daisy-dir&gt;\bin\</code></p>
+</details>
+<details class="question">
+<summary>Permission denied error</summary>
+<p><strong>Solutions</strong>:</p>
+<ul>
+<li>Run your editor as Administrator</li>
+<li>Or use the zip distribution instead of the installer</li>
+<li>Or install to a user directory instead of Program Files</li>
+</ul>
+</details>
+<details class="question">
+<summary>Sample files not found</summary>
+<p><strong>Solution</strong>: Check that your Daisy installation is complete and the sample directory exists at <code>&lt;daisy-dir&gt;\sample\</code></p>
+</details>
+<details class="question">
+<summary>Output files not generated</summary>
+<p><strong>Possible causes</strong>:</p>
+<ul>
+<li>Check the <code>daisy.log</code> file for error messages</li>
+<li>Ensure you have write permissions in the working directory</li>
+<li>Verify the <code>.dai</code> file syntax is correct</li>
+</ul>
+</details>
+<h3 id="command-line-usage">Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permanent link">¶</a></h3>
+<p>If you prefer command line execution:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a>cd /d "C:\path\to\your\daisy\files"
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>"&lt;daisy-dir&gt;\bin\daisy.exe" test.dai
+</span></code></pre></div>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">¶</a></h3>
+<p>If you encounter other issues:</p>
+<ol>
+<li>Check our <a href="https://github.com/daisy-model/daisy/issues">GitHub Issues</a></li>
+<li>Visit the <a href="https://daisy.ku.dk/">official Daisy website</a></li>
+<li>Review the editor setup guides for configuration help</li>
+</ol>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+<script src="../../assets/javascripts/panzoom.min.js"></script><script src="../../assets/javascripts/zoompan.js"></script></body>
+</html>
