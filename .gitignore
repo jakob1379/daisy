@@ -5,3 +5,7 @@ TAGS
 
 # python stuff
 __pycache__
+*.egg-info/
+
+# mkdocs
+site/

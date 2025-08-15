@@ -1,4 +1,7 @@
 # Daisy
+
+[![Documentation](https://img.shields.io/badge/Documentation-daisy-blue)](https://daisy-model.github.io/daisy/) [![KU Daisy](https://img.shields.io/badge/Daisy-KU-%23B40000?style=flat&labelColor=%23333333)](https://daisy.ku.dk/)
+
 Daisy is a mechanistic simulation of agricultural fields developed by the Agrohydrology group at the University of Copenhagen.
 
 Daisy keeps track of water, nitrogen, carbon, and pesticides in the bioactive zone near the soil surface (roughly top of canopy to the bottom of the (historic) root zone).
@@ -11,8 +14,10 @@ Daisy keeps track of water, nitrogen, carbon, and pesticides in the bioactive zo
 See [https://daisy.ku.dk/](https://daisy.ku.dk/) for more information.
 
 ## Getting started
-* [MacOS](doc/getting-started-macos.md)
-* [Windows](doc/getting-started-windows.md)
+* [MacOS](docs/getting-started/macos.md)
+* [Windows](docs/getting-started/windows.md)
+
+For the complete user guide, see the [documentation](docs/index.md) or visit the [online documentation](https://daisy-model.github.io/daisy/).
 
 
 ## Building
