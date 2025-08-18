@@ -1,0 +1,72 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          echo "Install dependencies here if needed"
+          # e.g. on ubuntu: sudo apt-get update && sudo apt-get install -y build-essential libboost-all-dev
+
+      - name: Build
+        run: |
+          echo "Build commands go here"
+          # e.g. make
+          # Create a dummy executable for demonstration
+          mkdir -p release/bin
+          echo "dummy executable" > release/bin/daisy
+          # Assuming README.md exists at the root. If not, this line can be removed.
+          if [ -f "README.md" ]; then cp README.md release/; fi
+
+      - name: Create archive
+        shell: bash
+        run: |
+          artifact_name="daisy-${{ github.ref_name }}-${{ matrix.os }}"
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            7z a "${artifact_name}.zip" ./release/*
+            echo "ASSET_NAME=${artifact_name}.zip" >> $GITHUB_ENV
+          else
+            tar -czvf "${artifact_name}.tar.gz" -C release .
+            echo "ASSET_NAME=${artifact_name}.tar.gz" >> $GITHUB_ENV
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ASSET_NAME }}
+          path: ${{ env.ASSET_NAME }}
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build
+    
+    permissions:
+      contents: write # to create releases
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
