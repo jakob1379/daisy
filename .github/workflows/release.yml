@@ -1,9 +1,10 @@
 name: Create Release
 
 on:
-  push:
+  release:
+    types: [published]
     tags:
-      - 'v'
+        - "v*"
 
 jobs:
   build:
