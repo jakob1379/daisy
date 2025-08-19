@@ -1,73 +1,164 @@
-name: Create Release
+name: Release Build
 
 on:
-  release:
-    types: [published]
+  push:
     tags:
-        - "v*"
+      - "v*"
 
 jobs:
-  build:
-    name: Build
+  build-linux-macos:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.11"]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          echo "Install dependencies here if needed"
-          # e.g. on ubuntu: sudo apt-get update && sudo apt-get install -y build-essential libboost-all-dev
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
+    - name: Install macOS dependencies
+      if: ${{ startsWith(matrix.os, 'macos') }}
+      run: brew install cmake boost suite-sparse pybind11
+
+    - name: Install ubuntu dependencies
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: sudo apt install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev python3-pybind11
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake ubuntu
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -S ${{ github.workspace }}
+        --preset linux-gcc-portable
+
+    - name: Configure CMake macos
+      if: ${{ startsWith(matrix.os, 'macos') }}
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -S ${{ github.workspace }}
+        --preset macos-clang-portable
+
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} -j 4
+
+    - name: Test
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: |
+        ctest --output-on-failure
+
+    - name: Package artifacts
+      run: |
+        cd ${{ steps.strings.outputs.build-output-dir }}
+        tar -czf daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz *
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ steps.strings.outputs.build-output-dir }}/daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz
+        asset_name: daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz
+        asset_content_type: application/gzip
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { sys: ucrt64, env: ucrt-x86_64 }
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          update: true
+          install: >-
+            git
+            mingw-w64-${{matrix.env}}-cmake
+            mingw-w64-${{matrix.env}}-gcc
+            mingw-w64-${{matrix.env}}-ninja
+            mingw-w64-${{matrix.env}}-suitesparse
+            mingw-w64-${{matrix.env}}-boost
+            mingw-w64-${{matrix.env}}-pybind11
+            mingw-w64-${{matrix.env}}-python
+            mingw-w64-${{matrix.env}}-python-pip
+            mingw-w64-${{matrix.env}}-python-pandas
+            unzip
+            tar
+
+      - name: Install python dependencies
+        run: pip install pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
+      - uses: actions/checkout@v4
+
+      - name: Get embeddable python
+        run: mkdir -p python/python &&
+             wget https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip -O python/python.zip &&
+             unzip python/python.zip -d python/python &&
+             cp python/python/python312.dll python/python/libpython3.12.dll
+
+      - name: Configure CMake
+        run: >
+          cmake -B build --preset mingw-gcc-portable
 
       - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
         run: |
-          echo "Build commands go here"
-          # e.g. make
-          # Create a dummy executable for demonstration
-          mkdir -p release/bin
-          echo "dummy executable" > release/bin/daisy
-          # Assuming README.md exists at the root. If not, this line can be removed.
-          if [ -f "README.md" ]; then cp README.md release/; fi
+          ctest --output-on-failure
 
-      - name: Create archive
-        shell: bash
+      - name: Package artifacts
         run: |
-          artifact_name="daisy-${{ github.ref_name }}-${{ matrix.os }}"
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            7z a "${artifact_name}.zip" ./release/*
-            echo "ASSET_NAME=${artifact_name}.zip" >> $GITHUB_ENV
-          else
-            tar -czvf "${artifact_name}.tar.gz" -C release .
-            echo "ASSET_NAME=${artifact_name}.tar.gz" >> $GITHUB_ENV
-          fi
+          cd build
+          tar -czf daisy-${{ github.ref_name }}-windows.tar.gz *
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ASSET_NAME }}
-          path: ${{ env.ASSET_NAME }}
-
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: build
-
-    permissions:
-      contents: write # to create releases
-
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/*/*
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: build/daisy-${{ github.ref_name }}-windows.tar.gz
+          asset_name: daisy-${{ github.ref_name }}-windows.tar.gz
+          asset_content_type: application/gzip
+
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
