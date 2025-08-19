@@ -6,147 +6,6 @@ on:
       - "v*"
 
 jobs:
-  build-linux-macos:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        python-version: ["3.11"]
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pandas pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
-
-    - name: Install macOS dependencies
-      if: ${{ startsWith(matrix.os, 'macos') }}
-      run: brew install cmake boost suite-sparse pybind11
-
-    - name: Install ubuntu dependencies
-      if: ${{ startsWith(matrix.os, 'ubuntu') }}
-      run: sudo apt install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev python3-pybind11
-
-    - name: Set reusable strings
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
-    - name: Configure CMake ubuntu
-      if: ${{ startsWith(matrix.os, 'ubuntu') }}
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -S ${{ github.workspace }}
-        --preset linux-gcc-portable
-
-    - name: Configure CMake macos
-      if: ${{ startsWith(matrix.os, 'macos') }}
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -S ${{ github.workspace }}
-        --preset macos-clang-portable
-
-    - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} -j 4
-
-    - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: |
-        ctest --output-on-failure
-
-    - name: Package artifacts
-      run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}
-        tar -czf daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz *
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ${{ steps.strings.outputs.build-output-dir }}/daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz
-        asset_name: daisy-${{ github.ref_name }}-${{ matrix.os }}.tar.gz
-        asset_content_type: application/gzip
-
-  build-windows:
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - { sys: ucrt64, env: ucrt-x86_64 }
-
-    defaults:
-      run:
-        shell: msys2 {0}
-
-    steps:
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{matrix.sys}}
-          update: true
-          install: >-
-            git
-            mingw-w64-${{matrix.env}}-cmake
-            mingw-w64-${{matrix.env}}-gcc
-            mingw-w64-${{matrix.env}}-ninja
-            mingw-w64-${{matrix.env}}-suitesparse
-            mingw-w64-${{matrix.env}}-boost
-            mingw-w64-${{matrix.env}}-pybind11
-            mingw-w64-${{matrix.env}}-python
-            mingw-w64-${{matrix.env}}-python-pip
-            mingw-w64-${{matrix.env}}-python-pandas
-            unzip
-            tar
-
-      - name: Install python dependencies
-        run: pip install pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
-
-      - uses: actions/checkout@v4
-
-      - name: Get embeddable python
-        run: mkdir -p python/python &&
-             wget https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip -O python/python.zip &&
-             unzip python/python.zip -d python/python &&
-             cp python/python/python312.dll python/python/libpython3.12.dll
-
-      - name: Configure CMake
-        run: >
-          cmake -B build --preset mingw-gcc-portable
-
-      - name: Build
-        run: cmake --build build
-
-      - name: Test
-        working-directory: build
-        run: |
-          ctest --output-on-failure
-
-      - name: Package artifacts
-        run: |
-          cd build
-          tar -czf daisy-${{ github.ref_name }}-windows.tar.gz *
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: build/daisy-${{ github.ref_name }}-windows.tar.gz
-          asset_name: daisy-${{ github.ref_name }}-windows.tar.gz
-          asset_content_type: application/gzip
-
   create-release:
     runs-on: ubuntu-latest
     outputs:
@@ -159,6 +18,205 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          release_name: Daisy ${{ github.ref_name }}
+          body: |
+            ## Daisy ${{ github.ref_name }}
+
+            ### Downloads
+            - **macOS**: `daisy-${{ github.ref_name }}-Darwin.pkg`
+            - **Windows Installer**: `daisy-${{ github.ref_name }}-win64.exe`
+            - **Windows Portable**: `daisy-${{ github.ref_name }}-win64.zip`
+            - **Linux**: `daisy_${{ github.ref_name }}_amd64.deb`
+
+            See [Getting Started](https://github.com/daisy-model/daisy#getting-started) for usage instructions.
           draft: false
           prerelease: false
+
+  build-macos:
+    needs: create-release
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
+    - name: Install macOS dependencies
+      run: brew install cmake boost suite-sparse pybind11
+
+    - name: Configure CMake (portable)
+      run: cmake -B build --preset macos-clang-portable
+
+    - name: Build
+      run: cmake --build build -j 4
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure
+
+    - name: Create macOS package
+      working-directory: build
+      run: cpack
+
+    - name: Find macOS package
+      id: find_pkg
+      run: |
+        PKG_FILE=$(find build -name "*.pkg" | head -1)
+        echo "pkg_file=$PKG_FILE" >> "$GITHUB_OUTPUT"
+        echo "Found package: $PKG_FILE"
+
+    - name: Upload macOS Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ steps.find_pkg.outputs.pkg_file }}
+        asset_name: daisy-${{ github.ref_name }}-Darwin.pkg
+        asset_content_type: application/octet-stream
+
+  build-linux:
+    needs: create-release
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
+    - name: Install ubuntu dependencies
+      run: sudo apt install cmake libsuitesparse-dev libboost-filesystem-dev libboost-system-dev python3-pybind11
+
+    - name: Configure CMake (portable)
+      run: cmake -B build --preset linux-gcc-portable
+
+    - name: Build
+      run: cmake --build build -j 4
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure
+
+    - name: Create DEB package
+      working-directory: build
+      run: cpack -G DEB
+
+    - name: Find DEB package
+      id: find_deb
+      run: |
+        DEB_FILE=$(find build -name "*.deb" | head -1)
+        echo "deb_file=$DEB_FILE" >> "$GITHUB_OUTPUT"
+        echo "Found package: $DEB_FILE"
+
+    - name: Upload DEB Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ steps.find_deb.outputs.deb_file }}
+        asset_name: daisy_${{ github.ref_name }}_amd64.deb
+        asset_content_type: application/octet-stream
+
+  build-windows:
+    needs: create-release
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ucrt64
+          update: true
+          install: >-
+            git
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-suitesparse
+            mingw-w64-ucrt-x86_64-boost
+            mingw-w64-ucrt-x86_64-pybind11
+            mingw-w64-ucrt-x86_64-python
+            mingw-w64-ucrt-x86_64-python-pip
+            mingw-w64-ucrt-x86_64-python-pandas
+            mingw-w64-ucrt-x86_64-nsis
+            unzip
+
+      - name: Install python dependencies
+        run: pip install pint daisypy-test@git+https://github.com/daisy-model/daisypy-test
+
+      - uses: actions/checkout@v4
+
+      - name: Get embeddable python
+        run: |
+          mkdir -p python/python
+          wget https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip -O python/python.zip
+          unzip python/python.zip -d python/python
+          cp python/python/python312.dll python/python/libpython3.12.dll
+
+      - name: Configure CMake (portable)
+        run: cmake -B build --preset mingw-gcc-portable
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
+        run: ctest --output-on-failure
+
+      - name: Create Windows installer
+        working-directory: build
+        run: cpack -G NSIS
+
+      - name: Create Windows ZIP
+        working-directory: build
+        run: cpack -G ZIP
+
+      - name: Find Windows packages
+        id: find_packages
+        run: |
+          EXE_FILE=$(find build -name "*.exe" -not -name "daisy.exe" | head -1)
+          ZIP_FILE=$(find build -name "*.zip" | head -1)
+          echo "exe_file=$EXE_FILE" >> "$GITHUB_OUTPUT"
+          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+          echo "Found installer: $EXE_FILE"
+          echo "Found zip: $ZIP_FILE"
+
+      - name: Upload Windows Installer
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ steps.find_packages.outputs.exe_file }}
+          asset_name: daisy-${{ github.ref_name }}-win64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows ZIP
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ steps.find_packages.outputs.zip_file }}
+          asset_name: daisy-${{ github.ref_name }}-win64.zip
+          asset_content_type: application/zip
